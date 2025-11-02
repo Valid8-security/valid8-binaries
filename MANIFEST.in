@@ -1,0 +1,36 @@
+# MANIFEST.in - Controls what files are included in source distribution
+
+# Include essential files
+include README.md
+include LICENSE
+include requirements.txt
+include requirements-build.txt
+
+# Include documentation
+recursive-include docs *.md *.rst
+
+# Include configuration templates
+recursive-include parry/templates *.yaml *.json *.txt
+
+# Include language support data
+recursive-include parry/language_support *.py
+
+# Exclude development and test files
+exclude .gitignore
+exclude .git*
+recursive-exclude tests *
+recursive-exclude examples *
+recursive-exclude scripts *
+
+# Exclude build artifacts
+global-exclude *.pyc
+global-exclude *.pyo
+global-exclude *.pyd
+global-exclude __pycache__
+global-exclude *.so
+global-exclude *.dylib
+global-exclude .DS_Store
+
+# For compiled distribution: exclude source .py files of compiled modules
+# (This is handled by setup_compiled.py, not MANIFEST)
+

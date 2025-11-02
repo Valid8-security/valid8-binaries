@@ -1,0 +1,80 @@
+# GitLab CI/CD Pipeline for Parry Security Scanning
+
+stages:
+  - security
+  - deep-scan
+
+variables:
+  PARRY_VERSION: "0.4.0"
+
+# Fast scan on every commit
+parry-fast-scan:
+  stage: security
+  image: python:3.10
+  before_script:
+    - pip install parry-scanner
+    - curl -fsSL https://ollama.ai/install.sh | sh
+    - ollama serve &
+    - sleep 5
+    - ollama pull codellama:7b-instruct-q4_K_M
+  script:
+    - parry scan . --mode fast --format json --output parry-fast.json
+    - python scripts/check_critical.py parry-fast.json
+  artifacts:
+    reports:
+      # GitLab Security Report format
+      sast: parry-fast.json
+    paths:
+      - parry-fast.json
+    expire_in: 30 days
+  allow_failure: false
+  only:
+    - branches
+    - merge_requests
+
+# Deep scan on main branch and scheduled
+parry-deep-scan:
+  stage: deep-scan
+  image: python:3.10
+  before_script:
+    - pip install parry-scanner
+    - curl -fsSL https://ollama.ai/install.sh | sh
+    - ollama serve &
+    - sleep 10
+    - ollama pull codellama:7b-instruct-q4_K_M
+  script:
+    - parry scan . --mode deep --validate --format json --output parry-deep.json
+    - parry scan . --sca --format json --output parry-sca.json
+  artifacts:
+    reports:
+      sast: parry-deep.json
+      dependency_scanning: parry-sca.json
+    paths:
+      - parry-deep.json
+      - parry-sca.json
+    expire_in: 90 days
+  only:
+    - main
+    - schedules
+  when: always
+
+# Incremental scan (uses cache)
+parry-incremental:
+  stage: security
+  image: python:3.10
+  cache:
+    key: ${CI_PROJECT_ID}
+    paths:
+      - .parry/cache/
+  before_script:
+    - pip install parry-scanner
+  script:
+    - parry scan . --mode fast --incremental --format json --output parry-incremental.json
+  artifacts:
+    paths:
+      - parry-incremental.json
+    expire_in: 7 days
+  only:
+    - merge_requests
+
+
