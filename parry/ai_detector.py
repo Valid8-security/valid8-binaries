@@ -38,8 +38,8 @@ class AIDetector:
         """
         self.llm = llm_client or LLMClient()
         self.detection_cache = {}
-        # Optimize for large codebases: use multiple CPU cores
-        self.max_workers = max_workers or min(os.cpu_count() or 4, 8)
+        # Optimize for large codebases: use multiple CPU cores (increased from 8 to 16)
+        self.max_workers = max_workers or min(os.cpu_count() or 4, 16)
     
     def detect_vulnerabilities(
         self,
@@ -300,8 +300,8 @@ ANALYZE NOW:"""
         
         return vuln
     
-    def _chunk_code(self, code: str, max_lines: int = 100) -> List[str]:
-        """Split code into analyzable chunks."""
+    def _chunk_code(self, code: str, max_lines: int = 50) -> List[str]:
+        """Split code into analyzable chunks - optimized smaller chunks for faster processing."""
         lines = code.split('\n')
         chunks = []
         

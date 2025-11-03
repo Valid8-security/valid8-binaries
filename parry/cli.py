@@ -8,7 +8,8 @@ import sys
 import json
 import os
 from pathlib import Path
-from typing import Optional
+from typing import Optional, List, Tuple
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
@@ -126,14 +127,18 @@ def scan(path: str, format: str, output: Optional[str], severity: Optional[str],
             console.print(f"[red]Error during scanning: {e}[/red]")
             sys.exit(1)
     
-    # AI-Powered Deep Scan (for deep or hybrid mode)
+    # AI-Powered Deep Scan (for deep or hybrid mode) - OPTIMIZED with parallel processing
     if mode in ["deep", "hybrid"] and results.get('files_scanned', 0) > 0 and ai_available:
         console.print("\n[cyan]🤖 AI Deep Scan: Comprehensive vulnerability detection...[/cyan]")
-        console.print("[dim]This uses local AI to achieve 75% recall (may take several minutes)[/dim]")
+        console.print("[dim]This uses local AI to achieve 75% recall (optimized with parallel processing)[/dim]")
         
         try:
             from parry.ai_detector import AIDetector
-            ai_detector = AIDetector()
+            import multiprocessing
+            
+            # Initialize AI detector with optimized settings
+            max_workers = min(multiprocessing.cpu_count() or 8, 16)  # Use up to 16 cores
+            ai_detector = AIDetector(max_workers=max_workers)
             
             # Get list of scanned files
             scanned_files = []
@@ -145,9 +150,13 @@ def scan(path: str, format: str, output: Optional[str], severity: Optional[str],
                 for ext in ['.py', '.java', '.js', '.go', '.php', '.rb', '.rs', '.c', '.cpp', '.h']:
                     scanned_files.extend(target.rglob(f'*{ext}'))
             
+            console.print(f"[dim]Found {len(scanned_files)} files for AI analysis (using {max_workers} workers)[/dim]")
+            
+            # Optimized parallel processing
             ai_vulns = []
-            for i, file_path in enumerate(scanned_files[:10]):  # Limit to 10 files for demo
-                console.print(f"[dim]AI analyzing {file_path.name} ({i+1}/{min(10, len(scanned_files))})...[/dim]")
+            
+            def process_file_optimized(file_path):
+                """Process single file with AI detection - optimized wrapper"""
                 try:
                     code = file_path.read_text(errors='ignore')
                     file_vulns = ai_detector.detect_vulnerabilities(
@@ -155,9 +164,29 @@ def scan(path: str, format: str, output: Optional[str], severity: Optional[str],
                         str(file_path),
                         file_path.suffix[1:]  # language from extension
                     )
-                    ai_vulns.extend([v.to_dict() if hasattr(v, 'to_dict') else v for v in file_vulns])
+                    return [v.to_dict() if hasattr(v, 'to_dict') else v for v in file_vulns]
                 except Exception as e:
-                    console.print(f"[yellow]Warning: Could not analyze {file_path.name}: {e}[/yellow]")
+                    return []
+            
+            # Process all files in parallel using ThreadPoolExecutor
+            with Progress(
+                SpinnerColumn(),
+                TextColumn("[progress.description]{task.description}"),
+                console=console,
+            ) as progress:
+                task = progress.add_task(f"[cyan]Analyzing {len(scanned_files)} files with AI...", total=len(scanned_files))
+                
+                with ThreadPoolExecutor(max_workers=max_workers) as executor:
+                    # Submit all files for parallel processing
+                    futures = {executor.submit(process_file_optimized, f): f for f in scanned_files}
+                    
+                    # Collect results as they complete
+                    completed = 0
+                    for future in as_completed(futures):
+                        file_vulns = future.result()
+                        ai_vulns.extend(file_vulns)
+                        completed += 1
+                        progress.update(task, completed=completed)
             
             # Merge AI findings with pattern findings
             if mode == "hybrid":

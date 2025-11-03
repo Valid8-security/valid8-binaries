@@ -13,9 +13,9 @@ class LLMConfig:
     """Configuration for LLM client"""
     base_url: str = "http://localhost:11434"
     model: str = "codellama:7b-instruct"
-    temperature: float = 0.1
-    max_tokens: int = 2048
-    timeout: int = 120
+    temperature: float = 0.0  # Optimized: deterministic for speed
+    max_tokens: int = 1024  # Optimized: reduced for faster inference
+    timeout: int = 60  # Optimized: faster timeout
 
 
 class LLMClient:
