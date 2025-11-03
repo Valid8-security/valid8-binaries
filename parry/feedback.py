@@ -1,5 +1,25 @@
+# Parry (C) by Lemonade Stand. Written by Andy Kurapati and Shreyan Mitra
 """
 Feedback management system for beta renewals and user input
+
+This module handles beta user feedback collection and license renewal requests:
+- Local feedback queue storage (JSONL format in ~/.parry/feedback/)
+- Optional GitHub issue creation for feedback tracking
+- Renewal request submission with license metadata
+- Email contact information management
+- Retry mechanism for failed submissions
+
+Key Features:
+- Offline-first: Queues feedback locally even without internet
+- GitHub Integration: Automatically creates issues when online
+- License Context: Includes tier, expiration, machine_id in submissions
+- Privacy: User controls what metadata is shared
+- Fallback Email: Provides beta@parry.ai for manual submissions
+
+Used by:
+- `parry license renew` command
+- Admin feedback collection workflows
+- Beta program management
 """
 
 import json

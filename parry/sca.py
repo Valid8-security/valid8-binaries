@@ -1,6 +1,31 @@
+# Parry (C) by Lemonade Stand. Written by Andy Kurapati and Shreyan Mitra
 """
 Software Composition Analysis (SCA) Module
 Scans dependencies for known vulnerabilities using multiple databases
+
+This module provides comprehensive dependency vulnerability scanning across multiple ecosystems:
+- Python (pip, requirements.txt, pyproject.toml, Pipfile, poetry.lock)
+- JavaScript/Node (npm, package.json)
+- Java (Maven pom.xml, Gradle build.gradle)
+- Go (go.mod)
+- Ruby (Gemfile)
+- PHP (composer.json)
+- Rust (Cargo.toml)
+
+Key Features:
+- Embedded local vulnerability database with critical CVEs
+- Offline-first mode (no external API calls by default)
+- Version range checking for affected packages
+- Support for multiple package file formats per ecosystem
+- Normalized vulnerability output across all ecosystems
+
+The local database includes high-profile vulnerabilities like:
+- Log4Shell (CVE-2021-44228)
+- Spring4Shell (CVE-2022-22965)
+- PyYAML arbitrary code execution (CVE-2020-14343)
+- And many more critical security issues
+
+Used by: `parry scan --sca` to detect vulnerable dependencies
 """
 import json
 import re

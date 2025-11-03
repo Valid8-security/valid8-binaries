@@ -1,3 +1,4 @@
+# Parry (C) by Lemonade Stand. Written by Andy Kurapati and Shreyan Mitra
 """
 Multi-language support for Parry Security Scanner.
 

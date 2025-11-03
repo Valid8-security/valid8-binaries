@@ -1,6 +1,37 @@
+# Parry (C) by Lemonade Stand. Written by Andy Kurapati and Shreyan Mitra
 """
 Parry REST API Server
 Provides HTTP endpoints for scanning, results retrieval, and management
+
+This module implements a FastAPI-based REST API server for Parry, enabling:
+- Asynchronous security scans via background tasks
+- Job status tracking and progress monitoring
+- Multi-mode scanning (fast/deep/hybrid)
+- SCA (Software Composition Analysis) integration
+- Incremental scanning support
+- Custom rules engine integration
+- CORS support for web frontends
+
+Key Endpoints:
+- POST /api/v1/scan - Initiate a new security scan (returns job_id)
+- GET /api/v1/jobs/{job_id} - Check scan status and retrieve results
+- GET /api/v1/jobs - List all scan jobs with optional filtering
+- GET /api/v1/stats - Aggregate statistics across all scans
+- GET /health - Health check for monitoring
+
+Job Lifecycle:
+1. queued → Scan request received, waiting to start
+2. running → Scan in progress with progress percentage
+3. completed → Scan finished successfully, results available
+4. failed → Scan encountered an error
+
+Architecture:
+- In-memory job storage (scan_jobs dict) - Use Redis/PostgreSQL for production
+- Background task execution via FastAPI BackgroundTasks
+- Pydantic models for request/response validation
+- CORS enabled for cross-origin web client access
+
+Used by: Web frontends, CI/CD pipelines, automation scripts
 """
 from fastapi import FastAPI, HTTPException, BackgroundTasks, UploadFile, File
 from fastapi.responses import JSONResponse

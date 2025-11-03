@@ -1,3 +1,4 @@
+# Parry (C) by Lemonade Stand. Written by Andy Kurapati and Shreyan Mitra
 """
 Comprehensive CWE mappings based on:
 - OWASP Top 10 2021

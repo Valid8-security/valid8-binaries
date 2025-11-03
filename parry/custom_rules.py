@@ -1,7 +1,48 @@
+# Parry (C) by Lemonade Stand. Written by Andy Kurapati and Shreyan Mitra
 """
 Custom Rules Engine
 Allows users to define custom security rules in YAML format
 Compatible with Semgrep rule format for easy migration
+
+This module enables organization-specific security policies by:
+- Loading custom security rules from YAML files
+- Supporting Semgrep-compatible rule format for easy adoption
+- Pattern-based code matching (regex and AST patterns)
+- Severity classification (INFO, WARNING, ERROR, CRITICAL)
+- Language-specific rules (Python, JavaScript, Java, Go, etc.)
+- Metadata support for tracking rule ownership and references
+
+Rule Structure:
+- id: Unique identifier for the rule
+- message: Human-readable description of the violation
+- severity: Impact level (INFO, WARNING, ERROR, CRITICAL)
+- languages: Target languages for the rule
+- patterns: Code patterns to match (supports regex and AST patterns)
+- pattern-either: Alternative patterns (match any)
+- pattern-not: Exclusion patterns (don't match these)
+- metadata: Custom fields (CWE, OWASP, owner, references)
+
+Rule Discovery:
+- Default location: ~/.parry/rules/*.yaml
+- Custom location: --rules-path flag
+- Multiple rule files supported
+- Auto-loading from directory
+
+Example Rule:
+```yaml
+rules:
+  - id: custom-sql-injection
+    message: Potential SQL injection via string concatenation
+    severity: ERROR
+    languages: [python]
+    patterns:
+      - pattern: execute($SQL + $USER_INPUT)
+    metadata:
+      cwe: CWE-89
+      owasp: A03:2021
+```
+
+Used by: `parry scan --rules-path` for enterprise custom policies
 """
 import yaml
 import re

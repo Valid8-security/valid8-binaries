@@ -1,5 +1,31 @@
+# Parry (C) by Lemonade Stand. Written by Andy Kurapati and Shreyan Mitra
 """
-Go language security analyzer.
+Go language security analyzer
+
+Security analysis for Go codebases with support for:
+- Goroutine and concurrency vulnerability detection
+- Standard library misuse (os/exec, net/http, crypto)
+- 15+ CWE categories
+
+Detection Capabilities:
+- Command Injection (CWE-78): exec.Command with user input
+- SQL Injection (CWE-89): String concatenation in SQL queries
+- Path Traversal (CWE-22): os.Open, ioutil.ReadFile with user paths
+- Race Conditions (CWE-362): Unsafe goroutine access
+- Weak Crypto (CWE-327): MD5, DES, weak algorithms
+- Hardcoded Secrets (CWE-798): Passwords, API keys
+- SSRF (CWE-918): Unvalidated HTTP requests
+- Integer Overflow (CWE-190): Unsafe arithmetic
+- XSS (CWE-79): HTML template misuse
+- CSRF (CWE-352): Missing CSRF protection
+
+Go-Specific Issues:
+- Goroutine data races
+- Unsafe pointer operations
+- Deferred function misuse
+- Error handling issues (ignored errors)
+
+Used by: Scanner.scan_file() when processing .go files
 """
 
 import re

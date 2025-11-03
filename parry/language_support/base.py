@@ -1,5 +1,40 @@
+# Parry (C) by Lemonade Stand. Written by Andy Kurapati and Shreyan Mitra
 """
-Base class for language-specific analyzers.
+Base class for language-specific analyzers
+
+This module defines the abstract base class and data structures for all language-specific
+security analyzers in Parry. It provides:
+
+- Vulnerability dataclass: Standardized representation of security findings
+  (CWE, severity, title, description, location, code snippet, confidence)
+
+- LanguageAnalyzer ABC: Abstract base class enforcing common interface for all analyzers
+  * analyze(): Main entry point for code analysis
+  * get_supported_cwes(): Returns list of CWE types the analyzer can detect
+  * parse_ast(): Optional AST parsing (language-specific)
+  * detect_*() methods: Specific vulnerability detection methods
+
+Supported Detection Methods:
+- detect_command_injection() - CWE-78: Command injection
+- detect_sql_injection() - CWE-89: SQL injection
+- detect_xss() - CWE-79: Cross-site scripting
+- detect_path_traversal() - CWE-22: Path traversal
+- detect_weak_crypto() - CWE-327: Weak cryptography
+- detect_hardcoded_secrets() - CWE-798: Hardcoded credentials
+- detect_unsafe_deserialization() - CWE-502: Unsafe deserialization
+- detect_xxe() - CWE-611: XML External Entity
+
+Concrete Implementations:
+- PythonAnalyzer (python_analyzer.py)
+- JavaScriptAnalyzer (javascript_analyzer.py)
+- JavaAnalyzer (java_analyzer.py)
+- GoAnalyzer (go_analyzer.py)
+- RubyAnalyzer (ruby_analyzer.py)
+- RustAnalyzer (rust_analyzer.py)
+- PHPAnalyzer (php_analyzer.py)
+- CppAnalyzer (cpp_analyzer.py)
+
+Each analyzer inherits from this base class and implements language-specific detection logic.
 """
 
 from abc import ABC, abstractmethod

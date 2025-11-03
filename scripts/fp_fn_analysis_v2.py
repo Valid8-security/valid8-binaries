@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Parry (C) by Lemonade Stand. Written by Andy Kurapati and Shreyan Mitra
 """
 False Positive/False Negative Analysis for Parry vs Competitors
 Using actual OWASP Benchmark results and industry data

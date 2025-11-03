@@ -1,5 +1,43 @@
+# Parry (C) by Lemonade Stand. Written by Andy Kurapati and Shreyan Mitra
 """
-Java language security analyzer.
+Java language security analyzer
+
+Comprehensive security analysis for Java codebases with support for:
+- Enterprise Java (Spring Framework, Jakarta EE)
+- Android applications
+- 30+ CWE categories covering OWASP Top 10
+- Framework-specific vulnerability detection
+
+Detection Capabilities:
+- Command Injection (CWE-78): Runtime.exec(), ProcessBuilder
+- SQL Injection (CWE-89): JDBC string concatenation, JPA misuse
+- XSS (CWE-79): JSP scriptlets, unsafe HTML output
+- XXE (CWE-611): XML parsers without entity restriction
+- Deserialization (CWE-502): ObjectInputStream on untrusted data
+- Path Traversal (CWE-22): File operations with user input
+- LDAP Injection (CWE-90): Unsafe LDAP queries
+- XPath Injection (CWE-643): Unsafe XPath with user data
+- Hardcoded Secrets (CWE-798): Passwords, keys in source
+- Weak Crypto (CWE-327): DES, MD5, weak algorithms
+- Improper Certificate Validation (CWE-295): TrustManager issues
+- SSRF (CWE-918): Unvalidated URL connections
+- Integer Overflow (CWE-190): Arithmetic operations
+- Race Conditions (CWE-362): TOCTOU in file operations
+- NULL Pointer Dereference (CWE-476): Unsafe dereferences
+- And 15+ more vulnerability types
+
+Framework-Specific Detection:
+- Spring Framework: Expression Language injection, CSRF, security misconfig
+- Jakarta EE: Session management, authentication bypass
+- Android: Intent injection, WebView XSS, insecure storage
+
+Analysis Techniques:
+- Regex-based pattern matching
+- API call analysis (dangerous methods)
+- Configuration scanning (XML, properties)
+- Context-aware severity scoring
+
+Used by: Scanner.scan_file() when processing .java files
 """
 
 import re

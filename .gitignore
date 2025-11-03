@@ -58,3 +58,6 @@ ollama_models/
 # Temporary
 *.tmp
 *.temp
+
+# Repository reorganization backups
+.backup/

@@ -1,6 +1,40 @@
+# Parry (C) by Lemonade Stand. Written by Andy Kurapati and Shreyan Mitra
 """
-Advanced vulnerability test cases for comprehensive recall testing.
-This file contains sophisticated vulnerabilities that require advanced detection.
+Advanced vulnerability test cases for comprehensive recall testing
+
+⚠️ WARNING: This code contains intentionally sophisticated vulnerabilities
+to test Parry's advanced detection capabilities. DO NOT use in production!
+
+Purpose:
+- Test Parry's deep analysis mode and AI-powered detection
+- Demonstrate complex vulnerability patterns beyond basic regex
+- Validate detection of less common CWEs
+- Benchmark recall against industry tools (Snyk, Semgrep)
+
+Coverage (20+ Advanced CWEs):
+- CWE-90: LDAP Injection
+- CWE-643: XPath Injection
+- CWE-113: HTTP Header Injection
+- CWE-190: Integer Overflow
+- CWE-209: Information Disclosure via Error Messages
+- CWE-295: Improper Certificate Validation
+- CWE-330: Use of Insufficiently Random Values
+- CWE-321: Hardcoded Cryptographic Key
+- CWE-311: Missing Encryption of Sensitive Data
+- CWE-319: Cleartext Transmission
+- CWE-502: Unsafe Deserialization (pickle)
+- CWE-611: XXE via unsafe YAML loading
+- CWE-78: Command Injection with shell=True
+- CWE-362: Race Conditions (TOCTOU)
+- CWE-384: Session Fixation
+- CWE-601: Open Redirect
+- CWE-770: Resource Exhaustion
+- CWE-749: Exposed Dangerous Functions
+
+Expected Results:
+- Parry should detect 15+ vulnerabilities in deep mode
+- Pattern-based detection may miss some (e.g., LDAP, XPath)
+- AI validation should catch context-dependent vulnerabilities
 """
 
 import os
@@ -13,31 +47,46 @@ from urllib.parse import urlparse
 import requests
 
 
-# 1. LDAP Injection
+# 1. LDAP Injection (CWE-90)
+# VULNERABILITY: User input directly embedded in LDAP filter without escaping
+# Attacker could pass: "*)(uid=*))(|(uid=*" to bypass authentication
+# FIX: Use ldap.filter.escape_filter_chars() to sanitize input
 def search_user_insecure(username):
     ldap_filter = f"(cn={username})"  # Unsafe LDAP injection
     return ldap_filter
 
 
-# 2. XPath Injection
+# 2. XPath Injection (CWE-643)
+# VULNERABILITY: Unsanitized input in XPath query
+# Attacker could pass: "' or '1'='1" to access unauthorized data
+# FIX: Use parameterized XPath queries or sanitize input
 def find_user_xpath(username):
     xpath_query = f"//users[@name='{username}']"  # XPath injection
     return xpath_query
 
 
-# 3. Header Injection
+# 3. Header Injection (CWE-113)
+# VULNERABILITY: User-controlled value in HTTP headers can inject CRLF
+# Attacker could pass: "Value\r\nX-Injected: true" to add malicious headers
+# FIX: Validate and sanitize header values, reject newlines
 def set_custom_header(value):
     headers = {"Custom-Header": value}  # HTTP header injection
     return headers
 
 
-# 4. Integer Overflow
+# 4. Integer Overflow (CWE-190)
+# VULNERABILITY: Unchecked arithmetic can overflow and cause buffer overflows
+# Large values of offset + size could wrap around to small values
+# FIX: Validate bounds before arithmetic operations
 def calculate_safety(offset, size):
     result = offset + size  # Potential integer overflow
     return result
 
 
-# 5. Error Information Disclosure
+# 5. Error Information Disclosure (CWE-209)
+# VULNERABILITY: Exception details exposed to users reveal internal structure
+# Stack traces can expose file paths, database schemas, code structure
+# FIX: Log detailed errors internally, return generic messages to users
 def process_data(data):
     try:
         result = complex_operation(data)
@@ -47,34 +96,51 @@ def process_data(data):
     return result
 
 
-# 6. Improper Certificate Validation
+# 6. Improper Certificate Validation (CWE-295)
+# VULNERABILITY: Disabling SSL verification allows man-in-the-middle attacks
+# Attacker can intercept and modify traffic
+# FIX: Always use verify=True (default), or provide CA bundle
 def fetch_data_insecure(url):
     requests.get(url, verify=False)  # Insecure SSL
 
 
-# 7. Weak Random
+# 7. Weak Random (CWE-330)
+# VULNERABILITY: Predictable random numbers for session IDs
+# random.randint is not cryptographically secure
+# FIX: Use secrets.token_urlsafe() or os.urandom()
 def generate_session_id():
     import random
     return random.randint(0, 1000)  # Weak randomness
 
 
-# 8. Hardcoded Crypto Key
+# 8. Hardcoded Crypto Key (CWE-321)
+# VULNERABILITY: Encryption key hardcoded in source code
+# Anyone with access to code can decrypt data
+# FIX: Load keys from secure key management system (KMS, vault)
 SECRET_KEY = "my-secret-key-12345"  # Hardcoded encryption key
 
 
-# 9. Missing Encryption
+# 9. Missing Encryption (CWE-311)
+# VULNERABILITY: Sensitive data transmitted without encryption
+# Data sent in plaintext can be intercepted
+# FIX: Encrypt data before transmission, or use HTTPS
 def send_sensitive_data(data):
     # No encryption of sensitive data
     return requests.post("http://api.example.com/data", json=data)
 
 
-# 10. Cleartext Transmission
+# 10. Cleartext Transmission (CWE-319)
+# VULNERABILITY: Using HTTP instead of HTTPS exposes traffic
+# Credentials, session tokens, personal data can be intercepted
+# FIX: Use HTTPS URLs exclusively
 def fetch_user_data(user_id):
     response = requests.get(f"http://api.example.com/user/{user_id}")  # HTTP not HTTPS
     return response
 
 
-# 11. LDAP Injection - Safe variant
+# 11. LDAP Injection - Safe variant (for comparison)
+# This shows the proper way to handle LDAP queries
+# escape_filter_chars() prevents LDAP injection attacks
 def search_user_safe(username):
     import ldap
     username = ldap.filter.escape_filter_chars(username)
@@ -82,17 +148,26 @@ def search_user_safe(username):
     return ldap_filter
 
 
-# 12. Unsafe Deserialization
+# 12. Unsafe Deserialization (CWE-502)
+# VULNERABILITY: pickle.loads on untrusted data can execute arbitrary code
+# Attacker can craft malicious pickle that runs code during deserialization
+# FIX: Use JSON for untrusted data, or verify data source
 def load_data(data):
     return pickle.loads(data)  # Unsafe deserialization
 
 
-# 13. YAML Injection
+# 13. YAML Injection (CWE-611/CWE-502)
+# VULNERABILITY: yaml.load() can execute arbitrary Python code
+# YAML files can contain !!python/object directives
+# FIX: Use yaml.safe_load() instead
 def parse_config(config_data):
     return yaml.load(config_data)  # YAML injection
 
 
-# 14. Command Injection with shell
+# 14. Command Injection with shell (CWE-78)
+# VULNERABILITY: shell=True with user input enables command injection
+# Attacker can chain commands with ; && || or use backticks
+# FIX: Use shell=False and pass command as list
 def execute_command(user_input):
     subprocess.call(user_input, shell=True)  # Command injection
 

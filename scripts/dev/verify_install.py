@@ -1,7 +1,31 @@
 #!/usr/bin/env python3
+# Parry (C) by Lemonade Stand. Written by Andy Kurapati and Shreyan Mitra
 """
 Verification script for Parry installation
-Run this after installation to verify everything works
+Run this after installation to verify everything works correctly
+
+Purpose:
+- Validates Python version (3.9+ required)
+- Checks Ollama installation and status
+- Verifies LLM model availability (codellama/codegemma)
+- Tests Parry CLI commands
+- Verifies license activation (for beta/pro users)
+- Runs sample scans to ensure end-to-end functionality
+
+Usage:
+    python verify_install.py
+
+Exit Codes:
+    0 - All checks passed
+    1 - One or more checks failed
+
+Output:
+- Colored status indicators (✓ PASS / ✗ FAIL)
+- Detailed error messages for failed checks
+- Recommendations for fixing issues
+
+This script is run automatically by the install.sh script and can be
+executed manually at any time to diagnose installation issues.
 """
 
 import sys

@@ -1,3 +1,4 @@
+# Parry (C) by Lemonade Stand. Written by Andy Kurapati and Shreyan Mitra
 """
 Container and Infrastructure as Code (IaC) Security Scanner
 

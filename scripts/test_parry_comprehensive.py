@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Parry (C) by Lemonade Stand. Written by Andy Kurapati and Shreyan Mitra
 """
 Comprehensive testing script for Parry
 Tests all major features and modes to ensure everything works correctly

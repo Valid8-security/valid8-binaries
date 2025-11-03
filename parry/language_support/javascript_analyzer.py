@@ -1,5 +1,41 @@
+# Parry (C) by Lemonade Stand. Written by Andy Kurapati and Shreyan Mitra
 """
-JavaScript/TypeScript language security analyzer.
+JavaScript/TypeScript language security analyzer
+
+Comprehensive security analysis for JavaScript and TypeScript codebases with support for:
+- Node.js backend code (Express, Koa, NestJS)
+- Frontend JavaScript (React, Vue, Angular)
+- TypeScript type-aware analysis
+- 23+ CWE categories covering OWASP Top 10
+
+Detection Capabilities:
+- Command Injection (CWE-78): child_process.exec, shell commands
+- Code Injection (CWE-94): eval(), Function(), vm.runInContext()
+- SQL Injection (CWE-89): String concatenation in SQL, ORM misuse
+- XSS (CWE-79): innerHTML, dangerouslySetInnerHTML, DOM manipulation
+- Path Traversal (CWE-22): fs.readFile, path.join with user input
+- Deserialization (CWE-502): JSON.parse, node-serialize
+- Prototype Pollution (CWE-915): Unsafe merge, object manipulation
+- XXE (CWE-611): XML parsing without entity restriction
+- Hardcoded Secrets (CWE-798): API keys, passwords in code
+- Weak Crypto (CWE-327): MD5, SHA1, weak algorithms
+- SSRF (CWE-918): Unvalidated URL requests
+- CSRF (CWE-352): Missing CSRF tokens
+- Open Redirect (CWE-601): Unsafe window.location
+- Insecure Cookies (CWE-614): httpOnly, secure flags missing
+
+Framework-Specific Detection:
+- Express.js: Middleware security, CORS misconfig, helmet issues
+- React: XSS via dangerouslySetInnerHTML, unsafe refs
+- Vue: Template injection, v-html misuse
+- Angular: Template injection, bypassSecurityTrust*
+
+Analysis Techniques:
+- Regex-based pattern matching for quick detection
+- Context-aware severity scoring
+- Support for both JavaScript and TypeScript syntax
+
+Used by: Scanner.scan_file() when processing .js, .jsx, .ts, .tsx files
 """
 
 import re

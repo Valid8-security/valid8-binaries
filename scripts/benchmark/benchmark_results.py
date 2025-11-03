@@ -1,6 +1,43 @@
 #!/usr/bin/env python3
+# Parry (C) by Lemonade Stand. Written by Andy Kurapati and Shreyan Mitra
 """
 Comprehensive benchmarking script for Parry vs competitors
+
+This script performs competitive analysis by running Parry alongside other
+security scanning tools and comparing:
+- Scan speed (files/second)
+- Vulnerability detection count
+- CWE coverage
+- False positive rates
+- Memory usage
+
+Compared Tools:
+- Parry (our tool)
+- Bandit (Python-specific)
+- Semgrep (multi-language patterns)
+- Snyk (commercial tool, if available)
+
+Metrics Collected:
+- Duration (seconds)
+- Files scanned
+- Vulnerabilities found
+- Breakdown by severity (critical/high/medium/low)
+- Breakdown by CWE type
+- Scan throughput (files/second)
+
+Usage:
+    python benchmark_results.py [target_directory]
+    
+Output:
+- JSON results saved to benchmark_results.json
+- Markdown report generated in BENCHMARK_SUMMARY.md
+- Console output with comparison table
+
+Use Cases:
+- Marketing materials (competitive advantage)
+- Performance regression testing
+- Recall/precision validation
+- Release verification
 """
 
 import sys

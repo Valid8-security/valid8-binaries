@@ -1,3 +1,4 @@
+# Parry (C) by Lemonade Stand. Written by Andy Kurapati and Shreyan Mitra
 """
 Universal CWE detectors that apply to all or most languages.
 

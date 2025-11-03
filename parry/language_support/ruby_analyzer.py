@@ -1,5 +1,34 @@
+# Parry (C) by Lemonade Stand. Written by Andy Kurapati and Shreyan Mitra
 """
-Ruby language security analyzer.
+Ruby language security analyzer
+
+Security analysis for Ruby and Ruby on Rails codebases with support for:
+- Rails framework-specific vulnerabilities
+- ActiveRecord ORM misuse detection
+- 17+ CWE categories
+
+Detection Capabilities:
+- Command Injection (CWE-78): system(), `backticks`, exec()
+- SQL Injection (CWE-89): Raw SQL, unsafe ActiveRecord queries
+- XSS (CWE-79): ERB template injection, raw HTML output
+- Mass Assignment (CWE-1321): Unsafe params, attr_accessible missing
+- Path Traversal (CWE-22): File operations with user input
+- Deserialization (CWE-502): Marshal.load, YAML.load (unsafe)
+- XXE (CWE-611): XML parsing without entity restriction
+- Hardcoded Secrets (CWE-798): API keys, passwords in code
+- Weak Crypto (CWE-327): MD5, DES usage
+- SSRF (CWE-918): Unvalidated HTTP requests
+- Open Redirect (CWE-601): Unsafe redirect_to
+- CSRF (CWE-352): Missing protect_from_forgery
+
+Rails-Specific Issues:
+- Mass assignment vulnerabilities
+- Strong parameters misuse
+- Unsafe query methods (find_by_sql, where with interpolation)
+- Template injection in ERB
+- Session handling issues
+
+Used by: Scanner.scan_file() when processing .rb files
 """
 
 import re
