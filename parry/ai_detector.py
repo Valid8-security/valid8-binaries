@@ -412,8 +412,8 @@ class HybridDetector:
     
     def _pattern_detect(self, code: str, filepath: str, language: str) -> List[Vulnerability]:
         """Pattern-based detection (baseline)."""
-        # Use existing scanner
-        return []  # Placeholder - actual scanner integration
+        # Use existing scanner for pattern-based detection
+        return self.pattern_scanner.scan_file(filepath, code, language)
     
     def _ai_detect(self, code: str, filepath: str, language: str) -> List[Vulnerability]:
         """AI-based detection (comprehensive)."""

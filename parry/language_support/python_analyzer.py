@@ -173,6 +173,25 @@ class PythonAnalyzer(LanguageAnalyzer, UniversalDetectors):
             # Fallback if framework detection fails
             pass
         
+        # MITRE CWE Top 25 missing critical detections
+        try:
+            from ..detectors.missing_critical_cwes import detect_missing_critical_cwes
+            critical_cwes = detect_missing_critical_cwes(code, 'python', filepath)
+            for cwe_vuln in critical_cwes:
+                vulnerabilities.append(Vulnerability(
+                    cwe=cwe_vuln['cwe'],
+                    severity=cwe_vuln['severity'],
+                    title=cwe_vuln['type'],
+                    description=cwe_vuln['description'],
+                    file_path=filepath,
+                    line_number=cwe_vuln['line'],
+                    code_snippet=cwe_vuln['code'],
+                    confidence='high'
+                ))
+        except Exception as e:
+            # Fallback if missing CWE detector not available
+            pass
+        
         return vulnerabilities
     
     def detect_command_injection(self, code: str, filepath: str) -> List[Vulnerability]:

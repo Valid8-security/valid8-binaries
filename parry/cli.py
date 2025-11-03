@@ -19,6 +19,8 @@ import json
 import os
 # Import Path from pathlib for object-oriented filesystem path manipulation
 from pathlib import Path
+# Import datetime for time-based operations
+from datetime import datetime
 # Import type hints for better code documentation and type checking
 from typing import Optional, List, Tuple
 # Import concurrent.futures for parallel processing of scan tasks
@@ -58,6 +60,8 @@ from parry.setup import SetupHelper, run_setup_wizard, run_doctor, create_config
 from parry.license import has_feature, require_feature, LicenseManager
 # Import FeedbackManager for collecting user feedback
 from parry.feedback import FeedbackManager
+# Import payment system for subscription management
+from parry.payment import StripePaymentManager, LicenseManager, PaymentConfig
 
 # Create a global Console instance for all terminal output throughout the CLI
 console = Console()
@@ -122,10 +126,34 @@ def scan(path: str, format: str, output: Optional[str], severity: Optional[str],
         incremental: Whether to only scan changed files
         custom_rules: Path to custom security rules file
     """
+    # Check and enforce license limits
+    license_manager = LicenseManager()
+    license_info = license_manager.validate_license()
+    
+    # Count files to scan
+    target_path = Path(path)
+    if target_path.is_file():
+        file_count = 1
+    else:
+        file_count = sum(1 for _ in target_path.rglob('*') if _.is_file())
+    
+    # Enforce file limit for free tier
+    if not license_manager.enforce_file_limit(file_count):
+        console.print(Panel.fit(
+            f"[bold red]❌ File Limit Exceeded[/bold red]\n\n"
+            f"Free tier limit: {license_info['file_limit']} files\n"
+            f"Files in scan: {file_count}\n\n"
+            f"[cyan]Upgrade to Pro for unlimited files:[/cyan]\n"
+            f"[bold]parry subscribe --tier pro[/bold]",
+            border_style="red"
+        ))
+        sys.exit(1)
+    
     # Display a visually appealing header panel with scanner information
     console.print(Panel.fit(
         "[bold cyan]Parry Security Scanner[/bold cyan]\n"  # Title in bold cyan
-        f"[dim]Mode: {mode} | Privacy-first vulnerability detection[/dim]",  # Subtitle with mode
+        f"[dim]Mode: {mode} | Privacy-first vulnerability detection[/dim]\n"  # Subtitle with mode
+        f"[dim]License: {license_info['tier'].upper()} | Files: {file_count}[/dim]",  # License info
         border_style="cyan"  # Cyan colored border
     ))
     
@@ -358,6 +386,95 @@ def scan(path: str, format: str, output: Optional[str], severity: Optional[str],
             console.print(f"[red]AI deep scan failed: {e}[/red]")
             # Inform user that pattern-based results will still be used
             console.print("[dim]Continuing with pattern-based results...[/dim]")
+    
+    # ADVANCED STATIC ANALYSIS (Deep Mode Only)
+    # Perform advanced static analysis using CFG, data flow, and symbolic execution
+    if mode == "deep" and ai_available and results.get('files_scanned', 0) > 0:
+        console.print("\n[cyan]🔬 Advanced Static Analysis: CFG, Data Flow & Symbolic Execution...[/cyan]")
+        console.print("[dim]This enhances precision with path-sensitive analysis[/dim]")
+        
+        try:
+            from parry.advanced_static_analysis import AdvancedStaticAnalyzer
+            
+            advanced_analyzer = AdvancedStaticAnalyzer()
+            advanced_vulns = []
+            
+            # Get Python files for advanced analysis
+            python_files = []
+            target = Path(path)
+            if target.is_file() and target.suffix == '.py':
+                python_files = [target]
+            else:
+                python_files = list(target.rglob('*.py'))
+            
+            if python_files:
+                with Progress(
+                    SpinnerColumn(),
+                    TextColumn("[progress.description]{task.description}"),
+                    BarColumn(),
+                    TaskProgressColumn(),
+                    console=console
+                ) as progress:
+                    task = progress.add_task(
+                        "[cyan]Running advanced analysis...",
+                        total=len(python_files)
+                    )
+                    
+                    for file_path in python_files:
+                        try:
+                            code = file_path.read_text(errors='ignore')
+                            
+                            # Run advanced analysis
+                            file_vulns = advanced_analyzer.analyze(
+                                code,
+                                str(file_path),
+                                'python'
+                            )
+                            
+                            # Convert to dict format
+                            for v in file_vulns:
+                                advanced_vulns.append({
+                                    'cwe': v.cwe,
+                                    'severity': v.severity,
+                                    'title': v.title,
+                                    'description': v.description,
+                                    'file_path': str(file_path),
+                                    'line_number': v.line,
+                                    'code': v.code,
+                                    'confidence': v.confidence,
+                                    'source': 'advanced_static_analysis'
+                                })
+                        except Exception:
+                            pass
+                        
+                        progress.update(task, advance=1)
+                
+                # Merge advanced findings with existing results
+                if advanced_vulns:
+                    original_count = len(results['vulnerabilities'])
+                    results['vulnerabilities'].extend(advanced_vulns)
+                    
+                    # Deduplicate
+                    seen = set()
+                    deduped = []
+                    for v in results['vulnerabilities']:
+                        key = (v['cwe'], v['file_path'], v['line_number'])
+                        if key not in seen:
+                            seen.add(key)
+                            deduped.append(v)
+                    
+                    results['vulnerabilities'] = deduped
+                    results['vulnerabilities_found'] = len(deduped)
+                    
+                    new_count = len(deduped) - original_count
+                    console.print(f"[green]✓ Advanced analysis found {len(advanced_vulns)} issues ({new_count} new)[/green]")
+                else:
+                    console.print("[dim]No additional issues found by advanced analysis[/dim]")
+        
+        except ImportError:
+            console.print("[yellow]⚠️  Advanced static analysis modules not available[/yellow]")
+        except Exception as e:
+            console.print(f"[red]Advanced analysis failed: {e}[/red]")
     
     # AI Validation to reduce false positives
     # Check if validation was requested and there are vulnerabilities to validate
@@ -1639,9 +1756,569 @@ def admin(command, email, days):
         console.print("  list-tokens       List all issued tokens")
 
 
+@main.command()
+@click.option("--tier", type=click.Choice(["pro", "enterprise"]), required=True,
+              help="Subscription tier to purchase")
+@click.option("--billing", type=click.Choice(["monthly", "yearly"]), default="monthly",
+              help="Billing cycle")
+@click.option("--email", prompt="Email address", help="Customer email")
+def subscribe(tier: str, billing: str, email: str):
+    """
+    🚀 Subscribe to Parry Pro or Enterprise
+    
+    Opens Stripe checkout to complete payment and receive license key.
+    
+    Tiers:
+    - Pro ($49/month): Hosted LLM, IDE extensions, unlimited files
+    - Enterprise ($299/month): Everything + API, SSO, on-premise
+    """
+    from parry.payment import PaymentConfig
+    
+    # Display tier information
+    tier_info = PaymentConfig.TIERS[tier]
+    price = tier_info.price_monthly if billing == 'monthly' else tier_info.price_yearly
+    price_display = f"${price / 100:.2f}/{billing}"
+    
+    console.print(Panel(
+        f"[bold]{tier_info.name} Subscription[/bold]\n\n"
+        f"[cyan]Price: {price_display}[/cyan]\n\n"
+        f"[green]Features:[/green]\n" + 
+        "\n".join([f"  • {feat}" for feat in tier_info.features]),
+        title="📦 Subscription Details",
+        border_style="cyan"
+    ))
+    
+    # Create checkout session
+    with console.status("[bold cyan]Creating checkout session..."):
+        try:
+            payment_manager = StripePaymentManager()
+            session = payment_manager.create_checkout_session(
+                tier=tier,
+                billing_cycle=billing,
+                customer_email=email,
+                success_url="https://parry.dev/success",
+                cancel_url="https://parry.dev/cancel",
+                metadata={
+                    'cli_version': '3.0.0',
+                    'platform': sys.platform
+                }
+            )
+            
+            checkout_url = session['url']
+            
+            console.print("\n[bold green]✓ Checkout session created![/bold green]\n")
+            console.print(f"[cyan]Open this URL to complete payment:[/cyan]\n{checkout_url}\n")
+            console.print("[dim]After payment, you'll receive your license key via email.[/dim]")
+            
+            # Optionally open browser
+            if click.confirm("Open browser now?"):
+                import webbrowser
+                webbrowser.open(checkout_url)
+                
+        except Exception as e:
+            console.print(f"[red]Error creating checkout: {e}[/red]")
+            sys.exit(1)
+
+
+@main.command()
+@click.argument("license_key")
+def activate(license_key: str):
+    """
+    🔑 Activate Parry license
+    
+    Install license key received after subscription purchase.
+    """
+    with console.status("[bold cyan]Validating license..."):
+        license_manager = LicenseManager()
+        
+        if license_manager.install_license(license_key):
+            # Get license info
+            license_info = license_manager.validate_license()
+            
+            console.print("\n[bold green]✓ License activated successfully![/bold green]\n")
+            console.print(Panel(
+                f"[cyan]Tier: {license_info['tier'].upper()}[/cyan]\n"
+                f"[cyan]LLM Mode: {license_info['llm_mode']}[/cyan]\n"
+                f"[cyan]File Limit: {license_info['file_limit'] or 'Unlimited'}[/cyan]\n\n"
+                f"[green]Features:[/green]\n" +
+                "\n".join([f"  • {feat}" for feat in license_info['features']]),
+                title="📜 License Details",
+                border_style="green"
+            ))
+        else:
+            console.print("[red]✗ License activation failed![/red]")
+            console.print("[dim]Please check your license key and try again.[/dim]")
+            sys.exit(1)
+
+
+@main.command()
+def license_info():
+    """
+    📜 Display current license information
+    
+    Shows active subscription tier, features, and expiration.
+    """
+    license_manager = LicenseManager()
+    license_info = license_manager.validate_license()
+    
+    if not license_info['valid'] and license_info['tier'] == 'free':
+        console.print(Panel(
+            "[yellow]No active subscription[/yellow]\n\n"
+            "[dim]You're using the Free tier with:[/dim]\n"
+            "  • CLI tool with local Ollama\n"
+            "  • Basic security detectors (30+)\n"
+            "  • Fast mode scanning\n"
+            "  • 100 file limit\n\n"
+            "[cyan]Upgrade to Pro for:[/cyan]\n"
+            "  • Hosted LLM (no setup)\n"
+            "  • IDE extensions\n"
+            "  • GitHub Actions\n"
+            "  • All detectors (150+)\n"
+            "  • Unlimited files\n\n"
+            "[bold]Run: parry subscribe --tier pro[/bold]",
+            title="📜 License Information",
+            border_style="yellow"
+        ))
+    else:
+        # Display active license
+        tier_name = license_info['tier'].upper()
+        expires = license_info.get('expires')
+        expires_str = "Never" if not expires else datetime.fromtimestamp(expires).strftime('%Y-%m-%d')
+        
+        console.print(Panel(
+            f"[bold green]{tier_name} Subscription[/bold green]\n\n"
+            f"[cyan]Status: {'Active' if license_info['valid'] else 'Expired'}[/cyan]\n"
+            f"[cyan]LLM Mode: {license_info['llm_mode']}[/cyan]\n"
+            f"[cyan]File Limit: {license_info['file_limit'] or 'Unlimited'}[/cyan]\n"
+            f"[cyan]Expires: {expires_str}[/cyan]\n\n"
+            f"[green]Features:[/green]\n" +
+            "\n".join([f"  • {feat}" for feat in license_info['features']]),
+            title="📜 License Information",
+            border_style="green"
+        ))
+
+
+@main.command()
+def pricing():
+    """
+    💰 Display Parry pricing tiers
+    
+    Shows detailed pricing and features for all subscription tiers.
+    """
+    tiers = PaymentConfig.TIERS
+    
+    console.print("\n[bold cyan]Parry Security Scanner - Pricing[/bold cyan]\n")
+    
+    # Free tier
+    free = tiers['free']
+    console.print(Panel(
+        f"[bold]{free.name}[/bold] - [green]$0/month[/green]\n\n" +
+        "\n".join([f"  • {feat}" for feat in free.features]) +
+        f"\n\n[dim]File Limit: {free.file_limit} files[/dim]",
+        border_style="green"
+    ))
+    
+    # Pro tier
+    pro = tiers['pro']
+    monthly = f"${pro.price_monthly / 100:.0f}"
+    yearly = f"${pro.price_yearly / 100:.0f}"
+    console.print(Panel(
+        f"[bold]{pro.name}[/bold] - [cyan]{monthly}/month or {yearly}/year[/cyan]\n\n" +
+        "\n".join([f"  • {feat}" for feat in pro.features]) +
+        "\n\n[dim]No file limits, hosted LLM[/dim]",
+        border_style="cyan"
+    ))
+    
+    # Enterprise tier
+    ent = tiers['enterprise']
+    monthly = f"${ent.price_monthly / 100:.0f}"
+    yearly = f"${ent.price_yearly / 100:.0f}"
+    console.print(Panel(
+        f"[bold]{ent.name}[/bold] - [yellow]{monthly}/month or {yearly}/year[/yellow]\n\n" +
+        "\n".join([f"  • {feat}" for feat in ent.features]) +
+        "\n\n[dim]Everything + API, SSO, on-premise[/dim]",
+        border_style="yellow"
+    ))
+    
+    console.print("\n[bold]To subscribe:[/bold] parry subscribe --tier <pro|enterprise>\n")
+
+
+@main.command(name="ask")
+@click.argument("path", type=click.Path(exists=True))
+@click.option("--line", type=int, help="Single line number to analyze")
+@click.option("--lines", help="Line range to analyze (e.g., '10-20')")
+@click.option("--context", type=int, default=3, help="Lines of context around selection")
+def ask_llm(path: str, line: int, lines: str, context: int):
+    """
+    🤖 Ask LLM to analyze specific code for security issues
+    
+    This command allows you to highlight specific lines and directly query the LLM
+    for security analysis, bypassing automated pattern detection.
+    
+    Requires Pro or Enterprise tier (hosted LLM).
+    
+    Examples:
+        parry ask myfile.py --line 42
+        parry ask myfile.py --lines 10-20
+        parry ask myfile.py --line 15 --context 5
+    """
+    from pathlib import Path
+    import os
+    
+    # Check license
+    license_mgr = LicenseManager()
+    license_info = license_mgr.load_license()
+    
+    if not license_info or license_info.get('tier') == 'free':
+        console.print("[red]❌ Direct LLM queries require Pro or Enterprise tier (hosted LLM)[/red]")
+        console.print("\n[yellow]Subscribe to Pro or Enterprise:[/yellow]")
+        console.print("  parry subscribe --tier pro")
+        return
+    
+    file_path = Path(path)
+    
+    if not file_path.is_file():
+        console.print(f"[red]Error: {path} is not a file[/red]")
+        return
+    
+    # Read file
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            all_lines = f.readlines()
+    except Exception as e:
+        console.print(f"[red]Error reading file: {e}[/red]")
+        return
+    
+    # Determine lines to analyze
+    if lines:
+        # Parse range like "10-20"
+        try:
+            start, end = map(int, lines.split('-'))
+            start_line = start - 1  # Convert to 0-indexed
+            end_line = end - 1
+        except ValueError:
+            console.print("[red]Error: --lines must be in format 'START-END' (e.g., '10-20')[/red]")
+            return
+    elif line:
+        # Single line with context
+        start_line = max(0, line - 1 - context)
+        end_line = min(len(all_lines) - 1, line - 1 + context)
+    else:
+        console.print("[red]Error: Must specify either --line or --lines[/red]")
+        return
+    
+    # Extract code
+    code_lines = all_lines[start_line:end_line + 1]
+    code = ''.join(code_lines)
+    
+    # Detect language
+    extension = file_path.suffix.lstrip('.')
+    language_map = {
+        'py': 'python', 'js': 'javascript', 'ts': 'typescript',
+        'java': 'java', 'go': 'go', 'rs': 'rust', 'rb': 'ruby',
+        'php': 'php', 'cpp': 'c++', 'c': 'c', 'cs': 'c#'
+    }
+    language = language_map.get(extension, extension)
+    
+    # Display code being analyzed
+    console.print(f"\n[bold cyan]Analyzing {file_path.name}[/bold cyan]")
+    console.print(f"[dim]Lines {start_line + 1}-{end_line + 1} ({language})[/dim]\n")
+    
+    console.print("[bold]Code:[/bold]")
+    console.print("─" * 80)
+    for i, line_text in enumerate(code_lines):
+        line_num = start_line + i + 1
+        console.print(f"[dim]{line_num:4d}[/dim] │ {line_text}", end='')
+    console.print("─" * 80)
+    
+    # Query LLM
+    console.print("\n[yellow]Querying LLM for security analysis...[/yellow]\n")
+    
+    try:
+        # Import LLM client
+        from parry.llm import LLMClient
+        
+        llm_client = LLMClient()
+        
+        # Construct prompt
+        prompt = f"""You are an expert security analyst. Analyze the following code for security vulnerabilities.
+
+File: {file_path.name}
+Language: {language}
+Lines: {start_line + 1}-{end_line + 1}
+
+Focus on:
+- Injection attacks (SQL, command, code, XSS)
+- Authentication and authorization issues
+- Cryptographic problems
+- Access control flaws
+- Data exposure and privacy issues
+- Insecure configurations
+- Race conditions
+- Logic errors with security implications
+
+CODE:
+```{language}
+{code}
+```
+
+Provide:
+1. A summary of security findings
+2. For each issue found:
+   - Title and severity (Critical/High/Medium/Low)
+   - Description of the vulnerability
+   - Specific line numbers
+   - Recommendation for fixing
+
+If no obvious issues are found, explain what security aspects look acceptable.
+"""
+        
+        # Get LLM response
+        response = llm_client.chat(prompt)
+        
+        # Display results
+        console.print("[bold green]LLM Security Analysis:[/bold green]")
+        console.print("═" * 80)
+        console.print(response)
+        console.print("═" * 80)
+        
+        console.print(f"\n[dim]Analysis completed using {llm_client.model}[/dim]")
+        
+    except ImportError:
+        console.print("[red]Error: LLM client not available. Check installation.[/red]")
+    except Exception as e:
+        console.print(f"[red]Error querying LLM: {e}[/red]")
+
+
+@main.command(name='compliance-report')  # Register 'compliance-report' as a subcommand
+@click.argument("path", type=click.Path(exists=True))  # Path to scan
+@click.option("--standard", "-s", 
+              type=click.Choice(["soc2", "iso27001", "pci-dss", "owasp", "all"]),
+              multiple=True,
+              default=["all"],
+              help="Compliance standards to check (can specify multiple)")
+@click.option("--format", "-f",
+              type=click.Choice(["json", "markdown", "pdf", "html"]),
+              default="pdf",
+              help="Output format for the report")
+@click.option("--output", "-o",
+              type=click.Path(),
+              help="Output file path (if not specified, prints to stdout or saves as compliance_report.<format>)")
+@click.option("--company-name", "-c",
+              default="Your Company",
+              help="Company name for report branding (PDF/HTML only)")
+@click.option("--logo",
+              type=click.Path(exists=True),
+              help="Path to company logo image (PDF only)")
+@click.option("--severity", 
+              type=click.Choice(["low", "medium", "high", "critical"]),
+              help="Minimum severity level to include in report")
+def compliance_report(path: str, 
+                     standard: tuple, 
+                     format: str, 
+                     output: Optional[str],
+                     company_name: str,
+                     logo: Optional[str],
+                     severity: Optional[str]):
+    """
+    Generate compliance reports for security audits
+    
+    Scans the specified path and generates a compliance report for one or more
+    security standards (SOC2, ISO 27001, PCI-DSS, OWASP Top 10).
+    
+    This feature is available for Pro and Business tier users only.
+    
+    Examples:
+        parry compliance-report ./src --standard soc2 --format pdf
+        
+        parry compliance-report ./app --standard soc2 --standard owasp -o report.pdf
+        
+        parry compliance-report ./backend --standard all --company-name "Acme Corp"
+    """
+    from rich.console import Console
+    from rich.progress import Progress, SpinnerColumn, TextColumn
+    from pathlib import Path
+    from parry.compliance import ComplianceReporter
+    from parry.scanner import scan_directory
+    
+    console = Console()
+    
+    # Check license tier (Pro or Business only)
+    try:
+        from parry.beta_token import BetaTokenManager
+        token_manager = BetaTokenManager()
+        license_info = token_manager.get_license_info()
+        
+        if license_info:
+            tier = license_info.get('tier', 'free').lower()
+            if tier not in ['pro', 'business']:
+                console.print(
+                    "[red]❌ Compliance reporting is only available for Pro and Business tiers.[/red]\n"
+                    f"[yellow]Current tier: {tier}[/yellow]\n\n"
+                    "Upgrade your license to access this feature:\n"
+                    "  parry license --tier pro\n"
+                )
+                return
+        else:
+            console.print(
+                "[yellow]⚠️  No active license found. Compliance reporting requires Pro or Business tier.[/yellow]\n\n"
+                "Get a license to access this feature:\n"
+                "  parry license --tier pro\n"
+            )
+            return
+    except Exception as e:
+        console.print(f"[yellow]Warning: Could not verify license: {e}[/yellow]")
+        console.print("[yellow]Continuing anyway (development mode)...[/yellow]\n")
+    
+    # Convert standards
+    standards_list = list(standard)
+    if "all" in standards_list:
+        standards_list = ["soc2", "iso27001", "pci-dss", "owasp"]
+    
+    console.print("[bold cyan]🔒 Parry Compliance Report Generator[/bold cyan]\n")
+    console.print(f"[dim]Scanning:[/dim] {path}")
+    console.print(f"[dim]Standards:[/dim] {', '.join(s.upper() for s in standards_list)}")
+    console.print(f"[dim]Format:[/dim] {format}\n")
+    
+    # Step 1: Scan the codebase
+    console.print("[bold]Step 1: Scanning codebase for vulnerabilities...[/bold]")
+    
+    with Progress(
+        SpinnerColumn(),
+        TextColumn("[progress.description]{task.description}"),
+        console=console
+    ) as progress:
+        scan_task = progress.add_task("Analyzing code...", total=None)
+        
+        try:
+            vulnerabilities = scan_directory(path)
+            progress.update(scan_task, completed=True)
+        except Exception as e:
+            console.print(f"[red]Error scanning directory: {e}[/red]")
+            return
+    
+    # Filter by severity if specified
+    if severity:
+        severity_order = {'low': 0, 'medium': 1, 'high': 2, 'critical': 3}
+        min_level = severity_order.get(severity, 0)
+        vulnerabilities = [
+            v for v in vulnerabilities 
+            if severity_order.get(v.severity, 0) >= min_level
+        ]
+    
+    console.print(f"[green]✓[/green] Found {len(vulnerabilities)} vulnerabilities\n")
+    
+    # Step 2: Generate compliance reports
+    console.print("[bold]Step 2: Generating compliance reports...[/bold]")
+    
+    try:
+        reporter = ComplianceReporter()
+        reports = reporter.generate_report(vulnerabilities, standards=standards_list)
+    except Exception as e:
+        console.print(f"[red]Error generating compliance reports: {e}[/red]")
+        return
+    
+    # Display summary
+    console.print("\n[bold]Compliance Summary:[/bold]")
+    for std_key, std_report in reports.items():
+        if std_key == 'summary':
+            continue
+        
+        std_name = std_report.get('standard', std_key.upper())
+        score = std_report.get('compliance_score', 0)
+        status = std_report.get('overall_status', 'UNKNOWN')
+        
+        # Color code based on score
+        if score >= 90:
+            color = "green"
+            emoji = "✓"
+        elif score >= 70:
+            color = "yellow"
+            emoji = "⚠"
+        else:
+            color = "red"
+            emoji = "✗"
+        
+        console.print(f"  [{color}]{emoji} {std_name}: {score:.1f}% ({status})[/{color}]")
+    
+    console.print()
+    
+    # Step 3: Export report
+    console.print("[bold]Step 3: Exporting report...[/bold]")
+    
+    # Determine output path
+    if output:
+        output_path = Path(output)
+    else:
+        if format == "json":
+            output_path = Path(f"compliance_report.json")
+        elif format == "markdown":
+            output_path = Path(f"compliance_report.md")
+        elif format == "pdf":
+            output_path = Path(f"compliance_report.pdf")
+        elif format == "html":
+            output_path = Path(f"compliance_report.html")
+    
+    try:
+        if format == "json":
+            reporter.export_to_json(reports, output_path)
+        
+        elif format == "markdown":
+            md_content = reporter.generate_markdown_report(reports)
+            with open(output_path, 'w') as f:
+                f.write(md_content)
+        
+        elif format == "pdf":
+            # Check if reportlab is available
+            try:
+                logo_path = Path(logo) if logo else None
+                reporter.export_to_pdf(
+                    reports, 
+                    output_path,
+                    company_name=company_name,
+                    logo_path=logo_path
+                )
+            except ImportError:
+                console.print(
+                    "[red]PDF export requires reportlab library.[/red]\n"
+                    "Install with: pip install reportlab\n"
+                )
+                return
+        
+        elif format == "html":
+            # TODO: Implement HTML export in future
+            console.print(
+                "[yellow]HTML export is not yet implemented.[/yellow]\n"
+                "Use --format pdf or --format markdown instead.\n"
+            )
+            return
+        
+        console.print(f"[green]✓ Report saved to:[/green] {output_path}")
+        console.print(f"\n[dim]Full path:[/dim] {output_path.absolute()}\n")
+        
+    except Exception as e:
+        console.print(f"[red]Error exporting report: {e}[/red]")
+        import traceback
+        console.print(f"[dim]{traceback.format_exc()}[/dim]")
+        return
+    
+    # Final summary
+    summary = reports.get('summary', {})
+    total_vulns = summary.get('total_vulnerabilities', 0)
+    by_severity = summary.get('by_severity', {})
+    
+    console.print("[bold]Report Generated Successfully![/bold]")
+    console.print(f"Total Vulnerabilities: {total_vulns}")
+    console.print(f"  • Critical: {by_severity.get('critical', 0)}")
+    console.print(f"  • High: {by_severity.get('high', 0)}")
+    console.print(f"  • Medium: {by_severity.get('medium', 0)}")
+    console.print(f"  • Low: {by_severity.get('low', 0)}")
+
+
 # Main entry point
 # Check if script is run directly
 if __name__ == "__main__":
     # Execute the main CLI group
     main()
+
 

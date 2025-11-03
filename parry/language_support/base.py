@@ -41,6 +41,14 @@ from abc import ABC, abstractmethod
 from typing import List, Dict, Any
 from dataclasses import dataclass
 
+# Import missing critical CWE detector
+try:
+    from ..detectors.missing_critical_cwes import detect_missing_critical_cwes
+except ImportError:
+    # Fallback if detectors module not yet available
+    def detect_missing_critical_cwes(code: str, language: str, filepath: str):
+        return []
+
 
 @dataclass
 class Vulnerability:
