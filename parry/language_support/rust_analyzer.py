@@ -53,6 +53,11 @@ class RustAnalyzer(LanguageAnalyzer, UniversalDetectors):
         vulnerabilities.extend(self.detect_improper_authentication(code, filepath))
         vulnerabilities.extend(self.detect_csrf(code, filepath))
         vulnerabilities.extend(self.detect_incorrect_permissions(code, filepath))
+        vulnerabilities.extend(self.detect_graphql_security(code, filepath))
+        vulnerabilities.extend(self.detect_jwt_security(code, filepath))
+        vulnerabilities.extend(self.detect_nosql_injection(code, filepath))
+        vulnerabilities.extend(self.detect_ssti(code, filepath))
+        vulnerabilities.extend(self.detect_redos(code, filepath))
         
         return vulnerabilities
     

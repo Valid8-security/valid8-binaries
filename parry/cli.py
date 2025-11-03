@@ -6,6 +6,7 @@ Parry CLI - Command-line interface for security scanning
 import click
 import sys
 import json
+import os
 from pathlib import Path
 from typing import Optional
 from rich.console import Console
@@ -25,6 +26,7 @@ from parry.cache import ProjectCache, ScanCache
 from parry.api import start_api_server
 from parry.setup import SetupHelper, run_setup_wizard, run_doctor, create_config
 from parry.license import has_feature, require_feature, LicenseManager
+from parry.feedback import FeedbackManager
 
 console = Console()
 
@@ -568,12 +570,60 @@ def config():
 
 
 @main.command()
-def license():
+@click.option("--install", help="Install a license (beta/pro/enterprise)")
+@click.option("--email", help="Email for beta license (deprecated, use --token)")
+@click.option("--token", help="Beta token for secure installation")
+def license(install, email, token):
     """
     Manage your Parry license.
     
     Shows current license information, tier, and available features.
+    
+    Install beta license:
+        parry license --install beta --token YOUR_BETA_TOKEN
+    
+    Old method (insecure, deprecated):
+        parry license --install beta --email user@example.com
     """
+    if install:
+        if install == 'beta':
+            # New secure method (preferred)
+            if token:
+                if LicenseManager.install_beta_license_with_token(token):
+                    console.print("[green]✓[/green] Beta license installed successfully!")
+                    console.print("[dim]Beta access expires in 90 days[/dim]")
+                    console.print("\n[bold cyan]Thank you for beta testing Parry![/bold cyan]")
+                else:
+                    console.print("[red]✗ Failed to install beta license[/red]")
+                    console.print("[yellow]Token may be invalid, expired, or already used[/yellow]")
+                return
+            
+            # Old insecure method (deprecated)
+            if email:
+                console.print("[yellow]⚠️  WARNING: Insecure beta installation[/yellow]")
+                console.print("[dim]This method is deprecated. Use --token instead.[/dim]")
+                console.print("[dim]Get a beta token from: https://parry.dev/beta[/dim]\n")
+                
+                if LicenseManager.install_beta_license(email):
+                    console.print("[green]✓[/green] Beta license installed (insecure mode)")
+                    console.print("[dim]Beta access expires in 90 days[/dim]")
+                else:
+                    console.print("[red]✗ Failed to install beta license[/red]")
+                return
+            
+            # Neither token nor email provided
+            console.print("[red]Error: Beta token required for secure installation[/red]")
+            console.print("\n[yellow]Get a beta token:[/yellow]")
+            console.print("[cyan]  1. Visit https://parry.dev/beta[/cyan]")
+            console.print("[cyan]  2. Request beta access[/cyan]")
+            console.print("[cyan]  3. Install with: parry license --install beta --token YOUR_TOKEN[/cyan]")
+            return
+        
+        else:
+            console.print(f"[red]License type '{install}' requires a license key[/red]")
+            console.print("Visit https://parry.dev to purchase a license")
+        return
+    
     info = LicenseManager.get_license_info()
     
     # Display license information
@@ -589,6 +639,8 @@ def license():
     tier_display = info['tier'].upper()
     if info['tier'] == 'free':
         tier_style = "green"
+    elif info['tier'] == 'beta':
+        tier_style = "yellow"
     elif info['tier'] in ['pro', 'enterprise']:
         tier_style = "yellow"
     else:
@@ -598,6 +650,27 @@ def license():
     table.add_row("Build ID", info['build_id'])
     table.add_row("Machine ID", info['machine_id'])
     table.add_row("Validation Cached", "Yes" if info['validation_cached'] else "No")
+    
+    # Load additional info from license file
+    try:
+        from parry.license import LicenseConfig
+        if LicenseConfig.LICENSE_FILE.exists():
+            import json
+            with open(LicenseConfig.LICENSE_FILE, 'r') as f:
+                license_data = json.load(f)
+                if 'expires' in license_data:
+                    from datetime import datetime
+                    try:
+                        expires = datetime.fromisoformat(license_data['expires'])
+                        days_left = (expires - datetime.now()).days
+                        if days_left > 0:
+                            table.add_row("Expires", f"In {days_left} days")
+                        else:
+                            table.add_row("Expires", "[red]Expired[/red]")
+                    except:
+                        pass
+    except:
+        pass
     
     # Add features
     features = info['features']
@@ -614,12 +687,300 @@ def license():
     
     # Display upgrade prompt if free tier
     if info['tier'] == 'free':
-        console.print("\n[yellow]💡 Upgrade to unlock:[/yellow]")
-        console.print("  • Deep mode (75% recall)")
+        console.print("\n[yellow]💡 Get Beta Access (Free for 90 days):[/yellow]")
+        console.print("  • Deep mode (90% recall)")
         console.print("  • AI validation (reduce false positives)")
         console.print("  • Compliance reports")
         console.print("  • SCA scanning")
-        console.print(f"\n[cyan]Visit https://parry.dev/pricing to upgrade[/cyan]")
+        console.print(f"\n[cyan]Run: parry license --install beta --email your@email.com[/cyan]")
+        console.print(f"[dim]or visit https://parry.dev to upgrade[/dim]")
+    
+    # Display beta expiration notice
+    elif info['tier'] == 'beta':
+        console.print("\n[yellow]📅 Beta Access[/yellow]")
+        console.print("  • You have access to all Pro features for 90 days")
+        console.print("  • Provide feedback to extend your beta access")
+        console.print("\n[cyan]Questions? Email: beta@parry.ai[/cyan]")
+
+
+@main.command()
+@click.option("--feedback", "-f", help="Feedback for renewal request")
+def renew(feedback):
+    """
+    Request beta license renewal.
+    
+    Provide detailed feedback about your experience to extend your beta access.
+    """
+    from datetime import datetime, timedelta
+    from parry.license import LicenseConfig
+    import json
+    
+    # Check if user has beta license
+    tier = LicenseManager.get_tier()
+    if tier != 'beta':
+        console.print("[red]Renewal only available for beta licenses[/red]")
+        console.print(f"Current tier: {tier}")
+        return
+    
+    # Get current license
+    if not LicenseConfig.LICENSE_FILE.exists():
+        console.print("[red]No license found[/red]")
+        return
+    
+    try:
+        with open(LicenseConfig.LICENSE_FILE, 'r') as f:
+            license_data = json.load(f)
+        
+        # Check expiration
+        expires = datetime.fromisoformat(license_data.get('expires', ''))
+        days_left = (expires - datetime.now()).days
+        
+        # Can only renew within 30 days of expiration
+        if days_left > 30:
+            console.print(f"[yellow]Your beta license is valid for {days_left} more days[/yellow]")
+            console.print("[dim]You can request renewal within 30 days of expiration[/dim]")
+            return
+        
+        # Get feedback
+        if not feedback:
+            console.print("\n[yellow]Please provide feedback to support your renewal request:[/yellow]")
+            console.print("[dim]Tell us about your experience using Parry[/dim]")
+            console.print("  • What vulnerabilities did you find?\n  • Any bugs or issues?\n  • What features do you like most?\n  • Suggestions for improvement?\n")
+            
+            feedback_lines = []
+            while True:
+                line = input("> ")
+                if not line or line.lower() == 'done':
+                    break
+                feedback_lines.append(line)
+            
+            feedback = '\n'.join(feedback_lines)
+        
+        if not feedback or len(feedback.strip()) < 20:
+            console.print("[red]Feedback must be at least 20 characters[/red]")
+            return
+        
+        # Submit renewal request
+        manager = FeedbackManager()
+        result = manager.submit_renewal_request(
+            email=license_data.get('email', 'unknown'),
+            feedback=feedback,
+            metadata={'days_left': days_left}
+        )
+        
+        # Display results
+        console.print("\n[green]✓ Renewal request submitted![/green]")
+        console.print("[dim]We'll review your feedback within 24 hours[/dim]")
+        
+        if result.get('github_issue'):
+            console.print(f"\n[yellow]View request: {result['github_issue']}[/yellow]")
+        else:
+            console.print("\n[yellow]📧 Email your feedback to: beta@parry.ai[/yellow]")
+            console.print("[dim]Your renewal request has been logged for review[/dim]")
+        
+        # Save confirmation
+        submission_id = result.get('submission_id')
+        if submission_id:
+            console.print(f"\n[dim]Submission ID: {submission_id}[/dim]")
+        
+    except Exception as e:
+        console.print(f"[red]Error: {e}[/red]")
+
+
+@main.command()
+@click.argument("message")
+@click.option("--type", "-t", type=click.Choice(["bug", "feature", "general"]), 
+              default="general", help="Type of feedback")
+@click.option("--email", help="Your email (optional)")
+def feedback(message, type, email):
+    """
+    Submit feedback (bugs, features, suggestions).
+    
+    Examples:
+        parry feedback "Found a false positive in SQL detection" --type bug
+        parry feedback "Would love to see Go support" --type feature
+        parry feedback "Great tool!" --type general
+    """
+    from parry.feedback import submit_beta_feedback
+    
+    # Get email from license if not provided
+    if not email:
+        try:
+            from parry.license import LicenseConfig
+            if LicenseConfig.LICENSE_FILE.exists():
+                with open(LicenseConfig.LICENSE_FILE, 'r') as f:
+                    license_data = json.load(f)
+                    email = license_data.get('email', 'anonymous')
+        except:
+            email = 'anonymous'
+    
+    # Submit feedback
+    result = submit_beta_feedback(email, message, type)
+    
+    if result.get('success'):
+        console.print(f"[green]✓ Feedback submitted![/green]")
+        console.print(f"[dim]Type: {type}[/dim]")
+        
+        if result.get('github_issue'):
+            console.print(f"\n[yellow]View: {result['github_issue']}[/yellow]")
+        else:
+            console.print("\n[dim]Thank you for helping improve Parry![/dim]")
+    else:
+        console.print("[red]Failed to submit feedback[/red]")
+
+
+@main.command()
+@click.option("--source", type=click.Choice(["local", "github", "all"]), 
+              default="local", help="Feedback source to view")
+def list_feedback(source):
+    """
+    List pending feedback and renewal requests (admin view).
+    
+    Shows all pending submissions for review.
+    
+    Sources:
+        local   - Local files on this machine only
+        github  - GitHub Issues from all users (optional, requires repo access)
+        all     - Both local and GitHub
+    """
+    from parry.feedback import FeedbackManager
+    
+    manager = FeedbackManager()
+    all_renewals = []
+    
+    # Get local feedback
+    if source in ["local", "all"]:
+        local_renewals = manager.get_pending_renewals()
+        all_renewals.extend(local_renewals)
+    
+    # Get GitHub feedback if requested and available
+    if source in ["github", "all"]:
+        try:
+            github_renewals = manager.get_renewals_from_github()
+            all_renewals.extend(github_renewals)
+        except Exception as e:
+            if source == "github":
+                console.print("[yellow]GitHub integration not available[/yellow]")
+                console.print(f"[dim]Error: {e}[/dim]")
+                console.print("\n[dim]To enable GitHub integration:[/dim]")
+                console.print("[cyan]  export GITHUB_TOKEN=your_token_here[/cyan]")
+                return
+            # If "all", just show local
+    
+    if not all_renewals:
+        console.print("[dim]No pending renewal requests[/dim]")
+        
+        if source == "local":
+            console.print("\n[yellow]💡 Tip: [/yellow]")
+            console.print("Users submit via 'parry renew' or 'parry feedback'")
+            console.print("Feedback is stored locally on each user's machine")
+            
+            console.print("\n[yellow]📧 Admin Access:[/yellow]")
+            console.print("[cyan]  Check email: beta@parry.ai[/cyan]")
+            console.print("[dim]  Users should email their feedback/renewal requests[/dim]")
+        
+        return
+    
+    console.print(f"\n[bold]Pending Renewal Requests: {len(all_renewals)}[/bold]")
+    
+    if source == "all":
+        local_count = len(manager.get_pending_renewals())
+        console.print(f"[dim]({local_count} local, {len(all_renewals) - local_count} from GitHub)[/dim]")
+    
+    console.print()
+    
+    table = Table()
+    table.add_column("#", style="cyan")
+    table.add_column("Email", style="white")
+    table.add_column("Days Left", style="yellow")
+    table.add_column("Source", style="dim")
+    table.add_column("Feedback Preview", style="dim")
+    
+    for i, renewal in enumerate(all_renewals, 1):
+        email = renewal.get('email', 'unknown')
+        feedback_text = renewal.get('feedback', '')[:60]
+        days_left = renewal.get('metadata', {}).get('days_left', 'unknown')
+        renewals_source = renewal.get('source', 'local')
+        
+        table.add_row(str(i), email, str(days_left), renewals_source, feedback_text)
+    
+    console.print(table)
+    
+    # Show renewal instructions
+    console.print("\n[yellow]📝 To extend a license:[/yellow]")
+    console.print("[dim]  1. Review feedback quality[/dim]")
+    console.print("[dim]  2. Check usage metrics[/dim]")
+    console.print("[cyan]  3. Generate token: parry admin generate-token --email user@example.com[/cyan]")
+
+
+@main.command()
+@click.argument("command")
+@click.option("--email", help="Email for token generation")
+@click.option("--days", type=int, default=90, help="Days until expiration (default: 90)")
+def admin(command, email, days):
+    """
+    Admin commands for managing beta licenses.
+    
+    Commands:
+        generate-token    Generate a beta token for a user
+        list-tokens       List all issued tokens
+    
+    Examples:
+        parry admin generate-token --email user@example.com
+        parry admin generate-token --email user@example.com --days 60
+        parry admin list-tokens
+    """
+    if command == 'generate-token':
+        if not email:
+            console.print("[red]Error: Email required[/red]")
+            console.print("Usage: parry admin generate-token --email user@example.com")
+            return
+        
+        from parry.beta_token import BetaTokenManager
+        
+        console.print(f"\n[bold]Generating beta token for:[/bold] [cyan]{email}[/cyan]")
+        console.print(f"[dim]Duration: {days} days[/dim]\n")
+        
+        token = BetaTokenManager.generate_token(email=email, days=days)
+        
+        console.print("[green]✓ Beta token generated![/green]\n")
+        console.print(f"[bold]Token:[/bold]")
+        console.print(f"[cyan]{token}[/cyan]\n")
+        console.print("[yellow]⚠️  SEND THIS TOKEN TO USER SECURELY[/yellow]")
+        console.print("[dim]User installs with: parry license --install beta --token {token}[/dim]")
+    
+    elif command == 'list-tokens':
+        from parry.beta_token import BetaTokenManager
+        
+        tokens = BetaTokenManager.list_issued_tokens()
+        
+        if not tokens:
+            console.print("[dim]No tokens issued yet[/dim]")
+            return
+        
+        console.print(f"\n[bold]Issued Beta Tokens: {len(tokens)}[/bold]\n")
+        
+        table = Table()
+        table.add_column("Email", style="white")
+        table.add_column("Issued", style="dim")
+        table.add_column("Expires", style="dim")
+        table.add_column("Issued By", style="dim")
+        
+        for token_hash, token_data in tokens.items():
+            table.add_row(
+                token_data.get('email', 'unknown'),
+                token_data.get('issued', 'unknown'),
+                token_data.get('expires', 'unknown'),
+                token_data.get('issued_by', 'unknown')
+            )
+        
+        console.print(table)
+    
+    else:
+        console.print(f"[red]Unknown admin command: {command}[/red]")
+        console.print("\nAvailable commands:")
+        console.print("  generate-token    Generate a beta token")
+        console.print("  list-tokens       List all issued tokens")
 
 
 if __name__ == "__main__":

@@ -60,7 +60,8 @@ class LicenseConfig:
         'standard-formats'
     ]
     
-    PRO_FEATURES = [
+    # Beta tier has all Pro features unlocked
+    BETA_FEATURES = [
         'deep-mode',
         'ai-detection',
         'ai-validation',
@@ -71,6 +72,8 @@ class LicenseConfig:
         'unlimited-files',
         'multi-language'
     ]
+    
+    PRO_FEATURES = BETA_FEATURES.copy()  # Same features as beta
     
     ENTERPRISE_FEATURES = [
         'rest-api',
@@ -84,6 +87,9 @@ class LicenseConfig:
         'container-scanning',
         'iac-scanning'
     ]
+    
+    # Beta license configuration
+    BETA_DURATION_DAYS = 60  # 60-day beta period (optimized for Winter Quarter revenue timeline)
 
 
 class MachineFingerprint:
@@ -413,7 +419,25 @@ class LicenseManager:
         try:
             with open(LicenseConfig.LICENSE_FILE, 'r') as f:
                 data = json.load(f)
-            return data.get('tier', 'free')
+            tier = data.get('tier', 'free')
+            
+            # Check if beta license has expired
+            if tier == 'beta':
+                expires_str = data.get('expires')
+                if expires_str:
+                    try:
+                        from datetime import datetime
+                        expires = datetime.fromisoformat(expires_str)
+                        if datetime.now() > expires:
+                            # Beta expired, show message but allow
+                            print("[yellow]⚠️  Beta license expired. Continuing anyway.[/yellow]")
+                            print("[dim]Visit https://parry.dev to get Pro or continue with Free tier[/dim]")
+                            # Return 'beta' anyway to be lenient
+                            return 'beta'
+                    except:
+                        pass
+            
+            return tier
         except:
             return 'free'
     
@@ -439,6 +463,10 @@ class LicenseManager:
         # Free tier features
         if tier == 'free':
             return feature in LicenseConfig.FREE_FEATURES
+        
+        # Beta tier features (same as Pro, lenient enforcement)
+        if tier == 'beta':
+            return feature in LicenseConfig.BETA_FEATURES or feature in LicenseConfig.FREE_FEATURES
         
         # Premium features require validation
         if tier in ['pro', 'enterprise']:
@@ -507,6 +535,8 @@ class LicenseManager:
         
         if tier == 'free':
             return LicenseConfig.FREE_FEATURES.copy()
+        elif tier == 'beta':
+            return LicenseConfig.BETA_FEATURES.copy()
         elif tier == 'pro':
             return LicenseConfig.PRO_FEATURES.copy()
         elif tier == 'enterprise':
@@ -541,35 +571,148 @@ class LicenseManager:
         
         Args:
             license_key: License key string
-            tier: License tier (pro/enterprise)
+            tier: License tier (beta/pro/enterprise)
         
         Returns:
             True if installation successful
         """
         try:
-            # Validate first
-            machine_id = MachineFingerprint.get()
-            result = OnlineValidator.validate(license_key, machine_id)
+            # For beta licenses, no online validation needed
+            if tier == 'beta':
+                from datetime import datetime, timedelta
+                license_data = {
+                    'key': license_key,
+                    'tier': 'beta',
+                    'installed_at': datetime.now().isoformat(),
+                    'expires': (datetime.now() + timedelta(days=LicenseConfig.BETA_DURATION_DAYS)).isoformat(),
+                    'machine_id': MachineFingerprint.get(),
+                    'hardware_bound': False
+                }
+            else:
+                # For pro/enterprise, validate first
+                machine_id = MachineFingerprint.get()
+                result = OnlineValidator.validate(license_key, machine_id)
+                
+                if not result.get('valid'):
+                    return False
+                
+                # Install license
+                license_data = {
+                    'key': license_key,
+                    'tier': tier,
+                    'installed_at': int(time.time()),
+                    'machine_id': machine_id
+                }
             
-            if not result.get('valid'):
-                return False
+            LicenseConfig.LICENSE_FILE.parent.mkdir(parents=True, exist_ok=True)
+            LicenseConfig.LICENSE_FILE.write_text(json.dumps(license_data, indent=2))
             
-            # Install license
+            # Cache validation result (skip for beta)
+            if tier != 'beta':
+                ValidationCache.set(result)
+            
+            return True
+            
+        except Exception:
+            return False
+    
+    @staticmethod
+    def install_beta_license(email: str, token: Optional[str] = None) -> bool:
+        """
+        Install a beta license (DEPRECATED: use install_beta_license_with_token instead)
+        
+        For backward compatibility, if no token provided, creates local-only license.
+        This method is insecure and should not be used for production.
+        
+        Args:
+            email: User email for identification
+            token: Optional beta token (for secure installation)
+        
+        Returns:
+            True if installation successful
+        """
+        # If token provided, use secure installation
+        if token:
+            return LicenseManager.install_beta_license_with_token(token)
+        
+        # Otherwise, use insecure local method (deprecated)
+        try:
+            from datetime import datetime, timedelta
+            
             license_data = {
-                'key': license_key,
-                'tier': tier,
-                'installed_at': int(time.time()),
-                'machine_id': machine_id
+                'type': 'BETA',
+                'email': email,
+                'tier': 'beta',
+                'issued': datetime.now().isoformat(),
+                'expires': (datetime.now() + timedelta(days=LicenseConfig.BETA_DURATION_DAYS)).isoformat(),
+                'features': LicenseConfig.BETA_FEATURES,
+                'machine_id': MachineFingerprint.get(),
+                'hardware_bound': False,
+                'version': LicenseConfig.VERSION,
+                'insecure': True  # Mark as insecure
             }
             
             LicenseConfig.LICENSE_FILE.parent.mkdir(parents=True, exist_ok=True)
             LicenseConfig.LICENSE_FILE.write_text(json.dumps(license_data, indent=2))
             
-            # Cache validation result
-            ValidationCache.set(result)
+            return True
+            
+        except Exception:
+            return False
+    
+    @staticmethod
+    def install_beta_license_with_token(token: str) -> bool:
+        """
+        Install a beta license using a secure token.
+        
+        Args:
+            token: Signed beta token from admin
+        
+        Returns:
+            True if installation successful
+        """
+        try:
+            from parry.beta_token import BetaTokenManager
+            
+            # Get machine ID
+            machine_id = MachineFingerprint.get()
+            
+            # Validate token
+            valid, payload, error = BetaTokenManager.validate_token(token, machine_id)
+            
+            if not valid:
+                # Log error but don't expose details
+                LicenseManager._log_event('beta_install_failed', {'error': error})
+                return False
+            
+            # Record installation
+            BetaTokenManager._record_installation(token, machine_id, payload['email'])
+            
+            # Create license data
+            license_data = {
+                'type': 'BETA',
+                'email': payload['email'],
+                'tier': 'beta',
+                'issued': payload['issued'],
+                'expires': payload['expires'],
+                'features': LicenseConfig.BETA_FEATURES,
+                'machine_id': machine_id,
+                'hardware_bound': False,
+                'version': LicenseConfig.VERSION,
+                'secure': True  # Mark as secure token-based
+            }
+            
+            LicenseConfig.LICENSE_FILE.parent.mkdir(parents=True, exist_ok=True)
+            LicenseConfig.LICENSE_FILE.write_text(json.dumps(license_data, indent=2))
+            
+            # Log successful installation
+            LicenseManager._log_event('beta_installed', {'email': payload['email']})
             
             return True
             
+        except ImportError:
+            # Fall back if beta_token not available
+            return False
         except Exception:
             return False
     

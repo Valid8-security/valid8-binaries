@@ -240,10 +240,11 @@ security_scan:
 
 ## Documentation
 
-- **[PARRY_METRICS.md](PARRY_METRICS.md)** - Complete performance metrics
-- **[SETUP.md](SETUP.md)** - Detailed setup guide
-- **[QUICKSTART.md](QUICKSTART.md)** - Quick tutorial
-- **[RELEASE_PROCESS.md](RELEASE_PROCESS.md)** - Release workflow
+- **[COMPETITIVE_ANALYSIS.md](COMPETITIVE_ANALYSIS.md)** - Parry vs competitors
+- **[SETUP_GUIDE.md](SETUP_GUIDE.md)** - Complete installation guide
+- **[API_REFERENCE.md](API_REFERENCE.md)** - CLI and REST API reference
+- **[QUICKSTART.md](QUICKSTART.md)** - Quick tutorial (5 minutes)
+- **[PARRY_METRICS.md](PARRY_METRICS.md)** - Performance metrics
 
 ---
 
