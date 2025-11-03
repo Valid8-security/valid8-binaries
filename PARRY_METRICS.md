@@ -3,6 +3,8 @@
 **Version:** 0.7.0 Beta  
 **Last Updated:** November 2, 2025
 
+> **📊 For comprehensive benchmark results across multiple codebases, see [COMPREHENSIVE_BENCHMARK_RESULTS.md](COMPREHENSIVE_BENCHMARK_RESULTS.md)**
+
 ---
 
 ## Performance Metrics

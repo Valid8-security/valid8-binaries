@@ -241,6 +241,7 @@ security_scan:
 ## Documentation
 
 - **[COMPETITIVE_ANALYSIS.md](COMPETITIVE_ANALYSIS.md)** - Parry vs competitors
+- **[COMPREHENSIVE_BENCHMARK_RESULTS.md](COMPREHENSIVE_BENCHMARK_RESULTS.md)** - 📊 Complete benchmark across codebases
 - **[SETUP_GUIDE.md](SETUP_GUIDE.md)** - Complete installation guide
 - **[API_REFERENCE.md](API_REFERENCE.md)** - CLI and REST API reference
 - **[SCAN_SPEED_EXAMPLES.md](SCAN_SPEED_EXAMPLES.md)** - Real-world performance examples
