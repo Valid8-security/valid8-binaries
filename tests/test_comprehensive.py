@@ -1,54 +1,7 @@
-# Parry (C) by Lemonade Stand. Written by Andy Kurapati and Shreyan Mitra
 """
 Comprehensive Test Suite for Parry Security Scanner
 
-This is the master test suite covering all major Parry functionality.
-Tests are organized by feature category for maintainability.
-
-Test Categories:
-1. TestCoreScanning: Basic vulnerability detection across all languages
-2. TestAIFeatures: AI-powered deep mode and validation
-3. TestSCA: Software Composition Analysis (dependency scanning)
-4. TestCompliance: SOC2, ISO27001, PCI-DSS reporting
-5. TestSecretsScanning: Entropy-based secret detection
-6. TestFrameworkDetection: Django, Flask, Spring, Rails, etc.
-7. TestContainerIaC: Docker, Kubernetes, Terraform scanning
-8. TestCustomRules: User-defined security rules
-9. TestCaching: Incremental scanning and git integration
-10. TestIntegrations: GitHub PR creation, API endpoints
-11. TestPerformance: Speed, memory, scalability benchmarks
-12. TestEdgeCases: Malformed files, encoding issues, large files
-
-Coverage Goals:
-- Line coverage: >80%
-- Branch coverage: >70%
-- All supported languages tested
-- All CWE categories validated
-
-Usage:
-    # Run all tests
-    pytest tests/test_comprehensive.py -v
-    
-    # Run specific test class
-    pytest tests/test_comprehensive.py::TestCoreScanning -v
-    
-    # Run with coverage
-    pytest tests/test_comprehensive.py --cov=parry --cov-report=html
-    
-    # Run in parallel (faster)
-    pytest tests/test_comprehensive.py -n auto
-
-CI/CD:
-- Runs on every PR
-- Blocks merge if tests fail
-- Performance regression detection
-- Coverage reports to Codecov
-
-Requirements:
-- pytest >= 7.0
-- pytest-cov (for coverage)
-- pytest-xdist (for parallel execution)
-- Ollama running locally (for AI tests)
+Tests core functionality, AI features, integrations, and edge cases
 """
 
 import pytest

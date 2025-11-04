@@ -1,39 +1,8 @@
-# Parry (C) by Lemonade Stand. Written by Andy Kurapati and Shreyan Mitra
 """
 Parry REST API Server
 Provides HTTP endpoints for scanning, results retrieval, and management
-
-This module implements a FastAPI-based REST API server for Parry, enabling:
-- Asynchronous security scans via background tasks
-- Job status tracking and progress monitoring
-- Multi-mode scanning (fast/deep/hybrid)
-- SCA (Software Composition Analysis) integration
-- Incremental scanning support
-- Custom rules engine integration
-- CORS support for web frontends
-
-Key Endpoints:
-- POST /api/v1/scan - Initiate a new security scan (returns job_id)
-- GET /api/v1/jobs/{job_id} - Check scan status and retrieve results
-- GET /api/v1/jobs - List all scan jobs with optional filtering
-- GET /api/v1/stats - Aggregate statistics across all scans
-- GET /health - Health check for monitoring
-
-Job Lifecycle:
-1. queued → Scan request received, waiting to start
-2. running → Scan in progress with progress percentage
-3. completed → Scan finished successfully, results available
-4. failed → Scan encountered an error
-
-Architecture:
-- In-memory job storage (scan_jobs dict) - Use Redis/PostgreSQL for production
-- Background task execution via FastAPI BackgroundTasks
-- Pydantic models for request/response validation
-- CORS enabled for cross-origin web client access
-
-Used by: Web frontends, CI/CD pipelines, automation scripts
 """
-from fastapi import FastAPI, HTTPException, BackgroundTasks, UploadFile, File, Request, Header
+from fastapi import FastAPI, HTTPException, BackgroundTasks, UploadFile, File
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, ConfigDict
@@ -50,8 +19,6 @@ from parry.scanner import Scanner
 from parry.sca import SCAScanner
 from parry.custom_rules import CustomRulesEngine
 from parry.cache import ProjectCache
-from parry.payment.stripe_integration import StripePaymentManager, LicenseManager
-from parry.payment.email_notifier import EmailNotifier
 
 logger = logging.getLogger(__name__)
 
@@ -330,101 +297,6 @@ async def run_scan(job_id: str, request: ScanRequest):
         scan_jobs[job_id]["completed_at"] = datetime.now().isoformat()
 
 
-@app.post("/api/v1/webhooks/stripe")
-async def stripe_webhook(request: Request, stripe_signature: Optional[str] = Header(None)):
-    """
-    Stripe webhook endpoint for payment events
-    
-    Handles:
-    - checkout.session.completed: New subscription
-    - customer.subscription.updated: Subscription change
-    - customer.subscription.deleted: Cancellation
-    - invoice.payment_failed: Payment failure
-    """
-    try:
-        # Get raw payload
-        payload = await request.body()
-        
-        # Verify signature
-        if not stripe_signature:
-            raise HTTPException(status_code=400, detail="Missing Stripe signature header")
-        
-        # Initialize managers
-        payment_manager = StripePaymentManager()
-        license_manager = LicenseManager()
-        email_notifier = EmailNotifier(provider='sendgrid')  # or 'aws_ses'
-        
-        # Handle webhook
-        result = payment_manager.handle_webhook(payload, stripe_signature)
-        
-        # Process based on event type
-        if result['status'] == 'subscription_created':
-            # Generate and send license
-            subscription = result['subscription']
-            customer_email = subscription['customer_email']
-            tier = subscription['tier']
-            
-            # Generate license key
-            license_key = license_manager.generate_license_key(
-                email=customer_email,
-                tier=tier
-            )
-            
-            # Save license
-            license_manager.save_license(license_key, {
-                'email': customer_email,
-                'tier': tier,
-                'subscription_id': subscription['id'],
-                'created_at': datetime.now().isoformat()
-            })
-            
-            # Send email with license
-            email_notifier.send_license_email(
-                to_email=customer_email,
-                to_name=subscription.get('customer_name', customer_email.split('@')[0]),
-                license_key=license_key,
-                tier=tier,
-                expires=datetime.fromtimestamp(subscription['expires']),
-                metadata={'subscription_id': subscription['id']}
-            )
-            
-            logger.info(f"License generated and sent for {customer_email}")
-        
-        elif result['status'] == 'payment_failed':
-            # Notify customer
-            payment_info = result['payment']
-            email_notifier.send_payment_failed_email(
-                to_email=payment_info['customer_email'],
-                to_name=payment_info.get('customer_name', payment_info['customer_email'].split('@')[0]),
-                tier=payment_info['tier'],
-                amount=payment_info['amount'] / 100,  # Convert from cents
-                reason=payment_info.get('failure_reason', 'Unknown')
-            )
-            
-            logger.warning(f"Payment failed for {payment_info['customer_email']}")
-        
-        elif result['status'] == 'subscription_deleted':
-            # Notify customer
-            subscription = result['subscription']
-            email_notifier.send_subscription_cancelled_email(
-                to_email=subscription['customer_email'],
-                to_name=subscription.get('customer_name', subscription['customer_email'].split('@')[0]),
-                tier=subscription['tier'],
-                expires=datetime.fromtimestamp(subscription['expires'])
-            )
-            
-            logger.info(f"Subscription cancelled for {subscription['customer_email']}")
-        
-        return JSONResponse(status_code=200, content={'received': True, 'result': result})
-    
-    except ValueError as e:
-        logger.error(f"Webhook validation error: {e}")
-        raise HTTPException(status_code=400, detail=str(e))
-    except Exception as e:
-        logger.error(f"Webhook processing error: {e}")
-        raise HTTPException(status_code=500, detail="Internal server error")
-
-
 def start_api_server(host: str = "0.0.0.0", port: int = 8000):
     """Start the API server"""
     print(f"""
@@ -435,7 +307,6 @@ def start_api_server(host: str = "0.0.0.0", port: int = 8000):
     ║   Version: 0.4.0                                       ║
     ║   Server: http://{host}:{port}                     ║
     ║   Docs: http://{host}:{port}/docs                  ║
-    ║   Webhook: http://{host}:{port}/api/v1/webhooks/stripe ║
     ║                                                        ║
     ╚════════════════════════════════════════════════════════╝
     """)

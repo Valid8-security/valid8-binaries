@@ -1,393 +1,456 @@
-// Parry (C) by Lemonade Stand. Written by Andy Kurapati and Shreyan Mitra
-/**
- * Parry VS Code Extension - Main Entry Point
- * 
- * Provides real-time security scanning with inline diagnostics and AI-powered fixes.
- * Requires Pro license for hosted LLM features.
- */
-
 import * as vscode from 'vscode';
-import { ParryScanner } from './scanner';
-import { DiagnosticsManager } from './diagnostics';
-import { SecurityPanelProvider } from './securityPanel';
-import { LicenseManager } from './license';
-import { QuickFixProvider } from './quickFix';
+import * as path from 'path';
+import axios from 'axios';
 
-let scanner: ParryScanner;
-let diagnosticsManager: DiagnosticsManager;
-let licenseManager: LicenseManager;
-let securityPanelProvider: SecurityPanelProvider;
+let diagnosticCollection: vscode.DiagnosticCollection;
+let statusBarItem: vscode.StatusBarItem;
 
 export function activate(context: vscode.ExtensionContext) {
-    console.log('Parry Security Scanner is activating...');
-    
-    // Initialize managers
-    licenseManager = new LicenseManager(context);
-    diagnosticsManager = new DiagnosticsManager();
-    scanner = new ParryScanner(licenseManager);
-    securityPanelProvider = new SecurityPanelProvider(context.extensionUri);
-    
-    // Register security panel
-    context.subscriptions.push(
-        vscode.window.registerWebviewViewProvider(
-            'parryVulnerabilities',
-            securityPanelProvider
-        )
-    );
-    
+    console.log('Parry Security Scanner is now active!');
+
+    // Create diagnostic collection
+    diagnosticCollection = vscode.languages.createDiagnosticCollection('parry');
+    context.subscriptions.push(diagnosticCollection);
+
+    // Create status bar item
+    statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
+    statusBarItem.text = "$(shield) Parry";
+    statusBarItem.tooltip = "Parry Security Scanner";
+    statusBarItem.command = 'parry.showReport';
+    statusBarItem.show();
+    context.subscriptions.push(statusBarItem);
+
     // Register commands
     context.subscriptions.push(
-        vscode.commands.registerCommand('parry.scanFile', async () => {
-            const editor = vscode.window.activeTextEditor;
-            if (editor) {
-                await scanDocument(editor.document);
-            }
+        vscode.commands.registerCommand('parry.scanFile', () => scanCurrentFile())
+    );
+    
+    context.subscriptions.push(
+        vscode.commands.registerCommand('parry.scanWorkspace', () => scanWorkspace())
+    );
+    
+    context.subscriptions.push(
+        vscode.commands.registerCommand('parry.quickFix', (uri: vscode.Uri, diagnostic: vscode.Diagnostic) => {
+            applyAIFix(uri, diagnostic);
         })
     );
     
     context.subscriptions.push(
-        vscode.commands.registerCommand('parry.scanWorkspace', async () => {
-            await scanWorkspace();
+        vscode.commands.registerCommand('parry.clearFindings', () => {
+            diagnosticCollection.clear();
+            vscode.window.showInformationMessage('Cleared all Parry findings');
         })
     );
     
     context.subscriptions.push(
-        vscode.commands.registerCommand('parry.showSecurityPanel', () => {
-            vscode.commands.executeCommand('workbench.view.extension.parry-security');
-        })
+        vscode.commands.registerCommand('parry.showReport', () => showSecurityReport())
     );
-    
-    context.subscriptions.push(
-        vscode.commands.registerCommand('parry.clearDiagnostics', () => {
-            diagnosticsManager.clear();
-            vscode.window.showInformationMessage('Parry: Diagnostics cleared');
-        })
-    );
-    
-    context.subscriptions.push(
-        vscode.commands.registerCommand('parry.activateLicense', async () => {
-            const licenseKey = await vscode.window.showInputBox({
-                prompt: 'Enter your Parry license key',
-                placeHolder: 'License key from email',
-                password: true
-            });
-            
-            if (licenseKey) {
-                const success = await licenseManager.activateLicense(licenseKey);
-                if (success) {
-                    vscode.window.showInformationMessage('License activated successfully!');
-                } else {
-                    vscode.window.showErrorMessage('License activation failed. Please check your key.');
-                }
-            }
-        })
-    );
-    
-    context.subscriptions.push(
-        vscode.commands.registerCommand('parry.showLicenseInfo', () => {
-            const info = licenseManager.getLicenseInfo();
-            const message = `Tier: ${info.tier}\nMode: ${info.llm_mode}\nFile Limit: ${info.file_limit || 'Unlimited'}`;
-            vscode.window.showInformationMessage(message, { modal: true });
-        })
-    );
-    
-    context.subscriptions.push(
-        vscode.commands.registerCommand('parry.subscribe', () => {
-            vscode.env.openExternal(vscode.Uri.parse('https://parry.dev/pricing'));
-        })
-    );
-    
-    // NEW: Direct LLM query for specific code
-    context.subscriptions.push(
-        vscode.commands.registerCommand('parry.queryLLM', async () => {
-            await queryLLMForSelection();
-        })
-    );
-    
-    // Register quick fix provider
-    const quickFixProvider = new QuickFixProvider(scanner, licenseManager);
-    context.subscriptions.push(
-        vscode.languages.registerCodeActionsProvider(
-            { scheme: 'file' },
-            quickFixProvider,
-            {
-                providedCodeActionKinds: QuickFixProvider.providedCodeActionKinds
-            }
-        )
-    );
-    
-    // Set up real-time scanning
-    const config = vscode.workspace.getConfiguration('parry');
-    if (config.get('enabled') && config.get('realtimeScan')) {
-        setupRealtimeScanning(context);
-    }
-    
-    // Scan open documents on startup
-    vscode.window.visibleTextEditors.forEach(editor => {
-        if (shouldScanDocument(editor.document)) {
-            scanDocument(editor.document);
-        }
-    });
-    
-    // Show welcome message for free tier users
-    if (licenseManager.getLicenseInfo().tier === 'free') {
-        vscode.window.showInformationMessage(
-            'Parry: Scanning with Free tier (100 file limit). Upgrade to Pro for unlimited files and hosted LLM.',
-            'Upgrade'
-        ).then(choice => {
-            if (choice === 'Upgrade') {
-                vscode.commands.executeCommand('parry.subscribe');
-            }
-        });
-    }
-    
-    console.log('Parry Security Scanner activated successfully');
-}
 
-function setupRealtimeScanning(context: vscode.ExtensionContext) {
-    const config = vscode.workspace.getConfiguration('parry');
-    const scanDelay = config.get<number>('scanDelay', 2000);
-    
-    let timeoutHandle: NodeJS.Timeout | undefined;
-    
-    // Scan on document change
+    // Auto-scan on save
     context.subscriptions.push(
-        vscode.workspace.onDidChangeTextDocument(event => {
-            if (!shouldScanDocument(event.document)) {
-                return;
-            }
-            
-            // Debounce scanning
-            if (timeoutHandle) {
-                clearTimeout(timeoutHandle);
-            }
-            
-            timeoutHandle = setTimeout(() => {
-                scanDocument(event.document);
-            }, scanDelay);
-        })
-    );
-    
-    // Scan on document open
-    context.subscriptions.push(
-        vscode.workspace.onDidOpenTextDocument(document => {
-            if (shouldScanDocument(document)) {
+        vscode.workspace.onDidSaveTextDocument(document => {
+            const config = vscode.workspace.getConfiguration('parry');
+            if (config.get('enableAutoScan')) {
                 scanDocument(document);
             }
         })
     );
-    
-    // Clear diagnostics on document close
-    context.subscriptions.push(
-        vscode.workspace.onDidCloseTextDocument(document => {
-            diagnosticsManager.clearForDocument(document.uri);
-        })
-    );
+
+    // Scan active file on activation
+    if (vscode.window.activeTextEditor) {
+        scanDocument(vscode.window.activeTextEditor.document);
+    }
 }
 
-function shouldScanDocument(document: vscode.TextDocument): boolean {
-    // Don't scan untitled documents or output/debug consoles
-    if (document.uri.scheme !== 'file') {
-        return false;
-    }
-    
-    // Check exclude patterns
-    const config = vscode.workspace.getConfiguration('parry');
-    const excludePatterns = config.get<string[]>('excludePatterns', []);
-    const filePath = document.uri.fsPath;
-    
-    const minimatch = require('minimatch');
-    for (const pattern of excludePatterns) {
-        if (minimatch(filePath, pattern, { matchBase: true })) {
-            return false;
-        }
-    }
-    
-    return true;
-}
-
-async function scanDocument(document: vscode.TextDocument) {
-    const config = vscode.workspace.getConfiguration('parry');
-    if (!config.get('enabled')) {
+async function scanCurrentFile() {
+    const editor = vscode.window.activeTextEditor;
+    if (!editor) {
+        vscode.window.showErrorMessage('No active file to scan');
         return;
     }
     
+    await scanDocument(editor.document);
+}
+
+async function scanDocument(document: vscode.TextDocument) {
+    // Only scan supported languages
+    const supportedLanguages = ['python', 'javascript', 'typescript', 'java', 'go', 'rust', 'php', 'ruby'];
+    if (!supportedLanguages.includes(document.languageId)) {
+        return;
+    }
+
+    statusBarItem.text = "$(sync~spin) Scanning...";
+    
     try {
-        const vulnerabilities = await scanner.scanDocument(document);
-        diagnosticsManager.updateDiagnostics(document.uri, vulnerabilities);
+        const config = vscode.workspace.getConfiguration('parry');
+        const mode = config.get<string>('scanMode', 'fast');
+        const validate = config.get<boolean>('enableAIValidation', false);
         
-        // Update security panel
-        securityPanelProvider.updateVulnerabilities(vulnerabilities);
+        // Call Parry CLI via terminal
+        const filePath = document.uri.fsPath;
+        const results = await runParryScan(filePath, mode, validate);
         
-        // Show status bar notification
-        if (vulnerabilities.length > 0) {
-            const critical = vulnerabilities.filter(v => v.severity === 'critical').length;
-            const high = vulnerabilities.filter(v => v.severity === 'high').length;
-            
-            if (critical > 0 || high > 0) {
-                vscode.window.showWarningMessage(
-                    `Parry found ${critical} critical and ${high} high severity vulnerabilities`
-                );
-            }
+        // Convert results to diagnostics
+        const diagnostics = convertToDiagnostics(results, document);
+        diagnosticCollection.set(document.uri, diagnostics);
+        
+        // Update status bar
+        const criticalCount = diagnostics.filter(d => d.severity === vscode.DiagnosticSeverity.Error).length;
+        const highCount = diagnostics.filter(d => d.severity === vscode.DiagnosticSeverity.Warning).length;
+        
+        if (criticalCount > 0) {
+            statusBarItem.text = `$(shield) Parry: ${criticalCount} critical`;
+            statusBarItem.color = new vscode.ThemeColor('errorForeground');
+        } else if (highCount > 0) {
+            statusBarItem.text = `$(shield) Parry: ${highCount} high`;
+            statusBarItem.color = new vscode.ThemeColor('warningForeground');
+        } else {
+            statusBarItem.text = "$(shield) Parry: ✓";
+            statusBarItem.color = new vscode.ThemeColor('charts.green');
         }
+        
     } catch (error) {
-        console.error('Parry scan error:', error);
+        console.error('Scan error:', error);
+        statusBarItem.text = "$(shield) Parry: Error";
         vscode.window.showErrorMessage(`Parry scan failed: ${error}`);
     }
 }
 
+async function runParryScan(filePath: string, mode: string, validate: boolean): Promise<any> {
+    const { exec } = require('child_process');
+    const { promisify } = require('util');
+    const execAsync = promisify(exec);
+    
+    try {
+        const validateFlag = validate ? '--validate' : '';
+        const command = `parry scan "${filePath}" --mode ${mode} ${validateFlag} --format json`;
+        
+        const { stdout } = await execAsync(command, {
+            timeout: 60000,  // 60 second timeout
+            maxBuffer: 10 * 1024 * 1024  // 10MB buffer
+        });
+        
+        return JSON.parse(stdout);
+    } catch (error: any) {
+        // Try to parse partial JSON from stdout
+        if (error.stdout) {
+            try {
+                return JSON.parse(error.stdout);
+            } catch {
+                throw new Error(`Parry CLI error: ${error.message}`);
+            }
+        }
+        throw error;
+    }
+}
+
+function convertToDiagnostics(results: any, document: vscode.TextDocument): vscode.Diagnostic[] {
+    const diagnostics: vscode.Diagnostic[] = [];
+    const vulnerabilities = results.vulnerabilities || [];
+    
+    const config = vscode.workspace.getConfiguration('parry');
+    const threshold = config.get<string>('severityThreshold', 'MEDIUM');
+    const severityOrder = ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'];
+    const minSeverityIndex = severityOrder.indexOf(threshold);
+    
+    for (const vuln of vulnerabilities) {
+        // Filter by severity threshold
+        const vulnSeverityIndex = severityOrder.indexOf(vuln.severity);
+        if (vulnSeverityIndex < minSeverityIndex) {
+            continue;
+        }
+        
+        const line = Math.max(0, vuln.line - 1);
+        const range = new vscode.Range(
+            new vscode.Position(line, 0),
+            new vscode.Position(line, document.lineAt(line).text.length)
+        );
+        
+        const severity = getSeverity(vuln.severity);
+        const diagnostic = new vscode.Diagnostic(
+            range,
+            `${vuln.cwe_id}: ${vuln.description}`,
+            severity
+        );
+        
+        diagnostic.source = 'Parry Security';
+        diagnostic.code = vuln.cwe_id;
+        diagnostic.relatedInformation = [
+            new vscode.DiagnosticRelatedInformation(
+                new vscode.Location(document.uri, range),
+                `Recommendation: ${vuln.recommendation || 'See Parry documentation'}`
+            )
+        ];
+        
+        diagnostics.push(diagnostic);
+    }
+    
+    return diagnostics;
+}
+
+function getSeverity(severity: string): vscode.DiagnosticSeverity {
+    switch (severity.toUpperCase()) {
+        case 'CRITICAL':
+            return vscode.DiagnosticSeverity.Error;
+        case 'HIGH':
+            return vscode.DiagnosticSeverity.Warning;
+        case 'MEDIUM':
+            return vscode.DiagnosticSeverity.Information;
+        case 'LOW':
+            return vscode.DiagnosticSeverity.Hint;
+        default:
+            return vscode.DiagnosticSeverity.Information;
+    }
+}
+
 async function scanWorkspace() {
-    const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
-    if (!workspaceFolder) {
+    const workspaceFolders = vscode.workspace.workspaceFolders;
+    if (!workspaceFolders || workspaceFolders.length === 0) {
         vscode.window.showErrorMessage('No workspace folder open');
         return;
     }
     
+    const workspacePath = workspaceFolders[0].uri.fsPath;
+    
     await vscode.window.withProgress({
         location: vscode.ProgressLocation.Notification,
-        title: 'Parry: Scanning workspace',
+        title: "Parry: Scanning workspace...",
         cancellable: false
     }, async (progress) => {
-        progress.report({ increment: 0, message: 'Finding files...' });
+        progress.report({ increment: 0 });
         
-        const files = await vscode.workspace.findFiles('**/*', '**/node_modules/**');
-        const total = files.length;
-        
-        for (let i = 0; i < files.length; i++) {
-            const file = files[i];
-            const document = await vscode.workspace.openTextDocument(file);
+        try {
+            const config = vscode.workspace.getConfiguration('parry');
+            const mode = config.get<string>('scanMode', 'fast');
             
-            if (shouldScanDocument(document)) {
-                await scanDocument(document);
-            }
+            const results = await runParryScan(workspacePath, mode, false);
             
-            progress.report({
-                increment: (100 / total),
-                message: `Scanning ${i + 1}/${total}`
-            });
+            progress.report({ increment: 100 });
+            
+            // Show results in webview
+            showResultsPanel(results);
+            
+            vscode.window.showInformationMessage(
+                `Parry scan complete: ${results.vulnerabilities?.length || 0} issues found`
+            );
+        } catch (error) {
+            vscode.window.showErrorMessage(`Workspace scan failed: ${error}`);
         }
-        
-        vscode.window.showInformationMessage(`Parry: Scanned ${total} files`);
     });
 }
 
-async function queryLLMForSelection() {
-    /**
-     * Direct LLM query for security analysis of specific code
-     * Bypasses automated pattern detection and asks LLM directly
-     */
-    const editor = vscode.window.activeTextEditor;
+async function applyAIFix(uri: vscode.Uri, diagnostic: vscode.Diagnostic) {
+    const document = await vscode.workspace.openTextDocument(uri);
+    const editor = await vscode.window.showTextDocument(document);
     
-    if (!editor) {
-        vscode.window.showWarningMessage('No active editor');
-        return;
-    }
-    
-    // Check license tier (requires Pro/Enterprise for hosted LLM)
-    const licenseInfo = licenseManager.getLicenseInfo();
-    if (licenseInfo.tier === 'free') {
-        const choice = await vscode.window.showWarningMessage(
-            'Direct LLM queries require Pro or Enterprise tier (hosted LLM)',
-            'Upgrade',
-            'Cancel'
-        );
-        
-        if (choice === 'Upgrade') {
-            vscode.commands.executeCommand('parry.subscribe');
-        }
-        return;
-    }
-    
-    // Get selection or current line
-    const selection = editor.selection;
-    let code: string;
-    let startLine: number;
-    let endLine: number;
-    
-    if (selection.isEmpty) {
-        // Use current line
-        startLine = selection.start.line;
-        endLine = selection.start.line;
-        code = editor.document.lineAt(startLine).text;
-    } else {
-        // Use selection
-        startLine = selection.start.line;
-        endLine = selection.end.line;
-        code = editor.document.getText(selection);
-    }
-    
-    // Show loading message
-    vscode.window.withProgress({
+    await vscode.window.withProgress({
         location: vscode.ProgressLocation.Notification,
-        title: 'Parry: Analyzing code with LLM...',
+        title: "Parry: Generating AI fix...",
         cancellable: false
-    }, async () => {
+    }, async (progress) => {
         try {
-            // Query LLM via API
-            const result = await scanner.queryLLMForCode(
-                code,
-                editor.document.languageId,
-                editor.document.fileName,
-                startLine,
-                endLine
-            );
+            const { exec } = require('child_process');
+            const { promisify } = require('util');
+            const execAsync = promisify(exec);
             
-            // Display results in output channel
-            const outputChannel = vscode.window.createOutputChannel('Parry LLM Analysis');
-            outputChannel.clear();
-            outputChannel.appendLine('='.repeat(80));
-            outputChannel.appendLine(`Parry LLM Security Analysis`);
-            outputChannel.appendLine('='.repeat(80));
-            outputChannel.appendLine('');
-            outputChannel.appendLine(`File: ${editor.document.fileName}`);
-            outputChannel.appendLine(`Lines: ${startLine + 1}-${endLine + 1}`);
-            outputChannel.appendLine(`Language: ${editor.document.languageId}`);
-            outputChannel.appendLine('');
-            outputChannel.appendLine('CODE:');
-            outputChannel.appendLine('-'.repeat(80));
-            outputChannel.appendLine(code);
-            outputChannel.appendLine('-'.repeat(80));
-            outputChannel.appendLine('');
-            outputChannel.appendLine('SECURITY ANALYSIS:');
-            outputChannel.appendLine('-'.repeat(80));
-            outputChannel.appendLine(result.analysis);
+            const filePath = uri.fsPath;
+            const command = `parry patch "${filePath}" --line ${diagnostic.range.start.line + 1}`;
             
-            if (result.issues && result.issues.length > 0) {
-                outputChannel.appendLine('');
-                outputChannel.appendLine('IDENTIFIED ISSUES:');
-                result.issues.forEach((issue: any, idx: number) => {
-                    outputChannel.appendLine(`\n${idx + 1}. ${issue.title} [${issue.severity}]`);
-                    outputChannel.appendLine(`   ${issue.description}`);
-                    if (issue.recommendation) {
-                        outputChannel.appendLine(`   Fix: ${issue.recommendation}`);
-                    }
-                });
-            }
+            const { stdout } = await execAsync(command, { timeout: 30000 });
+            const fix = JSON.parse(stdout);
             
-            outputChannel.appendLine('');
-            outputChannel.appendLine('='.repeat(80));
-            outputChannel.show(true);
-            
-            // Show notification
-            if (result.issues && result.issues.length > 0) {
-                vscode.window.showWarningMessage(
-                    `Parry LLM found ${result.issues.length} potential security issue(s)`,
-                    'View Details'
-                ).then(choice => {
-                    if (choice === 'View Details') {
-                        outputChannel.show();
-                    }
-                });
-            } else {
-                vscode.window.showInformationMessage('Parry LLM: No obvious security issues detected');
+            if (fix.patched_code) {
+                // Show diff and ask for confirmation
+                const choice = await vscode.window.showInformationMessage(
+                    'Apply AI-generated fix?',
+                    'Apply',
+                    'Show Diff',
+                    'Cancel'
+                );
+                
+                if (choice === 'Apply') {
+                    await editor.edit(editBuilder => {
+                        editBuilder.replace(diagnostic.range, fix.patched_code);
+                    });
+                    vscode.window.showInformationMessage('Fix applied successfully');
+                } else if (choice === 'Show Diff') {
+                    // Show diff in new editor
+                    const diffDocument = await vscode.workspace.openTextDocument({
+                        content: fix.patched_code,
+                        language: document.languageId
+                    });
+                    await vscode.window.showTextDocument(diffDocument, vscode.ViewColumn.Beside);
+                }
             }
         } catch (error) {
-            vscode.window.showErrorMessage(`Parry LLM query failed: ${error}`);
+            vscode.window.showErrorMessage(`Failed to generate fix: ${error}`);
         }
     });
+}
+
+function showSecurityReport() {
+    const panel = vscode.window.createWebviewPanel(
+        'parryReport',
+        'Parry Security Report',
+        vscode.ViewColumn.Two,
+        { enableScripts: true }
+    );
+    
+    // Get all diagnostics
+    const allDiagnostics: any[] = [];
+    diagnosticCollection.forEach((uri, diagnostics) => {
+        allDiagnostics.push({
+            file: vscode.workspace.asRelativePath(uri),
+            issues: diagnostics.length,
+            critical: diagnostics.filter(d => d.severity === vscode.DiagnosticSeverity.Error).length,
+            high: diagnostics.filter(d => d.severity === vscode.DiagnosticSeverity.Warning).length
+        });
+    });
+    
+    panel.webview.html = getReportHtml(allDiagnostics);
+}
+
+function showResultsPanel(results: any) {
+    const panel = vscode.window.createWebviewPanel(
+        'parryResults',
+        'Parry Scan Results',
+        vscode.ViewColumn.Two,
+        { enableScripts: true }
+    );
+    
+    const vulnerabilities = results.vulnerabilities || [];
+    const critical = vulnerabilities.filter((v: any) => v.severity === 'CRITICAL').length;
+    const high = vulnerabilities.filter((v: any) => v.severity === 'HIGH').length;
+    const medium = vulnerabilities.filter((v: any) => v.severity === 'MEDIUM').length;
+    
+    panel.webview.html = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body { font-family: var(--vscode-font-family); padding: 20px; }
+                .header { margin-bottom: 30px; }
+                .stats { display: flex; gap: 20px; margin-bottom: 30px; }
+                .stat-box { padding: 15px; border-radius: 5px; flex: 1; }
+                .critical { background: #ff4444; color: white; }
+                .high { background: #ff9900; color: white; }
+                .medium { background: #ffcc00; color: black; }
+                .vulnerability { border-left: 4px solid; padding: 10px; margin: 10px 0; }
+                .vuln-critical { border-color: #ff4444; }
+                .vuln-high { border-color: #ff9900; }
+                .vuln-medium { border-color: #ffcc00; }
+                h1 { color: var(--vscode-foreground); }
+                pre { background: var(--vscode-textCodeBlock-background); padding: 10px; }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h1>🛡️ Parry Security Scan Results</h1>
+                <p>Files scanned: ${results.files_scanned || 0}</p>
+            </div>
+            
+            <div class="stats">
+                <div class="stat-box critical">
+                    <h2>${critical}</h2>
+                    <p>Critical</p>
+                </div>
+                <div class="stat-box high">
+                    <h2>${high}</h2>
+                    <p>High</p>
+                </div>
+                <div class="stat-box medium">
+                    <h2>${medium}</h2>
+                    <p>Medium</p>
+                </div>
+            </div>
+            
+            <h2>Vulnerabilities</h2>
+            ${vulnerabilities.map((v: any) => `
+                <div class="vulnerability vuln-${v.severity.toLowerCase()}">
+                    <h3>${v.cwe_id} - ${v.severity}</h3>
+                    <p><strong>File:</strong> ${v.file}:${v.line}</p>
+                    <p><strong>Description:</strong> ${v.description}</p>
+                    <p><strong>Recommendation:</strong> ${v.recommendation || 'N/A'}</p>
+                    ${v.code_snippet ? `<pre>${v.code_snippet}</pre>` : ''}
+                </div>
+            `).join('')}
+        </body>
+        </html>
+    `;
+}
+
+function getReportHtml(files: any[]): string {
+    const totalIssues = files.reduce((sum, f) => sum + f.issues, 0);
+    const totalCritical = files.reduce((sum, f) => sum + f.critical, 0);
+    const totalHigh = files.reduce((sum, f) => sum + f.high, 0);
+    
+    return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body { font-family: var(--vscode-font-family); padding: 20px; }
+                table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+                th, td { padding: 10px; text-align: left; border-bottom: 1px solid var(--vscode-panel-border); }
+                th { background: var(--vscode-editor-background); }
+                .summary { display: flex; gap: 20px; margin-bottom: 30px; }
+                .summary-box { padding: 15px; border-radius: 5px; flex: 1; text-align: center; }
+            </style>
+        </head>
+        <body>
+            <h1>🛡️ Parry Security Report</h1>
+            
+            <div class="summary">
+                <div class="summary-box">
+                    <h2>${files.length}</h2>
+                    <p>Files with Issues</p>
+                </div>
+                <div class="summary-box">
+                    <h2>${totalIssues}</h2>
+                    <p>Total Issues</p>
+                </div>
+                <div class="summary-box">
+                    <h2>${totalCritical}</h2>
+                    <p>Critical</p>
+                </div>
+                <div class="summary-box">
+                    <h2>${totalHigh}</h2>
+                    <p>High</p>
+                </div>
+            </div>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>File</th>
+                        <th>Issues</th>
+                        <th>Critical</th>
+                        <th>High</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${files.map(f => `
+                        <tr>
+                            <td>${f.file}</td>
+                            <td>${f.issues}</td>
+                            <td>${f.critical}</td>
+                            <td>${f.high}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        </body>
+        </html>
+    `;
 }
 
 export function deactivate() {
-    diagnosticsManager.clear();
-    console.log('Parry Security Scanner deactivated');
+    if (diagnosticCollection) {
+        diagnosticCollection.dispose();
+    }
+    if (statusBarItem) {
+        statusBarItem.dispose();
+    }
 }
+
+

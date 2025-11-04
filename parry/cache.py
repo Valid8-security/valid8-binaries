@@ -1,10 +1,6 @@
-# Parry (C) by Lemonade Stand. Written by Andy Kurapati and Shreyan Mitra
 """
 Incremental Scanning Cache
-
-Caches scan results based on file hashes to avoid re-scanning unchanged files.
-This dramatically speeds up repeated scans of large codebases by only processing
-files that have been modified since the last scan.
+Caches scan results to only rescan changed files
 """
 import json
 import hashlib
@@ -17,15 +13,9 @@ logger = logging.getLogger(__name__)
 
 
 class ScanCache:
-    """
-    Manages caching of scan results for incremental scanning.
-    
-    Uses MD5 hashes to detect file changes and stores results in ~/.parry/cache/.
-    Supports cache invalidation, pruning old entries, and statistics reporting.
-    """
+    """Manages caching of scan results for incremental scanning"""
     
     def __init__(self, cache_dir: Optional[Path] = None):
-        """Initialize cache with custom or default directory (~/.parry/cache/)."""
         if cache_dir:
             self.cache_dir = cache_dir
         else:
@@ -36,7 +26,7 @@ class ScanCache:
         self.cache: Dict[str, Dict[str, Any]] = self._load_cache()
     
     def _load_cache(self) -> Dict[str, Dict[str, Any]]:
-        """Load cache from disk, return empty dict if file doesn't exist or is corrupt."""
+        """Load cache from disk"""
         if self.cache_file.exists():
             try:
                 with open(self.cache_file) as f:
@@ -47,7 +37,7 @@ class ScanCache:
         return {}
     
     def _save_cache(self):
-        """Persist cache to disk as JSON."""
+        """Save cache to disk"""
         try:
             with open(self.cache_file, 'w') as f:
                 json.dump(self.cache, f, indent=2)
@@ -55,7 +45,7 @@ class ScanCache:
             logger.error(f"Error saving cache: {e}")
     
     def get_file_hash(self, file_path: Path) -> str:
-        """Calculate MD5 hash of file content for change detection."""
+        """Calculate MD5 hash of file content"""
         try:
             with open(file_path, 'rb') as f:
                 return hashlib.md5(f.read()).hexdigest()
@@ -63,18 +53,18 @@ class ScanCache:
             return ""
     
     def is_file_changed(self, file_path: Path) -> bool:
-        """Check if file has changed since last scan by comparing hashes."""
+        """Check if file has changed since last scan"""
         file_key = str(file_path.absolute())
         current_hash = self.get_file_hash(file_path)
         
         if file_key not in self.cache:
-            return True  # Never scanned before
+            return True
         
         cached_hash = self.cache[file_key].get('hash', '')
         return current_hash != cached_hash
     
     def get_cached_results(self, file_path: Path) -> Optional[List[Dict[str, Any]]]:
-        """Get cached scan results for a file if it hasn't changed, otherwise None."""
+        """Get cached scan results for a file if unchanged"""
         if self.is_file_changed(file_path):
             return None
         
@@ -85,7 +75,7 @@ class ScanCache:
         return None
     
     def cache_results(self, file_path: Path, results: List[Dict[str, Any]], metadata: Optional[Dict[str, Any]] = None):
-        """Store scan results for a file with hash, timestamp, and optional metadata."""
+        """Cache scan results for a file"""
         file_key = str(file_path.absolute())
         file_hash = self.get_file_hash(file_path)
         
@@ -98,7 +88,7 @@ class ScanCache:
     
     def get_changed_files(self, files: List[Path]) -> tuple[List[Path], List[Path]]:
         """
-        Split files into changed and unchanged based on cache.
+        Split files into changed and unchanged
         Returns: (changed_files, unchanged_files)
         """
         changed = []
@@ -113,19 +103,19 @@ class ScanCache:
         return changed, unchanged
     
     def invalidate_file(self, file_path: Path):
-        """Remove a specific file from cache to force re-scan."""
+        """Remove a file from cache"""
         file_key = str(file_path.absolute())
         if file_key in self.cache:
             del self.cache[file_key]
     
     def invalidate_all(self):
-        """Clear entire cache - all files will be rescanned next time."""
+        """Clear entire cache"""
         self.cache = {}
         self._save_cache()
         logger.info("Cache cleared")
     
     def get_cache_stats(self) -> Dict[str, Any]:
-        """Get cache statistics including size, file count, and age range."""
+        """Get cache statistics"""
         total_files = len(self.cache)
         total_size = 0
         oldest = None
@@ -153,13 +143,12 @@ class ScanCache:
         }
     
     def prune_old_entries(self, days: int = 30):
-        """Remove cache entries older than specified days to keep cache fresh."""
+        """Remove cache entries older than specified days"""
         from datetime import timedelta
         
         cutoff = datetime.now() - timedelta(days=days)
         to_remove = []
         
-        # Find entries older than cutoff
         for file_key, entry in self.cache.items():
             timestamp_str = entry.get('timestamp')
             if timestamp_str:
@@ -170,7 +159,6 @@ class ScanCache:
                 except:
                     pass
         
-        # Remove old entries
         for key in to_remove:
             del self.cache[key]
         
@@ -179,40 +167,27 @@ class ScanCache:
             logger.info(f"Pruned {len(to_remove)} old cache entries")
     
     def save(self):
-        """Explicitly save cache to disk (normally auto-saved)."""
+        """Explicitly save cache to disk"""
         self._save_cache()
 
 
 class ProjectCache:
-    """
-    Manages project-level caching with git integration.
-    
-    Combines file hash-based caching with git change detection to identify
-    files that need re-scanning. Useful for CI/CD where only changed files
-    should be scanned.
-    """
+    """Manages project-level caching including git integration"""
     
     def __init__(self, project_path: Path):
-        """Initialize project cache in .parry/cache/ directory."""
         self.project_path = project_path
         self.cache_dir = project_path / ".parry" / "cache"
         self.cache_dir.mkdir(parents=True, exist_ok=True)
         self.scan_cache = ScanCache(self.cache_dir)
     
     def get_git_changed_files(self) -> Set[Path]:
-        """
-        Get files changed in git working directory.
-        
-        Includes:
-        - Uncommitted changes (modified, staged)
-        - Untracked files (new files not in .gitignore)
-        """
+        """Get files changed in git (uncommitted + recently committed)"""
         import subprocess
         
         changed_files = set()
         
         try:
-            # Get uncommitted changes (git diff HEAD)
+            # Get uncommitted changes
             result = subprocess.run(
                 ['git', 'diff', '--name-only', 'HEAD'],
                 cwd=self.project_path,
@@ -228,7 +203,7 @@ class ProjectCache:
                         if file_path.exists():
                             changed_files.add(file_path)
             
-            # Get untracked files (new files not yet added to git)
+            # Get untracked files
             result = subprocess.run(
                 ['git', 'ls-files', '--others', '--exclude-standard'],
                 cwd=self.project_path,
@@ -251,16 +226,13 @@ class ProjectCache:
     
     def get_incremental_scan_plan(self, all_files: List[Path]) -> Dict[str, Any]:
         """
-        Create incremental scan plan combining hash-based and git-based change detection.
-        
-        Files to scan: changed content OR git-changed
-        Files from cache: unchanged content AND not git-changed
-        
-        Returns dict with lists of files to scan vs. use from cache.
+        Create an incremental scan plan
+        Returns which files to scan and which to use from cache
         """
         git_changed = self.get_git_changed_files()
         changed, unchanged = self.scan_cache.get_changed_files(all_files)
         
+        # Files to scan: either changed content or git changed
         to_scan = []
         use_cache = []
         
@@ -278,4 +250,5 @@ class ProjectCache:
             'cache_count': len(use_cache),
             'cache_hit_rate': len(use_cache) / len(all_files) if all_files else 0
         }
+
 

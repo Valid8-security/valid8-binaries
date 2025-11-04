@@ -1,35 +1,5 @@
-# Parry (C) by Lemonade Stand. Written by Andy Kurapati and Shreyan Mitra
 """
-Rust language security analyzer
-
-Security analysis for Rust codebases with focus on:
-- Unsafe code blocks and memory safety issues
-- FFI (Foreign Function Interface) vulnerabilities
-- 16+ CWE categories including Rust-specific issues
-
-Detection Capabilities:
-- Unsafe Code Usage (CWE-676): Excessive unsafe blocks
-- Memory Safety (CWE-415, CWE-416): Double free, use-after-free
-- NULL Pointer Dereference (CWE-476): Unsafe pointer operations
-- Command Injection (CWE-78): Command execution with user input
-- SQL Injection (CWE-89): Raw SQL queries
-- Path Traversal (CWE-22): File operations with user paths
-- XSS (CWE-79): Web framework template issues
-- Hardcoded Secrets (CWE-798): API keys, passwords
-- Weak Crypto (CWE-327): MD5, outdated algorithms
-- CSRF (CWE-352): Missing CSRF protection in web frameworks
-
-Rust-Specific Issues:
-- Unsafe block analysis (transmute, raw pointers, union access)
-- FFI boundary vulnerabilities
-- Panic handling in unsafe contexts
-- Unchecked arithmetic operations
-- Unsafe trait implementations
-
-While Rust's borrow checker prevents many memory safety issues at compile time,
-this analyzer detects logic vulnerabilities and unsafe code usage patterns.
-
-Used by: Scanner.scan_file() when processing .rs files
+Rust language security analyzer.
 """
 
 import re

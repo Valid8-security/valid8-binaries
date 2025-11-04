@@ -1,4 +1,3 @@
-# Parry (C) by Lemonade Stand. Written by Andy Kurapati and Shreyan Mitra
 """
 Advanced Secrets Scanner with Entropy Analysis
 

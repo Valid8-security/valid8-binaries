@@ -1,4 +1,3 @@
-# Parry (C) by Lemonade Stand. Written by Andy Kurapati and Shreyan Mitra
 """
 Data Flow Analysis for advanced vulnerability detection.
 Tracks tainted data through code to detect complex vulnerabilities.

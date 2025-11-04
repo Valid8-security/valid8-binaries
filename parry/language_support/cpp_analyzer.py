@@ -1,39 +1,5 @@
-# Parry (C) by Lemonade Stand. Written by Andy Kurapati and Shreyan Mitra
 """
-C/C++ language security analyzer
-
-Security analysis for C/C++ codebases with focus on memory safety and classic vulnerabilities:
-- Buffer overflows and memory corruption
-- 9+ CWE categories including memory-safety critical issues
-
-Detection Capabilities:
-- Buffer Overflow (CWE-120, CWE-121): strcpy, sprintf, gets, memcpy misuse
-- Use After Free (CWE-416): Accessing freed memory
-- Double Free (CWE-415): Multiple free() calls on same pointer
-- NULL Pointer Dereference (CWE-476): Unsafe pointer access
-- Integer Overflow (CWE-190): Arithmetic without bounds checking
-- Uninitialized Variables (CWE-457): Using variables before initialization
-- Format String Vulnerabilities (CWE-134): printf with user input
-- Command Injection (CWE-78): system(), popen() with user input
-
-Unsafe Function Detection:
-- strcpy, strcat, sprintf (use strncpy, strncat, snprintf)
-- gets (use fgets)
-- scanf with %s (use width specifier)
-- memcpy without bounds checking
-
-Memory Management Issues:
-- Manual memory management errors (new/delete, malloc/free)
-- Memory leaks (allocations without deallocation)
-- Stack buffer overflows
-- Heap corruption
-
-Modern C++ Safety:
-- Suggests smart pointers (unique_ptr, shared_ptr)
-- Recommends safe string operations (std::string)
-- Encourages RAII patterns
-
-Used by: Scanner.scan_file() when processing .c, .cpp, .h, .hpp files
+C/C++ language security analyzer.
 """
 
 import re

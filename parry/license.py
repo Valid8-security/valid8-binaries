@@ -1,4 +1,3 @@
-# Parry (C) by Lemonade Stand. Written by Andy Kurapati and Shreyan Mitra
 """
 Comprehensive License Management System
 
@@ -274,20 +273,8 @@ class TamperDetector:
         if LicenseConfig.BUILD_ID == 'dev-build':
             return False
         
-        # In production build, check embedded hash for integrity
-        try:
-            import hashlib
-            # Calculate hash of current file
-            current_file = Path(__file__)
-            if current_file.exists():
-                with open(current_file, 'rb') as f:
-                    file_hash = hashlib.sha256(f.read()).hexdigest()
-                
-                # In production, compare with embedded hash
-                # For now, just verify file exists and is readable
-                return True
-        except Exception:
-            pass
+        # In production build, could check embedded hash
+        # This is a placeholder for actual integrity check
         
         return False
 

@@ -1,16 +1,12 @@
 {
   "name": "parry-security-scanner",
   "displayName": "Parry Security Scanner",
-  "description": "Real-time security vulnerability detection with AI-powered fixes",
-  "version": "1.0.0",
-  "publisher": "parry-dev",
-  "icon": "media/icon.png",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Parry-AI/parry-scanner"
-  },
+  "description": "AI-powered security scanning with 100% local processing",
+  "version": "0.4.0",
+  "publisher": "parry-security",
+  "icon": "images/icon.png",
   "engines": {
-    "vscode": "^1.85.0"
+    "vscode": "^1.80.0"
   },
   "categories": [
     "Linters",
@@ -20,14 +16,22 @@
   "keywords": [
     "security",
     "vulnerability",
-    "scanner",
     "sast",
+    "sca",
     "ai",
-    "security-scanner",
-    "code-analysis"
+    "scanner"
   ],
   "activationEvents": [
-    "onStartupFinished"
+    "onLanguage:python",
+    "onLanguage:javascript",
+    "onLanguage:typescript",
+    "onLanguage:java",
+    "onLanguage:go",
+    "onLanguage:rust",
+    "onLanguage:php",
+    "onLanguage:ruby",
+    "onCommand:parry.scanFile",
+    "onCommand:parry.scanWorkspace"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -43,134 +47,72 @@
         "icon": "$(shield)"
       },
       {
-        "command": "parry.showSecurityPanel",
-        "title": "Parry: Show Security Panel",
-        "icon": "$(lock)"
+        "command": "parry.quickFix",
+        "title": "Parry: Apply AI Fix",
+        "icon": "$(wand)"
       },
       {
-        "command": "parry.clearDiagnostics",
-        "title": "Parry: Clear All Diagnostics"
+        "command": "parry.clearFindings",
+        "title": "Parry: Clear All Findings"
       },
       {
-        "command": "parry.activateLicense",
-        "title": "Parry: Activate License"
-      },
-      {
-        "command": "parry.showLicenseInfo",
-        "title": "Parry: Show License Information"
-      },
-      {
-        "command": "parry.subscribe",
-        "title": "Parry: Subscribe to Pro"
-      },
-      {
-        "command": "parry.queryLLM",
-        "title": "Parry: Ask LLM About This Code",
-        "icon": "$(robot)"
+        "command": "parry.showReport",
+        "title": "Parry: Show Security Report"
       }
     ],
-    "viewsContainers": {
-      "activitybar": [
-        {
-          "id": "parry-security",
-          "title": "Parry Security",
-          "icon": "media/shield.svg"
-        }
-      ]
-    },
-    "views": {
-      "parry-security": [
-        {
-          "id": "parryVulnerabilities",
-          "name": "Vulnerabilities",
-          "icon": "media/shield.svg"
-        },
-        {
-          "id": "parryStats",
-          "name": "Statistics",
-          "icon": "media/chart.svg"
-        }
-      ]
-    },
     "configuration": {
       "title": "Parry Security Scanner",
       "properties": {
-        "parry.enabled": {
+        "parry.enableAutoScan": {
           "type": "boolean",
           "default": true,
-          "description": "Enable/disable Parry security scanning"
+          "description": "Automatically scan files on save"
         },
-        "parry.realtimeScan": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable real-time scanning as you type (requires Pro license)"
-        },
-        "parry.scanDelay": {
-          "type": "number",
-          "default": 2000,
-          "minimum": 500,
-          "maximum": 10000,
-          "description": "Delay in milliseconds before scanning after typing stops"
-        },
-        "parry.severity": {
-          "type": "string",
-          "enum": ["low", "medium", "high", "critical"],
-          "default": "low",
-          "description": "Minimum severity level to display"
-        },
-        "parry.excludePatterns": {
-          "type": "array",
-          "default": ["**/node_modules/**", "**/dist/**", "**/build/**", "**/.git/**"],
-          "description": "Glob patterns to exclude from scanning"
-        },
-        "parry.mode": {
+        "parry.scanMode": {
           "type": "string",
           "enum": ["fast", "deep", "hybrid"],
-          "default": "hybrid",
-          "description": "Scanning mode: fast (pattern-only), deep (AI-powered), hybrid (both)"
+          "default": "fast",
+          "description": "Scanning mode (fast=5% recall, deep=75% recall, hybrid=45%)"
         },
-        "parry.autoFix": {
+        "parry.enableAIValidation": {
           "type": "boolean",
           "default": false,
-          "description": "Automatically apply AI-generated fixes (use with caution)"
+          "description": "Use AI to validate findings and reduce false positives"
         },
-        "parry.showInlineErrors": {
-          "type": "boolean",
-          "default": true,
-          "description": "Show inline squiggly underlines for vulnerabilities"
-        },
-        "parry.apiEndpoint": {
+        "parry.severityThreshold": {
           "type": "string",
-          "default": "https://api.parry.dev",
-          "description": "Parry API endpoint for Pro/Enterprise features"
+          "enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL"],
+          "default": "MEDIUM",
+          "description": "Minimum severity to display"
+        },
+        "parry.ollamaUrl": {
+          "type": "string",
+          "default": "http://localhost:11434",
+          "description": "Ollama API endpoint"
         }
       }
     },
     "menus": {
       "editor/context": [
         {
-          "when": "editorFocus",
           "command": "parry.scanFile",
-          "group": "parry@1"
+          "group": "parry",
+          "when": "editorTextFocus"
         }
       ],
       "editor/title": [
         {
-          "when": "editorFocus",
           "command": "parry.scanFile",
-          "group": "navigation"
+          "group": "navigation",
+          "when": "editorTextFocus"
         }
-      ],
-      "view/title": [
+      ]
+    },
+    "views": {
+      "explorer": [
         {
-          "command": "parry.scanWorkspace",
-          "when": "view == parryVulnerabilities",
-          "group": "navigation"
-        },
-        {
-          "command": "parry.clearDiagnostics",
-          "when": "view == parryVulnerabilities",
-          "group": "navigation"
+          "id": "parrySecurity",
+          "name": "Parry Security"
         }
       ]
     }
@@ -181,21 +123,19 @@
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
-    "test": "node ./out/test/runTest.js",
-    "package": "vsce package",
-    "publish": "vsce publish"
+    "test": "node ./out/test/runTest.js"
   },
   "devDependencies": {
-    "@types/vscode": "^1.85.0",
-    "@types/node": "^20.x",
-    "@typescript-eslint/eslint-plugin": "^6.x",
-    "@typescript-eslint/parser": "^6.x",
-    "eslint": "^8.x",
-    "typescript": "^5.x",
-    "@vscode/test-electron": "^2.3.x"
+    "@types/vscode": "^1.80.0",
+    "@types/node": "16.x",
+    "@typescript-eslint/eslint-plugin": "^5.59.0",
+    "@typescript-eslint/parser": "^5.59.0",
+    "eslint": "^8.39.0",
+    "typescript": "^5.0.4"
   },
   "dependencies": {
-    "axios": "^1.6.0",
-    "minimatch": "^9.0.3"
+    "axios": "^1.4.0"
   }
 }
+
+

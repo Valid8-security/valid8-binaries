@@ -1,39 +1,5 @@
-# Parry (C) by Lemonade Stand. Written by Andy Kurapati and Shreyan Mitra
 """
-PHP language security analyzer
-
-Security analysis for PHP codebases including frameworks (Laravel, Symfony, WordPress):
-- 17+ CWE categories covering OWASP Top 10
-- Framework-specific vulnerability detection
-- Classic PHP vulnerabilities
-
-Detection Capabilities:
-- Command Injection (CWE-78): shell_exec(), exec(), system()
-- SQL Injection (CWE-89): mysql_query, PDO with concatenation
-- XSS (CWE-79): echo without escaping, unsafe template output
-- Remote File Inclusion (CWE-98): include/require with user input
-- Path Traversal (CWE-22): file_get_contents with user paths
-- Deserialization (CWE-502): unserialize() on untrusted data
-- XXE (CWE-611): XML parsing without entity restriction
-- Hardcoded Secrets (CWE-798): Database credentials, API keys
-- Weak Crypto (CWE-327): MD5 passwords, weak hashing
-- SSRF (CWE-918): Unvalidated URL in file_get_contents
-- Open Redirect (CWE-601): Unsafe header() redirects
-- CSRF (CWE-352): Missing CSRF token validation
-
-PHP-Specific Issues:
-- Variable variable misuse ($$var)
-- Type juggling vulnerabilities
-- Register globals equivalent patterns
-- Unsafe superglobal usage ($_GET, $_POST, $_REQUEST)
-- eval() and create_function() usage
-
-Framework Detection:
-- Laravel: Query builder misuse, Blade template issues
-- WordPress: Plugin vulnerabilities, nonce validation
-- Symfony: Twig template injection
-
-Used by: Scanner.scan_file() when processing .php files
+PHP language security analyzer.
 """
 
 import re

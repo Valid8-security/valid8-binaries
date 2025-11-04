@@ -1,4 +1,3 @@
-# Parry (C) by Lemonade Stand. Written by Andy Kurapati and Shreyan Mitra
 """
 Test file for new security patterns from Shreyan's branch.
 These demonstrate vulnerabilities that should now be detected.

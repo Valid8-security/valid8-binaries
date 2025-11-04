@@ -1,14 +1,5 @@
-# Parry (C) by Lemonade Stand. Written by Andy Kurapati and Shreyan Mitra
 """
 Prompt templates for LLM-based vulnerability patching
-
-This module contains CWE-specific prompt templates that guide the LLM in generating
-secure code fixes. Each template includes:
-- Explanation of the vulnerability
-- Best practices for fixing it
-- Code examples showing BAD and GOOD patterns
-
-These prompts are used by the PatchGenerator to create context-aware fixes.
 """
 
 PATCH_PROMPTS = {
@@ -140,8 +131,6 @@ Fix this security vulnerability by:
 }
 
 
-# SCAN_PROMPTS: Dictionary of prompts used for AI-powered vulnerability detection (--deep mode)
-# These guide the LLM to analyze code for security issues and provide structured output
 SCAN_PROMPTS = {
     "code_review": """
 You are a security expert reviewing code for vulnerabilities.

@@ -1,33 +1,5 @@
-# Parry (C) by Lemonade Stand. Written by Andy Kurapati and Shreyan Mitra
 """
-Unit tests for Parry scanner core functionality
-
-This test suite validates:
-- Individual detector classes (SQL injection, XSS, secrets, etc.)
-- Scanner integration (end-to-end file scanning)
-- Vulnerability detection accuracy
-- CWE classification correctness
-- Severity scoring
-- Multi-language support
-
-Test Coverage:
-- test_sql_injection_detection(): Validates SQL injection patterns
-- test_xss_detection(): Validates XSS detection in JavaScript
-- test_secrets_detection(): Validates hardcoded credential detection
-- test_scanner_integration(): End-to-end scanner test
-
-Usage:
-    pytest tests/test_scanner.py -v
-    pytest tests/test_scanner.py::test_sql_injection_detection
-
-CI/CD Integration:
-- Run automatically on every commit
-- Must pass before merging PRs
-- Part of release validation
-
-Requirements:
-- pytest >= 7.0
-- Parry installed (pip install -e .)
+Tests for Parry scanner
 """
 
 import pytest

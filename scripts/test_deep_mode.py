@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# Parry (C) by Lemonade Stand. Written by Andy Kurapati and Shreyan Mitra
 """
 Deep Mode Testing Script
 Tests Parry's AI-powered Deep Mode vulnerability detection

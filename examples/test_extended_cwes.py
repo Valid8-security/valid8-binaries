@@ -1,29 +1,6 @@
-# Parry (C) by Lemonade Stand. Written by Andy Kurapati and Shreyan Mitra
 """
 Extended CWE test cases for Parry v0.6.0
-Tests the newly added CWE detectors beyond the basic OWASP Top 10
-
-⚠️ WARNING: Intentionally vulnerable code for testing purposes only!
-
-Purpose:
-- Validate detection of less common but important CWEs
-- Test Parry's extended vulnerability coverage
-- Ensure recall improvements from v0.5.0 to v0.6.0
-
-Coverage (Additional CWEs):
-- CWE-306: Missing Authentication for Critical Function
-- CWE-434: Unrestricted File Upload
-- CWE-749: Exposed Dangerous Method or Function
-- CWE-770: Allocation of Resources Without Limits or Throttling
-- CWE-113: HTTP Header Injection (CRLF)
-- CWE-209: Generation of Error Message Containing Sensitive Information
-- CWE-330: Use of Insufficiently Random Values
-- CWE-295: Improper Certificate Validation
-
-Expected Results:
-- All functions should trigger vulnerability warnings
-- Confidence should be medium to high
-- Parry should suggest specific CWE IDs and remediation
+Tests the newly added CWE detectors
 """
 
 import random

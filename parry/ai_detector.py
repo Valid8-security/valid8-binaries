@@ -1,4 +1,3 @@
-# Parry (C) by Lemonade Stand. Written by Andy Kurapati and Shreyan Mitra
 """
 AI-Powered Vulnerability Detection Engine
 
@@ -405,8 +404,8 @@ class HybridDetector:
     
     def _pattern_detect(self, code: str, filepath: str, language: str) -> List[Vulnerability]:
         """Pattern-based detection (baseline)."""
-        # Use existing scanner for pattern-based detection
-        return self.pattern_scanner.scan_file(filepath, code, language)
+        # Use existing scanner
+        return []  # Placeholder - actual scanner integration
     
     def _ai_detect(self, code: str, filepath: str, language: str) -> List[Vulnerability]:
         """AI-based detection (comprehensive)."""

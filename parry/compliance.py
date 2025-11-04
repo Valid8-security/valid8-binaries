@@ -1,4 +1,3 @@
-# Parry (C) by Lemonade Stand. Written by Andy Kurapati and Shreyan Mitra
 """
 Compliance Reporting Module
 
@@ -444,37 +443,6 @@ class ComplianceReporter:
         """Export reports to JSON file"""
         with open(output_path, 'w') as f:
             json.dump(reports, f, indent=2)
-    
-    def export_to_pdf(self, 
-                     reports: Dict[str, Any], 
-                     output_path: Path,
-                     company_name: str = "Your Company",
-                     logo_path: Optional[Path] = None):
-        """
-        Export reports to PDF file
-        
-        Args:
-            reports: Compliance reports dictionary
-            output_path: Path where PDF should be saved
-            company_name: Company name for report branding
-            logo_path: Optional path to company logo
-        
-        Raises:
-            ImportError: If reportlab is not installed
-        """
-        try:
-            from .pdf_exporter import export_compliance_report_to_pdf
-        except ImportError:
-            raise ImportError(
-                "PDF export requires reportlab. Install with: pip install reportlab"
-            )
-        
-        return export_compliance_report_to_pdf(
-            reports, 
-            output_path, 
-            company_name=company_name,
-            logo_path=logo_path
-        )
     
     def generate_markdown_report(self, reports: Dict[str, Any]) -> str:
         """Generate markdown-formatted compliance report"""

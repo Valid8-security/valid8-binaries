@@ -1,40 +1,5 @@
-# Parry (C) by Lemonade Stand. Written by Andy Kurapati and Shreyan Mitra
 """
-Python language security analyzer
-
-Comprehensive security analysis for Python codebases with support for:
-- AST (Abstract Syntax Tree) parsing for accurate pattern matching
-- Data flow analysis to track tainted user input
-- Framework-specific detection (Django, Flask)
-- 35+ CWE categories covering OWASP Top 10
-
-Detection Capabilities:
-- Command Injection (CWE-78): os.system, subprocess with shell=True
-- Code Injection (CWE-94): eval(), exec(), compile() with user input
-- SQL Injection (CWE-89): Raw SQL queries, ORM misuse
-- XSS (CWE-79): Unsafe HTML rendering, template injection
-- Path Traversal (CWE-22): open(), os.path.join with user input
-- Deserialization (CWE-502): pickle.loads, yaml.load (unsafe)
-- XXE (CWE-611): XML parsing without entity restriction
-- Hardcoded Secrets (CWE-798): Passwords, API keys in source
-- Weak Crypto (CWE-327): MD5, SHA1, DES usage
-- SSRF (CWE-918): Unvalidated URL requests
-- CSRF (CWE-352): Missing CSRF protection
-- Open Redirect (CWE-601): Unsafe redirects
-- Race Conditions (CWE-362): TOCTOU vulnerabilities
-- And 20+ more vulnerability types
-
-Framework Support:
-- Django: ORM injection, template XSS, middleware issues
-- Flask: Template injection, session handling, CORS misconfig
-
-Analysis Techniques:
-- AST-based static analysis for precision
-- Regex patterns for quick heuristic detection
-- Data flow tracking for complex taint analysis
-- Context-aware severity scoring
-
-Used by: Scanner.scan_file() when processing .py files
+Python language security analyzer.
 """
 
 import re
@@ -171,25 +136,6 @@ class PythonAnalyzer(LanguageAnalyzer, UniversalDetectors):
                 vulnerabilities.extend(flask_vulns)
         except Exception as e:
             # Fallback if framework detection fails
-            pass
-        
-        # MITRE CWE Top 25 missing critical detections
-        try:
-            from ..detectors.missing_critical_cwes import detect_missing_critical_cwes
-            critical_cwes = detect_missing_critical_cwes(code, 'python', filepath)
-            for cwe_vuln in critical_cwes:
-                vulnerabilities.append(Vulnerability(
-                    cwe=cwe_vuln['cwe'],
-                    severity=cwe_vuln['severity'],
-                    title=cwe_vuln['type'],
-                    description=cwe_vuln['description'],
-                    file_path=filepath,
-                    line_number=cwe_vuln['line'],
-                    code_snippet=cwe_vuln['code'],
-                    confidence='high'
-                ))
-        except Exception as e:
-            # Fallback if missing CWE detector not available
             pass
         
         return vulnerabilities

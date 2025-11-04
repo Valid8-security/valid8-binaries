@@ -1,25 +1,5 @@
-# Parry (C) by Lemonade Stand. Written by Andy Kurapati and Shreyan Mitra
 """
 Feedback management system for beta renewals and user input
-
-This module handles beta user feedback collection and license renewal requests:
-- Local feedback queue storage (JSONL format in ~/.parry/feedback/)
-- Optional GitHub issue creation for feedback tracking
-- Renewal request submission with license metadata
-- Email contact information management
-- Retry mechanism for failed submissions
-
-Key Features:
-- Offline-first: Queues feedback locally even without internet
-- GitHub Integration: Automatically creates issues when online
-- License Context: Includes tier, expiration, machine_id in submissions
-- Privacy: User controls what metadata is shared
-- Fallback Email: Provides beta@parry.ai for manual submissions
-
-Used by:
-- `parry license renew` command
-- Admin feedback collection workflows
-- Beta program management
 """
 
 import json
@@ -213,24 +193,9 @@ Tier: {metadata.get('tier', 'N/A')}
     
     def mark_renewal_processed(self, submission_id: int):
         """Mark a renewal request as processed"""
-        try:
-            queue_file = Path.home() / '.parry' / 'renewal_queue.json'
-            if queue_file.exists():
-                with open(queue_file, 'r') as f:
-                    queue = json.load(f)
-                
-                # Update status
-                for item in queue.get('requests', []):
-                    if item.get('id') == submission_id:
-                        item['status'] = 'processed'
-                        item['processed_at'] = datetime.datetime.now().isoformat()
-                        break
-                
-                # Save updated queue
-                with open(queue_file, 'w') as f:
-                    json.dump(queue, f, indent=2)
-        except Exception as e:
-            print(f"Error marking renewal as processed: {e}")
+        # This would update the status in the queue file
+        # For now, this is a placeholder for future implementation
+        pass
     
     def get_renewals_from_github(self) -> List[Dict[str, Any]]:
         """Fetch pending renewal requests from GitHub Issues"""

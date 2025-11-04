@@ -1,22 +1,5 @@
-# Parry (C) by Lemonade Stand. Written by Andy Kurapati and Shreyan Mitra
 """
 Comparator - Benchmark Parry against other security tools
-
-This module enables comparative analysis of Parry's vulnerability detection against
-industry-standard security tools like Snyk and Semgrep. It:
-- Runs external security scanners (snyk, semgrep) on target codebases
-- Normalizes results from different tools into a common format
-- Computes overlap statistics (unique findings, shared detections)
-- Generates comparison reports in Markdown and terminal-friendly formats
-
-Key Features:
-- Unified result format for cross-tool comparison
-- Location-based matching (file path + line number)
-- Severity breakdown and statistics
-- Detailed overlap analysis (both tools, Parry-only, tool-only)
-- Support for multiple external scanner formats
-
-Used by: `parry compare` CLI command for competitive benchmarking
 """
 
 import json

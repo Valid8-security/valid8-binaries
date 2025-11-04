@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# Parry (C) by Lemonade Stand. Written by Andy Kurapati and Shreyan Mitra
 """
 Beta license signup script for testing
 """
