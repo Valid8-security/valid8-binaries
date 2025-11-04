@@ -134,26 +134,73 @@ class AIDetector:
         language: str,
         codebase_context: Dict[str, str]
     ) -> str:
-        """Build optimized minimal detection prompt for faster AI analysis."""
+        """Build optimized prompt focusing on vulnerabilities pattern scanners miss."""
         
         # Limit code length for faster processing
         code_snippet = code[:2000] if len(code) > 2000 else code
         
-        prompt = f"""Security scan for {filepath}:
+        # Get Fast Mode findings to avoid duplication
+        fast_mode_cwes = set()
+        if codebase_context and 'fast_mode_findings' in codebase_context:
+            fast_mode_cwes = {f.get('cwe', '') for f in codebase_context['fast_mode_findings']}
+        
+        prompt = f"""You are a security expert finding vulnerabilities that automated scanners miss.
+
+FILE: {filepath}
 
 ```{language}
 {code_snippet}
 ```
 
-Find vulnerabilities:
-- SQL injection (CWE-89)
-- XSS (CWE-79)
-- Command injection (CWE-78)
-- Path traversal (CWE-22)
-- Hardcoded secrets (CWE-798)
-- Weak crypto (CWE-327)
-- Auth bypass (CWE-287)
-- Deserialization (CWE-502)
+FOCUS ON HIGH-MISS-RATE VULNERABILITIES (what pattern scanners miss):
+
+**BUSINESS LOGIC (Top Priority):**
+- Broken Access Control (CWE-285): Missing authorization checks on sensitive operations
+- IDOR (CWE-639): Direct object references without permission validation
+- Mass Assignment (CWE-915): User input binding to internal model fields
+- Race Conditions (CWE-362): TOCTOU bugs, concurrent access issues
+- Price/Quantity Manipulation: Negative values, integer overflows
+
+**AUTHENTICATION & SESSION:**
+- Missing Authentication (CWE-306): Unprotected sensitive endpoints
+- Session Fixation (CWE-384): Session ID not regenerated after login
+- Weak Session Management (CWE-807): Predictable session tokens
+- JWT Issues: Algorithm confusion, 'none' algorithm acceptance
+
+**CONTEXT-DEPENDENT:**
+- Indirect Injection: Multi-hop taint flow through helper functions
+- ORM Injection (CWE-564): Parameterized but still vulnerable queries
+- Second-Order Injection: Stored data later executed unsafely
+- Template Injection (CWE-94): In specific framework contexts
+
+**SEMANTIC:**
+- Weak Randomness (CWE-330): Math.random() for security tokens
+- Information Disclosure (CWE-200): Verbose errors, debug mode in prod
+- Missing Rate Limiting (CWE-307): Brute force vulnerable endpoints
+- CSRF (CWE-352): State-changing operations without tokens
+
+**ONLY CHECK IF NOT ALREADY FOUND:**"""
+        
+        # Add common patterns only if Fast Mode didn't find them
+        if 'CWE-89' not in fast_mode_cwes:
+            prompt += "\n- SQL Injection (CWE-89)"
+        if 'CWE-79' not in fast_mode_cwes:
+            prompt += "\n- XSS (CWE-79)"
+        if 'CWE-78' not in fast_mode_cwes:
+            prompt += "\n- Command Injection (CWE-78)"
+        if 'CWE-22' not in fast_mode_cwes:
+            prompt += "\n- Path Traversal (CWE-22)"
+        
+        prompt += """
+
+ANALYSIS CHECKLIST:
+1. Missing authorization checks?
+2. User input → sensitive operations?
+3. Weak crypto/randomness?
+4. Session management issues?
+5. Error messages leaking info?
+6. Race conditions?
+7. IDOR possibilities?
 
 Format:
 VULNERABILITY
@@ -162,9 +209,10 @@ SEVERITY: [critical/high/medium/low]
 TITLE: [brief]
 LINE: [line number]
 DESCRIPTION: [explanation]
+EXPLOITATION: [how to exploit]
 ---
 
-Only report real vulnerabilities. Consider framework protections."""
+Only report REAL vulnerabilities with concrete exploitation paths. Consider framework protections."""
 
         return prompt
     

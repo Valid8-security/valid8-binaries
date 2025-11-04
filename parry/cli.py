@@ -294,9 +294,18 @@ def scan(path: str, format: str, output: Optional[str], severity: Optional[str],
                 console.print(f"[dim]Expected speedup: {stats['expected_speedup']} | Using {max_workers} workers[/dim]")
                 # Use only high-risk files
                 scanned_files = high_risk_files
+                
+                # Prepare Fast Mode findings context for AI (avoid duplication)
+                fast_mode_findings_by_file = {}
+                for vuln in results.get('vulnerabilities', []):
+                    file_path = vuln.get('file_path', '')
+                    if file_path not in fast_mode_findings_by_file:
+                        fast_mode_findings_by_file[file_path] = []
+                    fast_mode_findings_by_file[file_path].append(vuln)
             else:
                 # Deep mode: analyze all files
                 console.print(f"[dim]Found {len(scanned_files)} files for AI analysis (using {max_workers} workers)[/dim]")
+                fast_mode_findings_by_file = {}
             
             # Optimized parallel processing for AI vulnerability detection
             # Initialize list to collect AI-detected vulnerabilities
@@ -319,11 +328,18 @@ def scan(path: str, format: str, output: Optional[str], severity: Optional[str],
                 try:
                     # Read the file content, ignoring encoding errors
                     code = file_path.read_text(errors='ignore')
+                    
+                    # Build context with Fast Mode findings to avoid duplication
+                    context = {}
+                    if mode == "hybrid" and str(file_path) in fast_mode_findings_by_file:
+                        context['fast_mode_findings'] = fast_mode_findings_by_file[str(file_path)]
+                    
                     # Call AI detector to analyze the code for vulnerabilities
                     file_vulns = ai_detector.detect_vulnerabilities(
                         code,  # Source code to analyze
                         str(file_path),  # File path as string
-                        file_path.suffix[1:]  # Language extracted from file extension (remove leading dot)
+                        file_path.suffix[1:],  # Language extracted from file extension (remove leading dot)
+                        context  # Context with Fast Mode findings
                     )
                     # Convert vulnerability objects to dictionaries for JSON serialization
                     return [v.to_dict() if hasattr(v, 'to_dict') else v for v in file_vulns]
