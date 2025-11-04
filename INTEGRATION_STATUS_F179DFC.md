@@ -73,7 +73,7 @@ All features from commit f179dfc (Shreyan's comprehensive production-ready updat
 
 ---
 
-## Test Results (Post-Integration)
+## Test Results (Post-Integration + Optimization)
 
 ### Comprehensive Test Suite
 ```
@@ -81,22 +81,45 @@ Total: 12 tests
 Passed: 12 ✅
 Failed: 0
 Skipped: 0
-Time: 60.45 seconds
+Time: 1.49 seconds (was 60.45s - 40x faster!)
 ```
 
 **Test Coverage:**
-- ✅ Imports
-- ✅ Scanner Basic
-- ✅ Fast Mode
+- ✅ Imports (0.19s)
+- ✅ Scanner Basic (0.01s)
+- ✅ Fast Mode (0.00s)
 - ✅ Vulnerability Types (5+ CWEs detected)
 - ✅ Severity Levels (multiple levels)
-- ✅ License Manager
-- ✅ Setup Helper
-- ✅ Reporter
-- ✅ Patch Generator (AI)
-- ✅ Demo Script
-- ✅ Benchmark Results
-- ✅ Documentation
+- ✅ License Manager (0.00s)
+- ✅ Setup Helper (0.00s)
+- ✅ Reporter (0.00s)
+- ✅ Patch Generator (1.26s - was 60s+, 48x faster!)
+- ✅ Demo Script (0.03s)
+- ✅ Benchmark Results (0.00s)
+- ✅ Documentation (0.00s)
+
+### AI Performance Improvements
+**Before Optimization:**
+- Model: codellama:7b-instruct (3.8GB)
+- Timeout: 60s (frequent timeouts)
+- Deep Mode: Not functional
+- Patch Generator: 60+ seconds
+
+**After Optimization:**
+- Model: qwen2.5-coder:1.5b (986MB)
+- Timeout: No timeouts
+- Deep Mode: 7.85s for 7 vulnerabilities
+- Patch Generator: 1.26s (**48x speedup**)
+- AI Detection: Fully functional
+
+### Performance Metrics
+| Metric | Before | After | Improvement |
+|--------|--------|-------|-------------|
+| AI Inference Time | 60s+ (timeout) | 1-8s | **8-60x faster** |
+| Model Size | 3.8GB | 986MB | **3.9x smaller** |
+| Patch Generator | 60s+ | 1.26s | **48x faster** |
+| Test Suite Time | 60.45s | 1.49s | **40x faster** |
+| Deep Mode | ❌ Timeouts | ✅ 7.85s | **Fixed** |
 
 ---
 
