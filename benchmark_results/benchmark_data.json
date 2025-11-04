@@ -1,0 +1,509 @@
+{
+  "ground_truth": [
+    {
+      "file": "sql_injection.py",
+      "line": 6,
+      "cwe": "CWE-89",
+      "type": "SQL Injection",
+      "severity": "high"
+    },
+    {
+      "file": "command_injection.py",
+      "line": 6,
+      "cwe": "CWE-78",
+      "type": "Command Injection",
+      "severity": "critical"
+    },
+    {
+      "file": "command_injection.py",
+      "line": 10,
+      "cwe": "CWE-78",
+      "type": "Command Injection",
+      "severity": "critical"
+    },
+    {
+      "file": "path_traversal.py",
+      "line": 4,
+      "cwe": "CWE-22",
+      "type": "Path Traversal",
+      "severity": "high"
+    },
+    {
+      "file": "hardcoded_credentials.py",
+      "line": 3,
+      "cwe": "CWE-798",
+      "type": "Hardcoded Credentials",
+      "severity": "high"
+    },
+    {
+      "file": "hardcoded_credentials.py",
+      "line": 4,
+      "cwe": "CWE-798",
+      "type": "Hardcoded Credentials",
+      "severity": "high"
+    },
+    {
+      "file": "hardcoded_credentials.py",
+      "line": 5,
+      "cwe": "CWE-798",
+      "type": "Hardcoded Credentials",
+      "severity": "medium"
+    },
+    {
+      "file": "hardcoded_credentials.py",
+      "line": 13,
+      "cwe": "CWE-798",
+      "type": "Hardcoded Credentials",
+      "severity": "high"
+    },
+    {
+      "file": "weak_crypto.py",
+      "line": 6,
+      "cwe": "CWE-327",
+      "type": "Weak Cryptography",
+      "severity": "high"
+    },
+    {
+      "file": "weak_crypto.py",
+      "line": 10,
+      "cwe": "CWE-327",
+      "type": "Weak Cryptography",
+      "severity": "medium"
+    },
+    {
+      "file": "xss_vulnerability.js",
+      "line": 4,
+      "cwe": "CWE-79",
+      "type": "Cross-Site Scripting",
+      "severity": "high"
+    },
+    {
+      "file": "xss_vulnerability.js",
+      "line": 9,
+      "cwe": "CWE-79",
+      "type": "Cross-Site Scripting",
+      "severity": "high"
+    }
+  ],
+  "results": [
+    {
+      "tool": "Parry",
+      "mode": "fast",
+      "vulnerabilities_found": 0,
+      "scan_time": 0.07455110549926758,
+      "files_scanned": 6,
+      "files_per_second": 80.4817039240142,
+      "vulnerabilities": []
+    },
+    {
+      "tool": "Parry",
+      "mode": "hybrid",
+      "vulnerabilities_found": 0,
+      "scan_time": 0.07330679893493652,
+      "files_scanned": 6,
+      "files_per_second": 81.8477970280124,
+      "vulnerabilities": []
+    },
+    {
+      "tool": "Snyk",
+      "mode": "",
+      "vulnerabilities_found": 0,
+      "scan_time": 1.4807360172271729,
+      "files_scanned": 6,
+      "files_per_second": 4.052038938875549,
+      "vulnerabilities": []
+    },
+    {
+      "tool": "Semgrep",
+      "mode": "",
+      "vulnerabilities_found": 6,
+      "scan_time": 6.519694805145264,
+      "files_scanned": 6,
+      "files_per_second": 0.9202884765809702,
+      "vulnerabilities": [
+        {
+          "check_id": "python.lang.security.audit.subprocess-shell-true.subprocess-shell-true",
+          "path": "benchmark_results/test_codebase/command_injection.py",
+          "start": {
+            "line": 11,
+            "col": 40,
+            "offset": 228
+          },
+          "end": {
+            "line": 11,
+            "col": 44,
+            "offset": 232
+          },
+          "extra": {
+            "message": "Found 'subprocess' function 'call' with 'shell=True'. This is dangerous because this call will spawn the command using a shell process. Doing so propagates current shell settings and variables, which makes it much easier for a malicious actor to execute commands. Use 'shell=False' instead.",
+            "fix": "False",
+            "metadata": {
+              "source-rule-url": "https://bandit.readthedocs.io/en/latest/plugins/b602_subprocess_popen_with_shell_equals_true.html",
+              "owasp": [
+                "A01:2017 - Injection",
+                "A03:2021 - Injection"
+              ],
+              "cwe": [
+                "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
+              ],
+              "references": [
+                "https://stackoverflow.com/questions/3172470/actual-meaning-of-shell-true-in-subprocess",
+                "https://docs.python.org/3/library/subprocess.html"
+              ],
+              "category": "security",
+              "technology": [
+                "python"
+              ],
+              "cwe2022-top25": true,
+              "cwe2021-top25": true,
+              "subcategory": [
+                "secure default"
+              ],
+              "likelihood": "HIGH",
+              "impact": "LOW",
+              "confidence": "MEDIUM",
+              "license": "Semgrep Rules License v1.0. For more details, visit semgrep.dev/legal/rules-license",
+              "vulnerability_class": [
+                "Command Injection"
+              ],
+              "source": "https://semgrep.dev/r/python.lang.security.audit.subprocess-shell-true.subprocess-shell-true",
+              "shortlink": "https://sg.run/J92w"
+            },
+            "severity": "ERROR",
+            "fingerprint": "requires login",
+            "lines": "requires login",
+            "validation_state": "NO_VALIDATOR",
+            "engine_kind": "OSS"
+          }
+        },
+        {
+          "check_id": "python.sqlalchemy.security.sqlalchemy-execute-raw-query.sqlalchemy-execute-raw-query",
+          "path": "benchmark_results/test_codebase/sql_injection.py",
+          "start": {
+            "line": 8,
+            "col": 14,
+            "offset": 195
+          },
+          "end": {
+            "line": 8,
+            "col": 33,
+            "offset": 214
+          },
+          "extra": {
+            "message": "Avoiding SQL string concatenation: untrusted input concatenated with raw SQL query can result in SQL Injection. In order to execute raw query safely, prepared statement should be used. SQLAlchemy provides TextualSQL to easily used prepared statement with named parameters. For complex SQL composition, use SQL Expression Language or Schema Definition Language. In most cases, SQLAlchemy ORM will be a better option.",
+            "metadata": {
+              "cwe": [
+                "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+              ],
+              "owasp": [
+                "A01:2017 - Injection",
+                "A03:2021 - Injection"
+              ],
+              "references": [
+                "https://docs.sqlalchemy.org/en/14/core/tutorial.html#using-textual-sql",
+                "https://www.tutorialspoint.com/sqlalchemy/sqlalchemy_quick_guide.htm",
+                "https://docs.sqlalchemy.org/en/14/core/tutorial.html#using-more-specific-text-with-table-expression-literal-column-and-expression-column"
+              ],
+              "category": "security",
+              "technology": [
+                "sqlalchemy"
+              ],
+              "cwe2022-top25": true,
+              "cwe2021-top25": true,
+              "subcategory": [
+                "audit"
+              ],
+              "likelihood": "LOW",
+              "impact": "HIGH",
+              "confidence": "LOW",
+              "license": "Semgrep Rules License v1.0. For more details, visit semgrep.dev/legal/rules-license",
+              "vulnerability_class": [
+                "SQL Injection"
+              ],
+              "source": "https://semgrep.dev/r/python.sqlalchemy.security.sqlalchemy-execute-raw-query.sqlalchemy-execute-raw-query",
+              "shortlink": "https://sg.run/2b1L"
+            },
+            "severity": "ERROR",
+            "fingerprint": "requires login",
+            "lines": "requires login",
+            "validation_state": "NO_VALIDATOR",
+            "engine_kind": "OSS"
+          }
+        },
+        {
+          "check_id": "python.lang.security.audit.md5-used-as-password.md5-used-as-password",
+          "path": "benchmark_results/test_codebase/weak_crypto.py",
+          "start": {
+            "line": 7,
+            "col": 12,
+            "offset": 102
+          },
+          "end": {
+            "line": 7,
+            "col": 54,
+            "offset": 144
+          },
+          "extra": {
+            "message": "It looks like MD5 is used as a password hash. MD5 is not considered a secure password hash because it can be cracked by an attacker in a short amount of time. Use a suitable password hashing function such as scrypt. You can use `hashlib.scrypt`.",
+            "metadata": {
+              "cwe": [
+                "CWE-327: Use of a Broken or Risky Cryptographic Algorithm"
+              ],
+              "owasp": [
+                "A03:2017 - Sensitive Data Exposure",
+                "A02:2021 - Cryptographic Failures"
+              ],
+              "references": [
+                "https://tools.ietf.org/html/rfc6151",
+                "https://crypto.stackexchange.com/questions/44151/how-does-the-flame-malware-take-advantage-of-md5-collision",
+                "https://pycryptodome.readthedocs.io/en/latest/src/hash/sha3_256.html",
+                "https://security.stackexchange.com/questions/211/how-to-securely-hash-passwords",
+                "https://github.com/returntocorp/semgrep-rules/issues/1609",
+                "https://docs.python.org/3/library/hashlib.html#hashlib.scrypt"
+              ],
+              "category": "security",
+              "technology": [
+                "pycryptodome",
+                "hashlib",
+                "md5"
+              ],
+              "subcategory": [
+                "vuln"
+              ],
+              "likelihood": "HIGH",
+              "impact": "LOW",
+              "confidence": "MEDIUM",
+              "license": "Semgrep Rules License v1.0. For more details, visit semgrep.dev/legal/rules-license",
+              "vulnerability_class": [
+                "Cryptographic Issues"
+              ],
+              "source": "https://semgrep.dev/r/python.lang.security.audit.md5-used-as-password.md5-used-as-password",
+              "shortlink": "https://sg.run/5DwD"
+            },
+            "severity": "WARNING",
+            "fingerprint": "requires login",
+            "lines": "requires login",
+            "validation_state": "NO_VALIDATOR",
+            "engine_kind": "OSS"
+          }
+        },
+        {
+          "check_id": "python.lang.security.insecure-hash-algorithms.insecure-hash-algorithm-sha1",
+          "path": "benchmark_results/test_codebase/weak_crypto.py",
+          "start": {
+            "line": 11,
+            "col": 12,
+            "offset": 226
+          },
+          "end": {
+            "line": 11,
+            "col": 43,
+            "offset": 257
+          },
+          "extra": {
+            "message": "Detected SHA1 hash algorithm which is considered insecure. SHA1 is not collision resistant and is therefore not suitable as a cryptographic signature. Use SHA256 or SHA3 instead.",
+            "fix": "hashlib.sha256(password.encode())",
+            "metadata": {
+              "source-rule-url": "https://github.com/PyCQA/bandit/blob/d5f8fa0d89d7b11442fc6ec80ca42953974354c8/bandit/blacklists/calls.py#L59",
+              "cwe": [
+                "CWE-327: Use of a Broken or Risky Cryptographic Algorithm"
+              ],
+              "owasp": [
+                "A03:2017 - Sensitive Data Exposure",
+                "A02:2021 - Cryptographic Failures"
+              ],
+              "bandit-code": "B303",
+              "asvs": {
+                "control_id": "6.2.2 Insecure Custom Algorithm",
+                "control_url": "https://github.com/OWASP/ASVS/blob/master/4.0/en/0x14-V6-Cryptography.md#v62-algorithms",
+                "section": "V6 Stored Cryptography Verification Requirements",
+                "version": "4"
+              },
+              "references": [
+                "https://www.schneier.com/blog/archives/2012/10/when_will_we_se.html",
+                "https://www.trendmicro.com/vinfo/us/security/news/vulnerabilities-and-exploits/sha-1-collision-signals-the-end-of-the-algorithm-s-viability",
+                "http://2012.sharcs.org/slides/stevens.pdf",
+                "https://pycryptodome.readthedocs.io/en/latest/src/hash/sha3_256.html"
+              ],
+              "category": "security",
+              "technology": [
+                "python"
+              ],
+              "subcategory": [
+                "vuln"
+              ],
+              "likelihood": "LOW",
+              "impact": "MEDIUM",
+              "confidence": "MEDIUM",
+              "license": "Semgrep Rules License v1.0. For more details, visit semgrep.dev/legal/rules-license",
+              "vulnerability_class": [
+                "Cryptographic Issues"
+              ],
+              "source": "https://semgrep.dev/r/python.lang.security.insecure-hash-algorithms.insecure-hash-algorithm-sha1",
+              "shortlink": "https://sg.run/ydYx"
+            },
+            "severity": "WARNING",
+            "fingerprint": "requires login",
+            "lines": "requires login",
+            "validation_state": "NO_VALIDATOR",
+            "engine_kind": "OSS"
+          }
+        },
+        {
+          "check_id": "javascript.browser.security.insecure-document-method.insecure-document-method",
+          "path": "benchmark_results/test_codebase/xss_vulnerability.js",
+          "start": {
+            "line": 4,
+            "col": 5,
+            "offset": 73
+          },
+          "end": {
+            "line": 4,
+            "col": 59,
+            "offset": 127
+          },
+          "extra": {
+            "message": "User controlled data in methods like `innerHTML`, `outerHTML` or `document.write` is an anti-pattern that can lead to XSS vulnerabilities",
+            "metadata": {
+              "cwe": [
+                "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+              ],
+              "owasp": [
+                "A07:2017 - Cross-Site Scripting (XSS)",
+                "A03:2021 - Injection"
+              ],
+              "category": "security",
+              "technology": [
+                "browser"
+              ],
+              "cwe2022-top25": true,
+              "cwe2021-top25": true,
+              "subcategory": [
+                "audit"
+              ],
+              "likelihood": "LOW",
+              "impact": "LOW",
+              "confidence": "LOW",
+              "references": [
+                "https://owasp.org/Top10/A03_2021-Injection"
+              ],
+              "license": "Semgrep Rules License v1.0. For more details, visit semgrep.dev/legal/rules-license",
+              "vulnerability_class": [
+                "Cross-Site-Scripting (XSS)"
+              ],
+              "source": "https://semgrep.dev/r/javascript.browser.security.insecure-document-method.insecure-document-method",
+              "shortlink": "https://sg.run/LwA9"
+            },
+            "severity": "ERROR",
+            "fingerprint": "requires login",
+            "lines": "requires login",
+            "validation_state": "NO_VALIDATOR",
+            "engine_kind": "OSS"
+          }
+        },
+        {
+          "check_id": "javascript.browser.security.insecure-document-method.insecure-document-method",
+          "path": "benchmark_results/test_codebase/xss_vulnerability.js",
+          "start": {
+            "line": 9,
+            "col": 5,
+            "offset": 203
+          },
+          "end": {
+            "line": 9,
+            "col": 56,
+            "offset": 254
+          },
+          "extra": {
+            "message": "User controlled data in methods like `innerHTML`, `outerHTML` or `document.write` is an anti-pattern that can lead to XSS vulnerabilities",
+            "metadata": {
+              "cwe": [
+                "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+              ],
+              "owasp": [
+                "A07:2017 - Cross-Site Scripting (XSS)",
+                "A03:2021 - Injection"
+              ],
+              "category": "security",
+              "technology": [
+                "browser"
+              ],
+              "cwe2022-top25": true,
+              "cwe2021-top25": true,
+              "subcategory": [
+                "audit"
+              ],
+              "likelihood": "LOW",
+              "impact": "LOW",
+              "confidence": "LOW",
+              "references": [
+                "https://owasp.org/Top10/A03_2021-Injection"
+              ],
+              "license": "Semgrep Rules License v1.0. For more details, visit semgrep.dev/legal/rules-license",
+              "vulnerability_class": [
+                "Cross-Site-Scripting (XSS)"
+              ],
+              "source": "https://semgrep.dev/r/javascript.browser.security.insecure-document-method.insecure-document-method",
+              "shortlink": "https://sg.run/LwA9"
+            },
+            "severity": "ERROR",
+            "fingerprint": "requires login",
+            "lines": "requires login",
+            "validation_state": "NO_VALIDATOR",
+            "engine_kind": "OSS"
+          }
+        }
+      ]
+    }
+  ],
+  "metrics": [
+    {
+      "tool": "Parry",
+      "mode": "fast",
+      "true_positives": 0,
+      "false_positives": 0,
+      "false_negatives": 12,
+      "recall": 0.0,
+      "precision": 0.0,
+      "f1_score": 0.0,
+      "scan_time": 0.07455110549926758,
+      "files_per_second": 80.4817039240142
+    },
+    {
+      "tool": "Parry",
+      "mode": "hybrid",
+      "true_positives": 0,
+      "false_positives": 0,
+      "false_negatives": 12,
+      "recall": 0.0,
+      "precision": 0.0,
+      "f1_score": 0.0,
+      "scan_time": 0.07330679893493652,
+      "files_per_second": 81.8477970280124
+    },
+    {
+      "tool": "Snyk",
+      "mode": "",
+      "true_positives": 0,
+      "false_positives": 0,
+      "false_negatives": 12,
+      "recall": 0.0,
+      "precision": 0.0,
+      "f1_score": 0.0,
+      "scan_time": 1.4807360172271729,
+      "files_per_second": 4.052038938875549
+    },
+    {
+      "tool": "Semgrep",
+      "mode": "",
+      "true_positives": 0,
+      "false_positives": 0,
+      "false_negatives": 12,
+      "recall": 0.0,
+      "precision": 0.0,
+      "f1_score": 0.0,
+      "scan_time": 6.519694805145264,
+      "files_per_second": 0.9202884765809702
+    }
+  ]
+}

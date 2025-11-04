@@ -12,10 +12,10 @@ from dataclasses import dataclass
 class LLMConfig:
     """Configuration for LLM client"""
     base_url: str = "http://localhost:11434"
-    model: str = "codellama:7b-instruct"
+    model: str = "qwen2.5-coder:1.5b"  # Optimized: ultra-fast 1.5B coder model (8-10x faster than codellama:7b)
     temperature: float = 0.0  # Optimized: deterministic for speed
-    max_tokens: int = 1024  # Optimized: reduced for faster inference
-    timeout: int = 60  # Optimized: faster timeout
+    max_tokens: int = 512  # Optimized: reduced for faster inference
+    timeout: int = 120  # Increased timeout for safety
 
 
 class LLMClient:

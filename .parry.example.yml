@@ -1,0 +1,113 @@
+# Parry Security Scanner Configuration Example
+# Copy this file to .parry.yml in your project root
+
+# Paths to exclude from scanning
+exclude:
+  - "*/node_modules/*"
+  - "*/.git/*"
+  - "*/venv/*"
+  - "*/__pycache__/*"
+  - "*/dist/*"
+  - "*/build/*"
+  - "*.min.js"
+  - "*.min.css"
+  - "*/test/*"
+  - "*/tests/*"
+  - "*/.pytest_cache/*"
+
+# Minimum severity level to report (low, medium, high, critical)
+severity_threshold: medium
+
+# LLM configuration
+llm:
+  # Model to use for patch generation
+  model: codellama:7b-instruct
+  
+  # Alternative models:
+  # model: deepseek-coder:6.7b-instruct
+  # model: codegemma:7b-instruct
+  
+  # Ollama API endpoint
+  base_url: http://localhost:11434
+  
+  # Generation parameters
+  temperature: 0.1
+  max_tokens: 2048
+  timeout: 120
+
+# Scanner configuration
+scanner:
+  # Enable/disable specific vulnerability detectors
+  detectors:
+    sql_injection: true      # CWE-89
+    xss: true               # CWE-79
+    secrets: true           # CWE-798
+    path_traversal: true    # CWE-22
+    command_injection: true # CWE-78
+    deserialization: true   # CWE-502
+    weak_crypto: true       # CWE-327
+    xxe: true              # CWE-611
+    ssrf: true             # CWE-918
+    permissions: true      # CWE-732
+
+# Report configuration
+report:
+  # Default output format (terminal, json, markdown)
+  default_format: terminal
+  
+  # Include code snippets in reports
+  include_snippets: true
+  
+  # Number of context lines around vulnerability
+  context_lines: 5
+  
+  # Show confidence scores
+  show_confidence: true
+
+# Patch generation
+patch:
+  # Automatic backup before applying patches
+  backup: true
+  
+  # Backup directory
+  backup_dir: .parry-backups
+  
+  # Default mode (interactive, automatic, dry-run)
+  mode: interactive
+
+# Benchmarking
+benchmark:
+  # Tools to compare against
+  compare_tools:
+    - snyk
+    - semgrep
+  
+  # Save benchmark results
+  save_results: true
+  output_dir: benchmark_results
+
+# File type associations
+file_types:
+  python:
+    extensions: [".py"]
+    detectors: all
+  javascript:
+    extensions: [".js", ".jsx", ".ts", ".tsx"]
+    detectors: all
+  java:
+    extensions: [".java"]
+    detectors: all
+  go:
+    extensions: [".go"]
+    detectors: all
+
+# Custom rules (advanced)
+custom_rules:
+  # Example: Detect use of deprecated function
+  - id: deprecated-function
+    pattern: 'eval\s*\('
+    message: "Use of eval() is deprecated and dangerous"
+    severity: high
+    cwe: CWE-94
+
+

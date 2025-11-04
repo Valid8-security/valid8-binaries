@@ -189,26 +189,27 @@ def scan(path: str, format: str, output: Optional[str], severity: Optional[str],
                         progress.update(task, completed=completed)
             
             # Merge AI findings with pattern findings
+            # Both Deep and Hybrid modes should COMBINE pattern + AI findings
+            original_count = len(results['vulnerabilities'])
+            results['vulnerabilities'].extend(ai_vulns)
+            
+            # Deduplicate based on CWE + location
+            seen = set()
+            deduped = []
+            for v in results['vulnerabilities']:
+                key = (v['cwe'], v['file_path'], v['line_number'])
+                if key not in seen:
+                    seen.add(key)
+                    deduped.append(v)
+            
+            results['vulnerabilities'] = deduped
+            results['vulnerabilities_found'] = len(deduped)
+            
+            ai_added = len(deduped) - original_count
             if mode == "hybrid":
-                # Combine both
-                original_count = len(results['vulnerabilities'])
-                results['vulnerabilities'].extend(ai_vulns)
-                # Deduplicate
-                seen = set()
-                deduped = []
-                for v in results['vulnerabilities']:
-                    key = (v['cwe'], v['file_path'], v['line_number'])
-                    if key not in seen:
-                        seen.add(key)
-                        deduped.append(v)
-                results['vulnerabilities'] = deduped
-                results['vulnerabilities_found'] = len(deduped)
-                console.print(f"[green]✓ AI found {len(ai_vulns)} additional vulnerabilities (total: {len(deduped)})[/green]")
+                console.print(f"[green]✓ AI found {ai_added} additional vulnerabilities (total: {len(deduped)})[/green]")
             else:  # deep mode
-                # Replace with AI findings
-                results['vulnerabilities'] = ai_vulns
-                results['vulnerabilities_found'] = len(ai_vulns)
-                console.print(f"[green]✓ AI detected {len(ai_vulns)} vulnerabilities[/green]")
+                console.print(f"[green]✓ Combined: {original_count} pattern + {len(ai_vulns)} AI = {len(deduped)} total vulnerabilities[/green]")
             
         except Exception as e:
             console.print(f"[red]AI deep scan failed: {e}[/red]")

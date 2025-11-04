@@ -133,85 +133,56 @@ class AIDetector:
         language: str,
         codebase_context: Dict[str, str]
     ) -> str:
-        """Build optimized prompt focusing on vulnerabilities pattern scanners miss."""
+        """Build optimized prompt balancing speed and detection quality."""
         
-        # Limit code length for faster processing
-        code_snippet = code[:2000] if len(code) > 2000 else code
+        # Limit code length for speed (1200 chars = ~40 lines)
+        code_snippet = code[:1200] if len(code) > 1200 else code
         
-        # Get Fast Mode findings to avoid duplication
-        fast_mode_cwes = set()
-        if codebase_context and 'fast_mode_findings' in codebase_context:
-            fast_mode_cwes = {f.get('cwe', '') for f in codebase_context['fast_mode_findings']}
+        # Count lines for accurate line numbers
+        line_count = len(code_snippet.split('\n'))
         
-        prompt = f"""You are a security expert finding vulnerabilities that automated scanners miss.
-
-FILE: {filepath}
+        # Concise but comprehensive prompt
+        prompt = f"""Analyze this {language} code for security vulnerabilities.
 
 ```{language}
 {code_snippet}
 ```
 
-FOCUS ON HIGH-MISS-RATE VULNERABILITIES (what pattern scanners miss):
+Find ALL vulnerabilities:
 
-**BUSINESS LOGIC (Top Priority):**
-- Broken Access Control (CWE-285): Missing authorization checks on sensitive operations
-- IDOR (CWE-639): Direct object references without permission validation
-- Mass Assignment (CWE-915): User input binding to internal model fields
-- Race Conditions (CWE-362): TOCTOU bugs, concurrent access issues
-- Price/Quantity Manipulation: Negative values, integer overflows
+**INJECTION FLAWS:**
+- SQL Injection (CWE-89): unsanitized input in queries
+- Command Injection (CWE-78): shell commands with user input
+- XSS (CWE-79): unescaped user input in HTML
+- Path Traversal (CWE-22): file paths from user input
+- LDAP/XML/NoSQL Injection: unsanitized queries
 
-**AUTHENTICATION & SESSION:**
-- Missing Authentication (CWE-306): Unprotected sensitive endpoints
-- Session Fixation (CWE-384): Session ID not regenerated after login
-- Weak Session Management (CWE-807): Predictable session tokens
-- JWT Issues: Algorithm confusion, 'none' algorithm acceptance
+**SECURITY MISCONFIG:**
+- Hardcoded Credentials (CWE-798): passwords, API keys, tokens
+- Weak Crypto (CWE-327): MD5, SHA1, DES, weak keys
+- Debug Mode (CWE-489): debug=True in production
+- Missing HTTPS (CWE-319): sensitive data over HTTP
 
-**CONTEXT-DEPENDENT:**
-- Indirect Injection: Multi-hop taint flow through helper functions
-- ORM Injection (CWE-564): Parameterized but still vulnerable queries
-- Second-Order Injection: Stored data later executed unsafely
-- Template Injection (CWE-94): In specific framework contexts
+**ACCESS CONTROL:**
+- Missing Auth (CWE-306): no authentication on sensitive functions
+- Broken Access Control (CWE-285): missing permission checks
+- IDOR (CWE-639): direct object references without validation
 
-**SEMANTIC:**
-- Weak Randomness (CWE-330): Math.random() for security tokens
-- Information Disclosure (CWE-200): Verbose errors, debug mode in prod
-- Missing Rate Limiting (CWE-307): Brute force vulnerable endpoints
-- CSRF (CWE-352): State-changing operations without tokens
+**DANGEROUS FUNCTIONS:**
+- Deserialization (CWE-502): pickle, eval, exec with user data
+- File Upload (CWE-434): unrestricted file uploads
+- SSRF (CWE-918): requests with user-controlled URLs
 
-**ONLY CHECK IF NOT ALREADY FOUND:**"""
-        
-        # Add common patterns only if Fast Mode didn't find them
-        if 'CWE-89' not in fast_mode_cwes:
-            prompt += "\n- SQL Injection (CWE-89)"
-        if 'CWE-79' not in fast_mode_cwes:
-            prompt += "\n- XSS (CWE-79)"
-        if 'CWE-78' not in fast_mode_cwes:
-            prompt += "\n- Command Injection (CWE-78)"
-        if 'CWE-22' not in fast_mode_cwes:
-            prompt += "\n- Path Traversal (CWE-22)"
-        
-        prompt += """
-
-ANALYSIS CHECKLIST:
-1. Missing authorization checks?
-2. User input → sensitive operations?
-3. Weak crypto/randomness?
-4. Session management issues?
-5. Error messages leaking info?
-6. Race conditions?
-7. IDOR possibilities?
-
-Format:
+Report format:
 VULNERABILITY
 CWE: [number]
 SEVERITY: [critical/high/medium/low]
-TITLE: [brief]
-LINE: [line number]
-DESCRIPTION: [explanation]
-EXPLOITATION: [how to exploit]
+TITLE: [specific issue]
+LINE: [line number 1-{line_count}]
+DESCRIPTION: [what's wrong and why it's dangerous]
 ---
 
-Only report REAL vulnerabilities with concrete exploitation paths. Consider framework protections."""
+List every vulnerability found."""
 
         return prompt
     
@@ -293,16 +264,18 @@ Only report REAL vulnerabilities with concrete exploitation paths. Consider fram
         
         return vuln
     
-    def _chunk_code(self, code: str, max_lines: int = 40) -> List[str]:
-        """Split code into analyzable chunks - optimized smaller chunks for faster processing."""
+    def _chunk_code(self, code: str, max_lines: int = 30) -> List[str]:
+        """Split code into small chunks for ultra-fast parallel processing."""
         lines = code.split('\n')
         chunks = []
         
+        # Smaller chunks = faster inference per chunk
         for i in range(0, len(lines), max_lines):
             chunk = '\n'.join(lines[i:i + max_lines])
-            chunks.append(chunk)
+            if chunk.strip():  # Skip empty chunks
+                chunks.append(chunk)
         
-        return chunks
+        return chunks if chunks else [code]  # Ensure at least one chunk
     
     def _get_cache_key(self, filepath: str, code: str) -> str:
         """Generate cache key for detection."""

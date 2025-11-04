@@ -1,0 +1,18 @@
+# Build Requirements for Compiled Distribution
+# Install these before building: pip install -r requirements-build.txt
+
+# Core build tools
+cython>=3.0.0
+setuptools>=65.0.0
+wheel>=0.40.0
+
+# Code obfuscation (optional, for extra protection)
+pyarmor>=8.0.0
+
+# Build optimization
+numpy>=1.24.0  # Cython optimization
+
+# For creating standalone executables (optional)
+# pyinstaller>=5.0.0
+# nuitka>=1.8.0
+
