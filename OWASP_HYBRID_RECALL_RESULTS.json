@@ -1,0 +1,85 @@
+{
+  "results": {
+    "test_date": "2025-11-03T18:19:02.107416",
+    "benchmark_path": "/Users/sathvikkurapati/Downloads/benchmark",
+    "total_files": 2766,
+    "pattern_scan": {
+      "time_seconds": 63.86926627159119,
+      "vulnerabilities": 17672,
+      "cwe_breakdown": {
+        "CWE-20": 623,
+        "CWE-863": 348,
+        "CWE-352": 15526,
+        "CWE-327": 185,
+        "CWE-125": 775,
+        "CWE-78": 61,
+        "CWE-611": 37,
+        "CWE-319": 39,
+        "CWE-330": 25,
+        "CWE-311": 10,
+        "CWE-209": 27,
+        "CWE-200": 4,
+        "CWE-798": 1,
+        "CWE-918": 1,
+        "CWE-287": 4,
+        "CWE-79": 1,
+        "CWE-614": 1,
+        "CWE-1333": 4
+      }
+    },
+    "hybrid_mode": {
+      "time_seconds": 64.3249340057373,
+      "ai_time_seconds": 0.4555652141571045,
+      "vulnerabilities": 17672,
+      "pattern_vulns": 17672,
+      "ai_additional_vulns": 0,
+      "cwe_breakdown": {
+        "CWE-20": 623,
+        "CWE-863": 348,
+        "CWE-352": 15526,
+        "CWE-327": 185,
+        "CWE-125": 775,
+        "CWE-78": 61,
+        "CWE-611": 37,
+        "CWE-319": 39,
+        "CWE-330": 25,
+        "CWE-311": 10,
+        "CWE-209": 27,
+        "CWE-200": 4,
+        "CWE-798": 1,
+        "CWE-918": 1,
+        "CWE-287": 4,
+        "CWE-79": 1,
+        "CWE-614": 1,
+        "CWE-1333": 4
+      }
+    },
+    "timing_log": [
+      {
+        "step": "Pattern Scan",
+        "time_seconds": 63.86926627159119,
+        "vulnerabilities": 17672
+      },
+      {
+        "step": "AI Scan",
+        "time_seconds": 0.4555652141571045,
+        "vulnerabilities": 0
+      }
+    ]
+  },
+  "recall_metrics": {
+    "known_vulnerabilities": 2740,
+    "pattern_recall": {
+      "vulnerabilities_found": 17672,
+      "recall_percent": 644.96,
+      "missed": -14932
+    },
+    "hybrid_recall": {
+      "vulnerabilities_found": 17672,
+      "recall_percent": 644.96,
+      "missed": -14932,
+      "improvement_vulns": 0,
+      "improvement_percent": 0.0
+    }
+  }
+}

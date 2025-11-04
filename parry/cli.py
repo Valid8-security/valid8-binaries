@@ -239,18 +239,20 @@ def scan(path: str, format: str, output: Optional[str], severity: Optional[str],
             # Exit with error code 1 to indicate failure
             sys.exit(1)
     
-    # AI-Powered Deep Scan (for deep or hybrid mode) - OPTIMIZED with parallel processing
+    # AI-Powered Deep Scan (for deep or hybrid mode) - OPTIMIZED with parallel processing & smart prioritization
     # Check if AI-enhanced scanning should be performed
     if mode in ["deep", "hybrid"] and results.get('files_scanned', 0) > 0 and ai_available:
         # Display header for AI scanning phase
         console.print("\n[cyan]🤖 AI Deep Scan: Comprehensive vulnerability detection...[/cyan]")
         # Explain what AI scanning does and its benefits
-        console.print("[dim]This uses local AI to achieve 75% recall (optimized with parallel processing)[/dim]")
+        console.print("[dim]This uses local AI with smart prioritization (TinyLlama for 5-7x speed)[/dim]")
         
         # Attempt AI scanning with error handling
         try:
             # Import AIDetector class for AI-powered vulnerability detection
             from parry.ai_detector import AIDetector
+            # Import SmartFilePrioritizer for intelligent file selection
+            from parry.smart_prioritizer import SmartFilePrioritizer
             # Import multiprocessing to determine optimal worker count
             import multiprocessing
             
@@ -276,8 +278,25 @@ def scan(path: str, format: str, output: Optional[str], severity: Optional[str],
                     # Recursively find all files with this extension and add to list
                     scanned_files.extend(target.rglob(f'*{ext}'))
             
-            # Display count of files to be analyzed with worker count
-            console.print(f"[dim]Found {len(scanned_files)} files for AI analysis (using {max_workers} workers)[/dim]")
+            # Smart Prioritization: Only analyze high-risk files with AI (Hybrid mode only)
+            if mode == "hybrid":
+                # Initialize smart prioritizer
+                prioritizer = SmartFilePrioritizer(min_risk_score=0.3)
+                # Select high-risk files for AI analysis
+                high_risk_files = prioritizer.prioritize_files(
+                    scanned_files,
+                    results.get('vulnerabilities', [])
+                )
+                # Get statistics for display
+                stats = prioritizer.get_statistics(len(scanned_files), len(high_risk_files))
+                # Display prioritization info
+                console.print(f"[dim]Smart prioritization: {len(high_risk_files)}/{len(scanned_files)} files ({stats['percentage']}) selected for AI analysis[/dim]")
+                console.print(f"[dim]Expected speedup: {stats['expected_speedup']} | Using {max_workers} workers[/dim]")
+                # Use only high-risk files
+                scanned_files = high_risk_files
+            else:
+                # Deep mode: analyze all files
+                console.print(f"[dim]Found {len(scanned_files)} files for AI analysis (using {max_workers} workers)[/dim]")
             
             # Optimized parallel processing for AI vulnerability detection
             # Initialize list to collect AI-detected vulnerabilities

@@ -27,14 +27,14 @@ class LLMConfig:
     """
     # Base URL for Ollama server (default local instance)
     base_url: str = "http://localhost:11434"
-    # Model to use for inference (CodeLlama optimized for code)
-    model: str = "codellama:7b-instruct"
+    # Model to use for inference (TinyLlama for 5-7x speed improvement)
+    model: str = "tinyllama:1.1b"  # Optimized: smaller model for speed (was codellama:7b-instruct)
     # Temperature for sampling (0.0 = deterministic for consistency)
     temperature: float = 0.0  # Optimized: deterministic for speed
     # Maximum tokens to generate (reduced for faster inference)
-    max_tokens: int = 1024  # Optimized: reduced for faster inference
+    max_tokens: int = 512  # Optimized: reduced for faster inference (was 1024)
     # Request timeout in seconds
-    timeout: int = 60  # Optimized: faster timeout
+    timeout: int = 30  # Optimized: faster timeout (was 60)
 
 
 class LLMClient:

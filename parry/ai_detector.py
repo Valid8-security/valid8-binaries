@@ -134,92 +134,37 @@ class AIDetector:
         language: str,
         codebase_context: Dict[str, str]
     ) -> str:
-        """Build comprehensive detection prompt for AI."""
+        """Build optimized minimal detection prompt for faster AI analysis."""
         
-        prompt = f"""You are an expert security researcher analyzing code for vulnerabilities.
+        # Limit code length for faster processing
+        code_snippet = code[:2000] if len(code) > 2000 else code
+        
+        prompt = f"""Security scan for {filepath}:
 
-FILE: {filepath}
-LANGUAGE: {language}
-
-CODE TO ANALYZE:
 ```{language}
-{code}
+{code_snippet}
 ```
 
-TASK: Detect ALL security vulnerabilities in this code. Be thorough and comprehensive.
+Find vulnerabilities:
+- SQL injection (CWE-89)
+- XSS (CWE-79)
+- Command injection (CWE-78)
+- Path traversal (CWE-22)
+- Hardcoded secrets (CWE-798)
+- Weak crypto (CWE-327)
+- Auth bypass (CWE-287)
+- Deserialization (CWE-502)
 
-Look for these vulnerability types (CWE):
-
-**INJECTION VULNERABILITIES:**
-- SQL Injection (CWE-89): Unsafe SQL queries with user input
-- Command Injection (CWE-78): Unsafe system commands
-- LDAP Injection (CWE-90): Unsafe LDAP queries
-- XPath Injection (CWE-643): Unsafe XPath queries
-- XML Injection (CWE-91): Unsafe XML parsing
-- Expression Language Injection (CWE-917): Unsafe EL evaluation
-- Server-Side Template Injection (SSTI): Unsafe template rendering
-
-**AUTHENTICATION & ACCESS:**
-- Broken Authentication (CWE-287): Weak auth mechanisms
-- Broken Access Control (CWE-285): Missing authorization checks
-- Insecure Session Management (CWE-384): Weak sessions
-- Missing Authentication (CWE-306): No auth on sensitive operations
-
-**DATA EXPOSURE:**
-- Sensitive Data Exposure (CWE-200): Leaking sensitive info
-- Hardcoded Credentials (CWE-798): Passwords/keys in code
-- Insufficient Encryption (CWE-311): Weak or no encryption
-- Insecure Storage (CWE-312): Storing secrets improperly
-
-**CRYPTOGRAPHY:**
-- Weak Cryptography (CWE-327): MD5, DES, weak algos
-- Weak Random (CWE-330): Predictable randomness
-- Improper Certificate Validation (CWE-295): Skipping SSL checks
-
-**INPUT VALIDATION:**
-- XSS (CWE-79): Unescaped output to browser
-- Path Traversal (CWE-22): Unsafe file paths
-- Open Redirect (CWE-601): Unvalidated redirects
-- SSRF (CWE-918): Server-side request forgery
-
-**CONFIGURATION:**
-- Security Misconfiguration (CWE-16): Insecure defaults
-- Missing Security Headers: CORS, CSP, etc.
-- Debug Mode in Production
-- Verbose Error Messages
-
-**DESERIALIZATION & PARSING:**
-- Unsafe Deserialization (CWE-502): Pickle, unserialize
-- XXE (CWE-611): XML external entities
-- YAML Deserialization: Unsafe YAML.load
-
-**BUSINESS LOGIC:**
-- CSRF (CWE-352): Missing CSRF tokens
-- Race Conditions (CWE-362): Time-of-check issues
-- Integer Overflow (CWE-190): Numeric overflows
-
-**MEMORY & RESOURCES:**
-- Buffer Overflow (CWE-119): Memory corruption
-- NULL Pointer Dereference (CWE-476)
-- Resource Exhaustion (CWE-400): DoS via resources
-- Memory Leaks (CWE-401)
-
-**For EACH vulnerability found, respond in this EXACT format:**
-
+Format:
 VULNERABILITY
-CWE: [CWE number]
+CWE: [number]
 SEVERITY: [critical/high/medium/low]
-TITLE: [Brief title]
-LINE: [Line number where issue occurs]
-DESCRIPTION: [Detailed explanation of the vulnerability]
-EXPLOITATION: [How an attacker could exploit this]
-FIX: [How to fix it]
+TITLE: [brief]
+LINE: [line number]
+DESCRIPTION: [explanation]
 ---
 
-Be comprehensive but accurate. Only report real vulnerabilities with concrete exploitation paths.
-Consider framework protections (Django ORM, Spring Security, etc.) - if they prevent exploitation, don't report it.
-
-ANALYZE NOW:"""
+Only report real vulnerabilities. Consider framework protections."""
 
         return prompt
     
@@ -301,7 +246,7 @@ ANALYZE NOW:"""
         
         return vuln
     
-    def _chunk_code(self, code: str, max_lines: int = 50) -> List[str]:
+    def _chunk_code(self, code: str, max_lines: int = 40) -> List[str]:
         """Split code into analyzable chunks - optimized smaller chunks for faster processing."""
         lines = code.split('\n')
         chunks = []
