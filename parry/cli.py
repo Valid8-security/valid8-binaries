@@ -32,6 +32,8 @@ from parry.license import has_feature, require_feature, LicenseManager
 from parry.batched_ai_processor import batched_ai_processor, progressive_analyzer, ai_model_cache
 from parry.feedback import FeedbackManager
 from parry.natural_language_filter import nl_slm_filter
+from parry.incremental_scanner import IncrementalScanner
+from parry.auto_fix import AutoFixGenerator
 
 console = Console()
 
@@ -166,7 +168,23 @@ def scan(path: str, format: str, output: Optional[str], severity: Optional[str],
         task = progress.add_task("[cyan]Scanning codebase...", total=None)
         
         try:
-            results = scanner.scan(Path(path))
+            # Use incremental scanner if requested
+            if incremental:
+                console.print("[cyan]🔄 Using incremental scanning mode...[/cyan]")
+                incremental_scanner = IncrementalScanner()
+                results = incremental_scanner.scan_incremental(
+                    Path(path), mode, max_workers=4
+                )
+
+                # Show incremental scanning stats
+                if 'metadata' in results:
+                    meta = results['metadata']
+                    speedup = meta.get('speedup_estimate', 1)
+                    if speedup > 1:
+                        console.print(f"[green]🚀 {speedup:.1f}x speedup! Only scanned {meta['impacted_files']} of {meta.get('total_files', meta['impacted_files'])} files[/green]")
+            else:
+                results = scanner.scan(Path(path))
+
             progress.update(task, completed=True)
         except Exception as e:
             console.print(f"[red]Error during scanning: {e}[/red]")
@@ -497,6 +515,148 @@ def scan(path: str, format: str, output: Optional[str], severity: Optional[str],
         sys.exit(1)
     else:
         sys.exit(0)
+
+
+@main.command()
+@click.argument("path", type=click.Path(exists=True))
+@click.option("--apply", is_flag=True, help="Automatically apply generated fixes")
+@click.option("--dry-run", is_flag=True, help="Show fixes without applying them")
+@click.option("--cwe", help="Only fix specific CWE type")
+@click.option("--interactive", "-i", is_flag=True, help="Review each fix before applying")
+def fix(path: str, apply: bool, dry_run: bool, cwe: Optional[str], interactive: bool):
+    """
+    🚀 Generate and apply automated security fixes
+
+    Uses AI and pattern-based approaches to automatically fix vulnerabilities.
+    Supports AST transformations, parameterized queries, and secure API usage.
+
+    Examples:
+        parry fix src/ --dry-run                    # Show available fixes
+        parry fix src/vulnerable.py --apply         # Apply fixes automatically
+        parry fix . --cwe CWE-89 --interactive      # Fix only SQL injection interactively
+    """
+    console.print(Panel.fit(
+        "[bold green]🔧 Automated Security Fix Generator[/bold green]\n"
+        "[dim]AI-powered vulnerability remediation[/dim]",
+        border_style="green"
+    ))
+
+    if dry_run and apply:
+        console.print("[red]❌ Cannot use both --dry-run and --apply[/red]")
+        sys.exit(1)
+
+    # Initialize fix generator
+    fix_generator = AutoFixGenerator()
+
+    # First scan for vulnerabilities
+    console.print("[cyan]🔍 Scanning for vulnerabilities...[/cyan]")
+
+    scanner = Scanner()
+    try:
+        results = scanner.scan(Path(path))
+    except Exception as e:
+        console.print(f"[red]Error during scanning: {e}[/red]")
+        sys.exit(1)
+
+    vulnerabilities = results.get("vulnerabilities", [])
+    if not vulnerabilities:
+        console.print("[green]✅ No vulnerabilities found![/green]")
+        return
+
+    # Filter by CWE if specified
+    if cwe:
+        vulnerabilities = [v for v in vulnerabilities if v.get("cwe") == cwe]
+        if not vulnerabilities:
+            console.print(f"[yellow]⚠️ No vulnerabilities found for CWE: {cwe}[/yellow]")
+            return
+
+    console.print(f"[cyan]🔧 Generating fixes for {len(vulnerabilities)} vulnerabilities...[/cyan]")
+
+    fixes_applied = 0
+    fixes_failed = 0
+
+    for vuln in vulnerabilities:
+        # Generate fix
+        try:
+            # Read file content
+            file_path = vuln.get("file_path", vuln.get("file", ""))
+            if not file_path:
+                continue
+
+            with open(file_path, 'r', encoding='utf-8') as f:
+                file_content = f.read()
+
+            # Create Vulnerability object
+            vuln_obj = Vulnerability(
+                cwe=vuln.get("cwe", ""),
+                severity=vuln.get("severity", "medium"),
+                title=vuln.get("title", ""),
+                description=vuln.get("description", ""),
+                file_path=file_path,
+                line_number=vuln.get("line_number", 1),
+                code_snippet=vuln.get("code_snippet", ""),
+                confidence=vuln.get("confidence", 0.5),
+                category="security",
+                language="unknown"
+            )
+
+            fix = fix_generator.generate_fix(vuln_obj, file_content)
+
+            if not fix:
+                console.print(f"[yellow]⚠️ No automated fix available for: {vuln.get('title')}[/yellow]")
+                continue
+
+            # Display fix information
+            console.print(f"\n[bold cyan]🔧 Fix Generated: {fix.title}[/bold cyan]")
+            console.print(f"[dim]File: {fix.file_path}:{fix.line_number}[/dim]")
+            console.print(f"[dim]CWE: {fix.cwe} | Confidence: {fix.confidence:.1f}[/dim]")
+            console.print(f"[dim]Type: {fix.fix_type}[/dim]")
+            console.print(f"[dim]Risk: {fix.risk_assessment}[/dim]")
+
+            console.print(f"\n[red]- {fix.original_code.strip()}[/red]")
+            console.print(f"[green]+ {fix.fixed_code.strip()}[/green]")
+
+            # Apply fix based on options
+            should_apply = False
+
+            if dry_run:
+                console.print("[blue]ℹ️ Dry run - fix not applied[/blue]")
+                continue
+
+            if apply:
+                should_apply = True
+            elif interactive:
+                response = input(f"\nApply this fix? [y/N]: ").strip().lower()
+                should_apply = response in ['y', 'yes']
+            else:
+                console.print("[blue]ℹ️ Use --apply or --interactive to apply fixes[/blue]")
+                continue
+
+            if should_apply:
+                result = fix_generator.apply_fix(fix, dry_run=False)
+
+                if result['success']:
+                    console.print(f"[green]✅ Fix applied successfully![/green]")
+                    if not result.get('syntax_valid', True):
+                        console.print(f"[yellow]⚠️ Warning: Syntax validation failed[/yellow]")
+                    fixes_applied += 1
+                else:
+                    console.print(f"[red]❌ Fix application failed: {result.get('error', 'Unknown error')}[/red]")
+                    fixes_failed += 1
+
+        except Exception as e:
+            console.print(f"[red]❌ Error generating fix for vulnerability: {e}[/red]")
+            fixes_failed += 1
+
+    # Summary
+    console.print(f"\n[bold]📊 Fix Generation Summary[/bold]")
+    console.print(f"  Fixes Applied: [green]{fixes_applied}[/green]")
+    console.print(f"  Fixes Failed: [red]{fixes_failed}[/red]")
+    console.print(f"  Total Processed: {len(vulnerabilities)}")
+
+    if fixes_applied > 0:
+        console.print(f"\n[green]🎉 Successfully applied {fixes_applied} security fixes![/green]")
+        console.print(f"[yellow]💡 Remember to test your application after applying fixes[/yellow]")
 
 
 @main.command()

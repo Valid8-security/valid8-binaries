@@ -1,0 +1,104 @@
+{
+  "assessment_timestamp": "2025-11-07T06:27:26.621139",
+  "assessment_duration": 17.584328174591064,
+  "overall_score": 64.0,
+  "beta_readiness": false,
+  "scores": {
+    "core_functionality": 50.0,
+    "security_compliance": 66.7,
+    "feature_completeness": 80.0
+  },
+  "detailed_results": {
+    "core_functionality": {
+      "cli_basic_scan": true,
+      "hybrid_mode": false,
+      "deep_mode": false,
+      "custom_rules": true,
+      "multiple_formats": false,
+      "sca_integration": true,
+      "incremental_scan": false,
+      "auto_fix_generation": true
+    },
+    "performance_metrics": {
+      "scan_speed_small": 0.727294921875,
+      "scan_speed_medium": 1.5433158874511719,
+      "scan_speed_large": 5.237147808074951,
+      "memory_usage": 120,
+      "cpu_usage": 0,
+      "cache_effectiveness": 0,
+      "parallel_processing": true
+    },
+    "security_audit": {
+      "no_data_exfiltration": true,
+      "secure_file_handling": true,
+      "safe_command_execution": true,
+      "encrypted_storage": false,
+      "audit_logging": false,
+      "rate_limiting": false,
+      "input_validation": true,
+      "error_handling": true,
+      "no_hardcoded_secrets": true
+    },
+    "feature_completeness": {
+      "basic_pattern_scanning": true,
+      "ai_powered_detection": true,
+      "multiple_scan_modes": true,
+      "custom_rules_engine": true,
+      "multiple_output_formats": true,
+      "incremental_scanning": true,
+      "automated_fix_generation": true,
+      "sca_dependency_scanning": true,
+      "natural_language_filtering": true,
+      "github_app_integration": true,
+      "ci_cd_pipeline_support": true,
+      "rest_api": true,
+      "webhook_support": true,
+      "vscode_extension": true,
+      "cli_tool": true,
+      "one_click_installer": true,
+      "compliance_reporting": false,
+      "team_management": false,
+      "audit_logging": false,
+      "sso_authentication": false
+    },
+    "integrations": {
+      "github_actions": true,
+      "gitlab_ci": true,
+      "jenkins": true,
+      "github_app": true,
+      "vscode_extension": true,
+      "rest_api": true,
+      "webhooks": true
+    },
+    "user_experience": {
+      "intuitive_cli": true,
+      "helpful_error_messages": true,
+      "progress_indicators": true,
+      "comprehensive_help": true,
+      "sensible_defaults": true,
+      "clear_documentation": true,
+      "fast_startup": true,
+      "responsive_ui": true
+    },
+    "documentation": {
+      "readme": true,
+      "setup_guide": true,
+      "contributing": true,
+      "quickstart": true,
+      "api_docs": true,
+      "architecture_diagrams": true,
+      "github_app_docs": true,
+      "vscode_extension_docs": true,
+      "installer_docs": true
+    }
+  },
+  "recommendations": [
+    "\u274c Not ready for beta - significant improvements needed",
+    "Focus on core functionality and security first",
+    "Implement compliance reporting (SOC 2, GDPR, etc.)",
+    "Add team management and RBAC features"
+  ],
+  "next_steps": [
+    "Address critical security issues"
+  ]
+}
