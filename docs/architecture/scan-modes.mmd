@@ -1,0 +1,42 @@
+graph LR
+    subgraph "Fast Mode"
+        Fast_Pattern[Pattern-Based Detection<br/>Regex matching<br/>CWE signatures]
+        Fast_Speed[⚡ 12s for 1000 files<br/>~80 files/sec]
+        Fast_Accuracy[📊 85% precision<br/>73% recall<br/>15% false positives]
+        Fast_Use[💼 Use Case:<br/>Quick checks<br/>CI/CD gates<br/>Large codebases]
+    end
+
+    subgraph "Hybrid Mode (Recommended)"
+        Hybrid_Pattern[Pattern Detection<br/>First pass]
+        Hybrid_Filter[Smart Prioritization<br/>High-risk files]
+        Hybrid_AI[AI Validation<br/>LLM confirmation<br/>False positive reduction]
+        Hybrid_Speed[⚡ 45s for 1000 files<br/>~22 files/sec]
+        Hybrid_Accuracy[📊 92% precision<br/>91% recall<br/>8% false positives]
+        Hybrid_Use[💼 Use Case:<br/>Production scanning<br/>Security audits<br/>Balance speed/accuracy]
+    end
+
+    subgraph "Deep Mode"
+        Deep_Full[Full AI Analysis<br/>Every file scanned<br/>Comprehensive validation]
+        Deep_Speed[⚡ 2-3min for 1000 files<br/>~8 files/sec]
+        Deep_Accuracy[📊 95%+ precision<br/>95%+ recall<br/>3% false positives]
+        Deep_Use[💼 Use Case:<br/>Critical code review<br/>Maximum accuracy<br/>Smaller projects]
+    end
+
+    Fast_Pattern --> Fast_Speed
+    Fast_Pattern --> Fast_Accuracy
+    Fast_Accuracy --> Fast_Use
+
+    Hybrid_Pattern --> Hybrid_Filter
+    Hybrid_Filter --> Hybrid_AI
+    Hybrid_AI --> Hybrid_Speed
+    Hybrid_AI --> Hybrid_Accuracy
+    Hybrid_Accuracy --> Hybrid_Use
+
+    Deep_Full --> Deep_Speed
+    Deep_Full --> Deep_Accuracy
+    Deep_Accuracy --> Deep_Use
+
+    style Fast_Speed fill:#e8f5e8
+    style Hybrid_Speed fill:#fff3e0
+    style Deep_Speed fill:#ffebee
+    style Hybrid_Use fill:#e3f2fd

@@ -1,0 +1,60 @@
+graph TB
+    subgraph "User Interface Layer"
+        CLI[CLI Interface<br/>Commands & Configuration]
+        API[REST API<br/>Endpoints & Webhooks]
+        IDE[IDE Plugins<br/>VS Code, IntelliJ]
+    end
+
+    subgraph "Core Processing Layer"
+        Scanner[File Scanner<br/>Multi-language Support]
+        Detector[AI Detector<br/>Pattern + LLM Analysis]
+        Validator[AI Validator<br/>False Positive Reduction]
+        Prioritizer[Smart Prioritizer<br/>Risk-based File Selection]
+    end
+
+    subgraph "Infrastructure Layer"
+        Cache[(Multi-Level Cache<br/>L1/L2 Persistence)]
+        Stream[Streaming Processor<br/>Memory Efficient]
+        Batch[Batched AI Processor<br/>Parallel LLM Requests]
+        Regex[Regex Pool<br/>Compiled Pattern Cache]
+    end
+
+    subgraph "External Services"
+        Ollama[Ollama LLM<br/>qwen2.5-coder models]
+        Stripe[Stripe Payment<br/>Subscription Management]
+        GitHub[GitHub Actions<br/>CI/CD Integration]
+    end
+
+    subgraph "Data Storage"
+        Results[(Scan Results<br/>JSON/SARIF/HTML)]
+        Config[(Configuration<br/>YAML files)]
+        Rules[(Custom Rules<br/>YAML patterns)]
+        Filters[(NL Filters<br/>SLM patterns)]
+    end
+
+    CLI --> Scanner
+    API --> Scanner
+    IDE --> Scanner
+
+    Scanner --> Prioritizer
+    Prioritizer --> Detector
+    Detector --> Validator
+
+    Validator --> Cache
+    Scanner --> Stream
+    Detector --> Batch
+    Scanner --> Regex
+
+    Validator --> Ollama
+    CLI --> Stripe
+    CLI --> GitHub
+
+    Validator --> Results
+    CLI --> Config
+    CLI --> Rules
+    CLI --> Filters
+
+    style CLI fill:#e3f2fd
+    style Detector fill:#f3e5f5
+    style Ollama fill:#e8f5e8
+    style Cache fill:#fff3e0

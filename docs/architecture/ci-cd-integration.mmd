@@ -1,0 +1,77 @@
+flowchart TD
+    subgraph "GitHub Actions"
+        Trigger[Push/PR Trigger]
+        Checkout[Checkout Code]
+        Setup[Setup Python<br/>+ Ollama]
+        Scan[Parry Scan<br/>Hybrid Mode]
+        Results[Generate SARIF<br/>Upload to Security Tab]
+        Comment[PR Comments<br/>With Findings]
+        Status[Status Check<br/>Block/Fail on Critical]
+    end
+
+    subgraph "GitLab CI"
+        GL_Trigger[Merge Request]
+        GL_Checkout[Get Sources]
+        GL_Docker[Use Parry Docker<br/>Image]
+        GL_Scan[Security Scan<br/>JSON Output]
+        GL_Report[Generate Report<br/>JUnit/SARIF]
+        GL_Artifact[Store Artifacts]
+        GL_Validate[Validate Results<br/>Fail on High Severity]
+    end
+
+    subgraph "Jenkins Pipeline"
+        Jenkins_Trigger[Webhook/SCM Poll]
+        Jenkins_Checkout[Checkout SCM]
+        Jenkins_Docker[Docker Agent<br/>With Parry]
+        Jenkins_Parallel[Parallel: Scan + Test]
+        Jenkins_Archive[Archive Reports<br/>HTML/JSON]
+        Jenkins_Publish[Publish Results<br/>Dashboard Integration]
+        Jenkins_Alert[Alert on Issues<br/>Email/Slack]
+    end
+
+    subgraph "Local Development"
+        PreCommit[Pre-commit Hooks<br/>Fast scanning]
+        IDE_Plugin[VS Code Extension<br/>Real-time feedback]
+        Git_Hooks[Git Hooks<br/>Pre-push validation]
+    end
+
+    subgraph "Parry Features"
+        Modes[Multiple Scan Modes<br/>Fast/Hybrid/Deep]
+        Formats[Output Formats<br/>SARIF/JSON/HTML]
+        Integration[Rich Integrations<br/>API/Webhooks/Custom Rules]
+        Automation[Automated Fixes<br/>Where possible]
+    end
+
+    Trigger --> Checkout
+    Checkout --> Setup
+    Setup --> Scan
+    Scan --> Results
+    Results --> Comment
+    Comment --> Status
+
+    GL_Trigger --> GL_Checkout
+    GL_Checkout --> GL_Docker
+    GL_Docker --> GL_Scan
+    GL_Scan --> GL_Report
+    GL_Report --> GL_Artifact
+    GL_Artifact --> GL_Validate
+
+    Jenkins_Trigger --> Jenkins_Checkout
+    Jenkins_Checkout --> Jenkins_Docker
+    Jenkins_Docker --> Jenkins_Parallel
+    Jenkins_Parallel --> Jenkins_Archive
+    Jenkins_Archive --> Jenkins_Publish
+    Jenkins_Publish --> Jenkins_Alert
+
+    PreCommit --> Modes
+    IDE_Plugin --> Formats
+    Git_Hooks --> Integration
+
+    Modes --> Automation
+    Formats --> Automation
+    Integration --> Automation
+
+    style Trigger fill:#e8f5e8
+    style GL_Trigger fill:#e3f2fd
+    style Jenkins_Trigger fill:#fff3e0
+    style Automation fill:#f3e5f5

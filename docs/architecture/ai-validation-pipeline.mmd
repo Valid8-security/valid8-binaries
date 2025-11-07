@@ -1,0 +1,37 @@
+flowchart TD
+    A[Vulnerability Finding<br/>From Pattern Scan] --> B{Rule-Based<br/>Validation<br/>0ms}
+
+    B --> C{Cache Lookup<br/>μs}
+    B --> D[SLM Natural Language<br/>Filter Check<br/>50-200ms]
+
+    C --> E[Ensemble Consensus<br/>Validation<br/>2-3s]
+    D --> E
+
+    E --> F[Confidence<br/>Calibration<br/>μs]
+
+    F --> G{Confidence<br/>> 0.8?}
+
+    G -->|Yes| H[Accept Finding<br/>✅ Valid Vulnerability]
+    G -->|No| I[Filter Finding<br/>❌ False Positive]
+
+    subgraph "Validation Stages"
+        B
+        C
+        D
+        E
+        F
+    end
+
+    subgraph "SLM Models Used"
+        SLM1[qwen2.5-coder:0.5b<br/>Fast Validation]
+        SLM2[qwen2.5-coder:1.5b<br/>Deep Analysis]
+    end
+
+    E --> SLM1
+    E --> SLM2
+
+    style A fill:#e8f5e8
+    style H fill:#e8f5e8
+    style I fill:#ffebee
+    style D fill:#fff3e0
+    style E fill:#f3e5f5
