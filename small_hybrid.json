@@ -1,0 +1,108 @@
+{
+  "scan_id": "db6cb0560332",
+  "timestamp": "2025-11-06T21:41:43.851129",
+  "target": "small_test",
+  "summary": {
+    "files_scanned": 5,
+    "vulnerabilities_found": 7,
+    "by_severity": {
+      "critical": 2,
+      "high": 5
+    },
+    "by_cwe": {
+      "CWE-78": 1,
+      "CWE-20": 1,
+      "CWE-89": 1,
+      "CWE-79": 1,
+      "CWE-502": 1,
+      "CWE-95": 1,
+      "CWE-352": 1
+    }
+  },
+  "vulnerabilities": [
+    {
+      "cwe": "CWE-78",
+      "severity": "critical",
+      "title": "OS Command Injection",
+      "description": "Potential command injection using os.system. User input should never be passed directly to system commands.",
+      "file_path": "small_test/python_vuln.py",
+      "line_number": 7,
+      "code_snippet": "os.system(user_input)  # Dangerous",
+      "confidence": "high",
+      "category": "security",
+      "language": "python"
+    },
+    {
+      "cwe": "CWE-20",
+      "severity": "high",
+      "title": "Improper Input Validation",
+      "description": "Critical operation with unvalidated input. Always validate and sanitize user input before use.",
+      "file_path": "small_test/python_vuln.py",
+      "line_number": 7,
+      "code_snippet": "os.system(user_input)  # Dangerous",
+      "confidence": "medium",
+      "category": "security",
+      "language": "python"
+    },
+    {
+      "cwe": "CWE-89",
+      "severity": "critical",
+      "title": "SQL Injection",
+      "description": "Tainted data from user input reaches dangerous sink without sanitization. Sanitize user input before sql injection.",
+      "file_path": "small_test/python_vuln.py",
+      "line_number": 11,
+      "code_snippet": "    # CWE-89: SQL injection  \n    query = f\"SELECT * FROM users WHERE id = {user_input}\"\n    conn.execute(query)",
+      "confidence": "high",
+      "category": "security",
+      "language": "python"
+    },
+    {
+      "cwe": "CWE-79",
+      "severity": "high",
+      "title": "Cross-Site Scripting (XSS)",
+      "description": "Potential XSS. Sanitize user input or use textContent.",
+      "file_path": "small_test/js_vuln.js",
+      "line_number": 4,
+      "code_snippet": "document.getElementById('result').innerHTML = userData; // XSS vulnerability",
+      "confidence": "high",
+      "category": "security",
+      "language": "javascript"
+    },
+    {
+      "cwe": "CWE-502",
+      "severity": "high",
+      "title": "Unsafe Deserialization",
+      "description": "Unsafe deserialization of untrusted data. Validate input first.",
+      "file_path": "small_test/js_vuln.js",
+      "line_number": 8,
+      "code_snippet": "eval(code); // Dangerous",
+      "confidence": "high",
+      "category": "security",
+      "language": "javascript"
+    },
+    {
+      "cwe": "CWE-95",
+      "severity": "high",
+      "title": "Dangerous Function Usage",
+      "description": "Use of dangerous function: eval. Avoid dynamic code execution.",
+      "file_path": "small_test/js_vuln.js",
+      "line_number": 8,
+      "code_snippet": "eval(code); // Dangerous",
+      "confidence": "high",
+      "category": "security",
+      "language": "javascript"
+    },
+    {
+      "cwe": "CWE-352",
+      "severity": "high",
+      "title": "Cross-Site Request Forgery (CSRF)",
+      "description": "State-changing operation without CSRF protection. Implement CSRF tokens for state-changing operations.",
+      "file_path": "small_test/js_vuln.js",
+      "line_number": 2,
+      "code_snippet": "function updateUI(data) {",
+      "confidence": "medium",
+      "category": "security",
+      "language": "javascript"
+    }
+  ]
+}

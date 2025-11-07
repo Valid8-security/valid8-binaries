@@ -1,357 +1,132 @@
 {
-  "test_result": {
-    "total_vulnerabilities": 143,
-    "true_positives": 14,
-    "false_positives": 129,
-    "true_negatives": 0,
-    "false_negatives": 15,
-    "precision": 0.0979020979020979,
-    "recall": 0.4827586206896552,
-    "f1_score": 0.16279069767441862,
-    "accuracy": 0.08860759493670886,
-    "scan_time": 0.053045034408569336,
-    "by_cwe": {
-      "CWE-601": {
-        "tp": 0,
-        "fp": 0,
-        "fn": 1
+  "timestamp": "2025-11-04T14:41:30.343777",
+  "test_target": "/Users/sathvikkurapati/Downloads/parry-local/examples",
+  "file_count": 6,
+  "note": "All metrics collected from actual tool runs on same codebase",
+  "tools": [
+    {
+      "tool": "Parry Fast",
+      "status": "success",
+      "duration_seconds": 0.46,
+      "files_scanned": 0,
+      "vulnerabilities_found": 182,
+      "code_vulnerabilities": 182,
+      "dependency_vulnerabilities": 0,
+      "custom_rule_violations": 0,
+      "vulnerabilities_per_second": 391.85,
+      "files_per_second": 0.0,
+      "severity_breakdown": {
+        "critical": 37,
+        "high": 127,
+        "medium": 18
       },
-      "CWE-78": {
-        "tp": 4,
-        "fp": 6,
-        "fn": 4
+      "cwe_coverage": 26,
+      "raw_output_file": "/var/folders/87/bltffkld2b55t80t_2bdbqxc0000gn/T/parry_fast_1762296090.json"
+    },
+    {
+      "tool": "Parry Fast",
+      "status": "success",
+      "duration_seconds": 0.35,
+      "files_scanned": 0,
+      "vulnerabilities_found": 182,
+      "code_vulnerabilities": 182,
+      "dependency_vulnerabilities": 0,
+      "custom_rule_violations": 0,
+      "vulnerabilities_per_second": 520.38,
+      "files_per_second": 0.0,
+      "severity_breakdown": {
+        "critical": 37,
+        "high": 127,
+        "medium": 18
       },
-      "CWE-94": {
-        "tp": 0,
-        "fp": 2,
-        "fn": 0
+      "cwe_coverage": 26,
+      "raw_output_file": "/var/folders/87/bltffkld2b55t80t_2bdbqxc0000gn/T/parry_fast_1762296090.json"
+    },
+    {
+      "tool": "Parry Fast",
+      "status": "success",
+      "duration_seconds": 0.34,
+      "files_scanned": 0,
+      "vulnerabilities_found": 182,
+      "code_vulnerabilities": 182,
+      "dependency_vulnerabilities": 0,
+      "custom_rule_violations": 0,
+      "vulnerabilities_per_second": 535.05,
+      "files_per_second": 0.0,
+      "severity_breakdown": {
+        "critical": 37,
+        "high": 127,
+        "medium": 18
       },
-      "CWE-306": {
-        "tp": 0,
-        "fp": 2,
-        "fn": 0
+      "cwe_coverage": 26,
+      "raw_output_file": "/var/folders/87/bltffkld2b55t80t_2bdbqxc0000gn/T/parry_fast_1762296091.json"
+    },
+    {
+      "tool": "Parry Fast",
+      "status": "success",
+      "duration_seconds": 0.34,
+      "files_scanned": 0,
+      "vulnerabilities_found": 182,
+      "code_vulnerabilities": 182,
+      "dependency_vulnerabilities": 0,
+      "custom_rule_violations": 0,
+      "vulnerabilities_per_second": 539.96,
+      "files_per_second": 0.0,
+      "severity_breakdown": {
+        "critical": 37,
+        "high": 127,
+        "medium": 18
       },
-      "CWE-863": {
-        "tp": 0,
-        "fp": 2,
-        "fn": 0
+      "cwe_coverage": 26,
+      "raw_output_file": "/var/folders/87/bltffkld2b55t80t_2bdbqxc0000gn/T/parry_fast_1762296091.json"
+    },
+    {
+      "tool": "Parry Hybrid",
+      "status": "success",
+      "duration_seconds": 0.41,
+      "files_scanned": 0,
+      "vulnerabilities_found": 294,
+      "code_vulnerabilities": 294,
+      "dependency_vulnerabilities": 0,
+      "custom_rule_violations": 0,
+      "vulnerabilities_per_second": 710.79,
+      "files_per_second": 0.0,
+      "severity_breakdown": {
+        "critical": 35,
+        "high": 241,
+        "medium": 18
       },
-      "CWE-352": {
-        "tp": 0,
-        "fp": 18,
-        "fn": 0
+      "cwe_coverage": 54,
+      "raw_output_file": "/var/folders/87/bltffkld2b55t80t_2bdbqxc0000gn/T/parry_hybrid_1762296091.json"
+    },
+    {
+      "tool": "Semgrep (p/owasp-top-ten)",
+      "status": "success",
+      "duration_seconds": 3.44,
+      "files_scanned": 8,
+      "vulnerabilities_found": 38,
+      "vulnerabilities_per_second": 11.05,
+      "files_per_second": 2.33,
+      "severity_breakdown": {
+        "error": 19,
+        "info": 4,
+        "warning": 15
       },
-      "CWE-434": {
-        "tp": 0,
-        "fp": 8,
-        "fn": 0
+      "raw_output_file": "/var/folders/87/bltffkld2b55t80t_2bdbqxc0000gn/T/semgrep_p_owasp-top-ten_1762296092.json"
+    },
+    {
+      "tool": "Bandit",
+      "status": "success",
+      "duration_seconds": 0.14,
+      "files_scanned": 5,
+      "vulnerabilities_found": 44,
+      "vulnerabilities_per_second": 311.26,
+      "severity_breakdown": {
+        "medium": 20,
+        "low": 15,
+        "high": 9
       },
-      "CWE-113": {
-        "tp": 0,
-        "fp": 2,
-        "fn": 0
-      },
-      "CWE-330": {
-        "tp": 0,
-        "fp": 4,
-        "fn": 0
-      },
-      "CWE-295": {
-        "tp": 0,
-        "fp": 5,
-        "fn": 0
-      },
-      "CWE-321": {
-        "tp": 0,
-        "fp": 3,
-        "fn": 0
-      },
-      "CWE-311": {
-        "tp": 0,
-        "fp": 5,
-        "fn": 0
-      },
-      "CWE-287": {
-        "tp": 0,
-        "fp": 20,
-        "fn": 0
-      },
-      "CWE-319": {
-        "tp": 0,
-        "fp": 7,
-        "fn": 0
-      },
-      "CWE-614": {
-        "tp": 0,
-        "fp": 2,
-        "fn": 0
-      },
-      "CWE-20": {
-        "tp": 0,
-        "fp": 5,
-        "fn": 0
-      },
-      "CWE-79": {
-        "tp": 0,
-        "fp": 4,
-        "fn": 3
-      },
-      "CWE-327": {
-        "tp": 1,
-        "fp": 8,
-        "fn": 3
-      },
-      "CWE-798": {
-        "tp": 3,
-        "fp": 11,
-        "fn": 1
-      },
-      "CWE-502": {
-        "tp": 4,
-        "fp": 2,
-        "fn": 1
-      },
-      "CWE-1321": {
-        "tp": 0,
-        "fp": 1,
-        "fn": 0
-      },
-      "CWE-200": {
-        "tp": 0,
-        "fp": 1,
-        "fn": 0
-      },
-      "CWE-89": {
-        "tp": 2,
-        "fp": 2,
-        "fn": 2
-      },
-      "CWE-259": {
-        "tp": 0,
-        "fp": 2,
-        "fn": 0
-      },
-      "CWE-125": {
-        "tp": 0,
-        "fp": 1,
-        "fn": 0
-      },
-      "CWE-787": {
-        "tp": 0,
-        "fp": 1,
-        "fn": 0
-      },
-      "CWE-77": {
-        "tp": 0,
-        "fp": 1,
-        "fn": 0
-      },
-      "CWE-276": {
-        "tp": 0,
-        "fp": 1,
-        "fn": 0
-      },
-      "CWE-732": {
-        "tp": 0,
-        "fp": 1,
-        "fn": 0
-      },
-      "CWE-489": {
-        "tp": 0,
-        "fp": 1,
-        "fn": 0
-      },
-      "CWE-676": {
-        "tp": 0,
-        "fp": 1,
-        "fn": 0
-      }
+      "raw_output_file": "/var/folders/87/bltffkld2b55t80t_2bdbqxc0000gn/T/bandit_1762296095.json"
     }
-  },
-  "ground_truth_count": 29,
-  "parry_detections": 147,
-  "ground_truth": {
-    "examples/test_extended_cwes.py": [
-      {
-        "line": 74,
-        "cwe": "CWE-601",
-        "type": "Open Redirect",
-        "description": "Open redirect pattern"
-      }
-    ],
-    "examples/test_shreyan_patterns.py": [
-      {
-        "line": 10,
-        "cwe": "CWE-798",
-        "type": "Hardcoded Credentials",
-        "description": "Hardcoded credential detected"
-      },
-      {
-        "line": 14,
-        "cwe": "CWE-798",
-        "type": "Hardcoded Credentials",
-        "description": "Hardcoded credential detected"
-      },
-      {
-        "line": 21,
-        "cwe": "CWE-79",
-        "type": "XSS",
-        "description": "XSS pattern detected"
-      },
-      {
-        "line": 25,
-        "cwe": "CWE-79",
-        "type": "XSS",
-        "description": "XSS pattern detected"
-      },
-      {
-        "line": 27,
-        "cwe": "CWE-79",
-        "type": "XSS",
-        "description": "XSS pattern detected"
-      }
-    ],
-    "examples/vulnerable_code.py": [
-      {
-        "line": 32,
-        "cwe": "CWE-78",
-        "type": "Command Injection",
-        "description": "Command injection pattern detected"
-      },
-      {
-        "line": 42,
-        "cwe": "CWE-798",
-        "type": "Hardcoded Credentials",
-        "description": "Hardcoded credential detected"
-      },
-      {
-        "line": 43,
-        "cwe": "CWE-798",
-        "type": "Hardcoded Credentials",
-        "description": "Hardcoded credential detected"
-      },
-      {
-        "line": 48,
-        "cwe": "CWE-89",
-        "type": "SQL Injection",
-        "description": "SQL injection pattern detected"
-      },
-      {
-        "line": 72,
-        "cwe": "CWE-78",
-        "type": "Command Injection",
-        "description": "Command injection pattern detected"
-      },
-      {
-        "line": 77,
-        "cwe": "CWE-78",
-        "type": "Command Injection",
-        "description": "Command injection pattern detected"
-      },
-      {
-        "line": 98,
-        "cwe": "CWE-502",
-        "type": "Unsafe Deserialization",
-        "description": "Unsafe deserialization pattern"
-      },
-      {
-        "line": 102,
-        "cwe": "CWE-327",
-        "type": "Weak Crypto",
-        "description": "Weak cryptographic algorithm"
-      },
-      {
-        "line": 103,
-        "cwe": "CWE-327",
-        "type": "Weak Crypto",
-        "description": "Weak cryptographic algorithm"
-      },
-      {
-        "line": 106,
-        "cwe": "CWE-327",
-        "type": "Weak Crypto",
-        "description": "Weak cryptographic algorithm"
-      },
-      {
-        "line": 107,
-        "cwe": "CWE-327",
-        "type": "Weak Crypto",
-        "description": "Weak cryptographic algorithm"
-      }
-    ],
-    "examples/vulnerable_advanced.py": [
-      {
-        "line": 27,
-        "cwe": "CWE-78",
-        "type": "Command Injection",
-        "description": "Command injection pattern detected"
-      },
-      {
-        "line": 44,
-        "cwe": "CWE-78",
-        "type": "Command Injection",
-        "description": "Command injection pattern detected"
-      },
-      {
-        "line": 152,
-        "cwe": "CWE-502",
-        "type": "Unsafe Deserialization",
-        "description": "Unsafe deserialization pattern"
-      },
-      {
-        "line": 156,
-        "cwe": "CWE-502",
-        "type": "Unsafe Deserialization",
-        "description": "Unsafe deserialization pattern"
-      },
-      {
-        "line": 160,
-        "cwe": "CWE-502",
-        "type": "Unsafe Deserialization",
-        "description": "Unsafe deserialization pattern"
-      },
-      {
-        "line": 164,
-        "cwe": "CWE-502",
-        "type": "Unsafe Deserialization",
-        "description": "Unsafe deserialization pattern"
-      },
-      {
-        "line": 168,
-        "cwe": "CWE-78",
-        "type": "Command Injection",
-        "description": "Command injection pattern detected"
-      },
-      {
-        "line": 172,
-        "cwe": "CWE-78",
-        "type": "Command Injection",
-        "description": "Command injection pattern detected"
-      },
-      {
-        "line": 178,
-        "cwe": "CWE-89",
-        "type": "SQL Injection",
-        "description": "SQL injection pattern detected"
-      },
-      {
-        "line": 205,
-        "cwe": "CWE-89",
-        "type": "SQL Injection",
-        "description": "SQL injection pattern detected"
-      },
-      {
-        "line": 236,
-        "cwe": "CWE-78",
-        "type": "Command Injection",
-        "description": "Command injection pattern detected"
-      },
-      {
-        "line": 297,
-        "cwe": "CWE-89",
-        "type": "SQL Injection",
-        "description": "SQL injection pattern detected"
-      }
-    ]
-  }
+  ]
 }

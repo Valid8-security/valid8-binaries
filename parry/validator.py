@@ -32,7 +32,7 @@ class VulnerabilityValidator:
         self,
         vulnerabilities: List[Vulnerability],
         codebase_path: str,
-        batch_size: int = 10
+        batch_size: int = 5  # CPU-optimized: reduced for CPU machines
     ) -> Dict[str, Any]:
         """
         Validate all vulnerabilities using AI analysis.

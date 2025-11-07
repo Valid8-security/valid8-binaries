@@ -45,7 +45,7 @@ class SmartFilePrioritizer:
         'secret', 'key', 'cipher', 'salt', 'iv', 'nonce',
         
         # File Operations
-        'open(', 'file', 'read', 'write', 'upload', 'download', 'path',
+        'open', 'file', 'read', 'write', 'upload', 'download', 'path',
         'directory', 'folder', 'filesystem',
         
         # Network & API

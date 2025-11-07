@@ -1,4 +1,4 @@
-name: Parry Security Scan
+name: Security Scan with Parry
 
 on:
   push:
@@ -6,85 +6,125 @@ on:
   pull_request:
     branches: [ main, develop ]
   schedule:
-    # Run weekly security scan
-    - cron: '0 0 * * 0'
+    # Run weekly security scans
+    - cron: '0 2 * * 1'  # Monday 2 AM UTC
 
 jobs:
-  security-scan:
+  parry-security-scan:
     runs-on: ubuntu-latest
-    
+    permissions:
+      contents: read
+      security-events: write
+      issues: write
+      pull-requests: write
+
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
-    
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Full history for incremental scans
+
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.10'
-    
-    - name: Install Ollama
-      run: |
-        curl -fsSL https://ollama.ai/install.sh | sh
-        ollama serve &
-        sleep 5
-        ollama pull codellama:7b-instruct-q4_K_M
-    
+        python-version: '3.9'
+
     - name: Install Parry
       run: |
-        pip install parry-scanner
-    
-    - name: Run Fast Scan (for CI/CD)
+        pip install parry-security-scanner
+        # Or install from source:
+        # pip install -e .
+
+    - name: Install Ollama (for AI-enhanced scanning)
       run: |
-        parry scan . --mode fast --format json --output parry-results.json
+        curl -fsSL https://ollama.ai/install.sh | sh
+        # Start Ollama service in background
+        nohup ollama serve > /dev/null 2>&1 &
+        sleep 5
+        # Pull the required model
+        ollama pull qwen2.5-coder:1.5b
+
+    - name: Run Parry Security Scan (Hybrid Mode)
+      id: parry-scan
+      run: |
+        # Run hybrid mode for best coverage and performance
+        parry scan . --mode hybrid --format json --output parry-results.json --severity medium
       continue-on-error: true
-    
-    - name: Upload scan results
+
+    - name: Upload Parry Results
       uses: actions/upload-artifact@v3
       with:
-        name: parry-scan-results
+        name: parry-security-results
         path: parry-results.json
-    
-    - name: Check for CRITICAL vulnerabilities
+
+    - name: Generate Security Report
       run: |
-        python -c "
-        import json
-        with open('parry-results.json') as f:
-            results = json.load(f)
-            critical = [v for v in results.get('vulnerabilities', []) if v.get('severity') == 'CRITICAL']
-            if critical:
-                print(f'Found {len(critical)} CRITICAL vulnerabilities!')
-                for v in critical:
-                    print(f\"  - {v.get('cwe_id')}: {v.get('description')}\")
-                exit(1)
-        "
-    
-    - name: Comment PR with results (optional)
+        echo "## 🔒 Parry Security Scan Results" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+        if [ -f parry-results.json ]; then
+          # Extract vulnerability counts
+          vuln_count=$(jq '.vulnerabilities | length' parry-results.json)
+          files_scanned=$(jq '.files_scanned' parry-results.json)
+          high_severity=$(jq '[.vulnerabilities[] | select(.severity == "high" or .severity == "critical")] | length' parry-results.json)
+          medium_severity=$(jq '[.vulnerabilities[] | select(.severity == "medium")] | length' parry-results.json)
+
+          echo "| Metric | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Files Scanned | $files_scanned |" >> $GITHUB_STEP_SUMMARY
+          echo "| Total Vulnerabilities | $vuln_count |" >> $GITHUB_STEP_SUMMARY
+          echo "| High/Critical Severity | $high_severity |" >> $GITHUB_STEP_SUMMARY
+          echo "| Medium Severity | $medium_severity |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "$high_severity" -gt 0 ]; then
+            echo "⚠️ **High-severity vulnerabilities detected!**" >> $GITHUB_STEP_SUMMARY
+            echo "Please review the security findings and address critical issues." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ **No high-severity vulnerabilities found!**" >> $GITHUB_STEP_SUMMARY
+          fi
+        else
+          echo "❌ Scan failed - no results file generated" >> $GITHUB_STEP_SUMMARY
+        fi
+
+    - name: Comment on PR (if applicable)
       if: github.event_name == 'pull_request'
       uses: actions/github-script@v6
       with:
         script: |
           const fs = require('fs');
-          const results = JSON.parse(fs.readFileSync('parry-results.json', 'utf8'));
-          const vulns = results.vulnerabilities || [];
-          const critical = vulns.filter(v => v.severity === 'CRITICAL').length;
-          const high = vulns.filter(v => v.severity === 'HIGH').length;
-          const medium = vulns.filter(v => v.severity === 'MEDIUM').length;
-          
-          const comment = `## 🛡️ Parry Security Scan Results
-          
-          - 🔴 Critical: ${critical}
-          - 🟠 High: ${high}
-          - 🟡 Medium: ${medium}
-          - Total: ${vulns.length}
-          
-          ${critical > 0 ? '⚠️ **Action required:** Critical vulnerabilities detected!' : '✅ No critical issues'}
-          `;
-          
-          github.rest.issues.createComment({
-            issue_number: context.issue.number,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: comment
-          });
+          if (fs.existsSync('parry-results.json')) {
+            const results = JSON.parse(fs.readFileSync('parry-results.json', 'utf8'));
+            const vulnCount = results.vulnerabilities?.length || 0;
+            const highSev = results.vulnerabilities?.filter(v => v.severity === 'high' || v.severity === 'critical').length || 0;
 
+            const comment = `## 🔒 Security Scan Results
 
+            **Parry Security Scanner** found:
+            - **${vulnCount}** total vulnerabilities
+            - **${highSev}** high/critical severity issues
+            - **${results.files_scanned || 0}** files scanned
+
+            ${highSev > 0 ? '⚠️ **Please review and address high-severity findings.**' : '✅ **No high-severity issues detected!**'}
+
+            [View detailed results](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+          }
+
+    - name: Fail on High-Severity Vulnerabilities
+      if: steps.parry-scan.outcome == 'success'
+      run: |
+        if [ -f parry-results.json ]; then
+          high_count=$(jq '[.vulnerabilities[] | select(.severity == "high" or .severity == "critical")] | length' parry-results.json)
+          if [ "$high_count" -gt 0 ]; then
+            echo "❌ Found $high_count high-severity vulnerabilities. Failing build."
+            echo "Review the security scan results above."
+            exit 1
+          fi
+        fi

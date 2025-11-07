@@ -40,8 +40,8 @@ class SetupHelper:
         self.ollama_installed = False
         self.ollama_running = False
         self.model_available = False
-        self.recommended_model = "codellama:7b"
-        self.model_size_gb = 3.8
+        self.recommended_model = "qwen2.5-coder:1.5b"  # Mac M3 compatible (3B/7B hang)
+        self.model_size_gb = 0.99
         
     def print_banner(self):
         """Print welcome banner"""
@@ -407,8 +407,8 @@ scanner:
     - "*.spec.py"
 
 llm:
-  # AI model to use
-  model: codellama:7b
+  # AI model to use (qwen2.5-coder:1.5b - Mac M3 compatible)
+  model: qwen2.5-coder:1.5b
   
   # Ollama API endpoint
   endpoint: http://localhost:11434

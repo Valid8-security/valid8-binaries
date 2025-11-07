@@ -1,744 +1,503 @@
 # Parry Setup Guide
 
-Complete guide to installing and configuring Parry Security Scanner.
+Complete installation and setup instructions for Parry security scanner.
 
----
-
-## Quick Start (5 Minutes)
-
-```bash
-# 1. Install Parry
-pip install parry-scanner
-
-# 2. Run setup wizard
-parry setup
-
-# 3. Verify installation
-parry doctor
-
-# 4. Scan your code
-parry scan . --mode hybrid
-```
-
----
-
-## System Requirements
+## 📋 System Requirements
 
 ### Minimum Requirements
+- **OS**: Linux, macOS, Windows
+- **Python**: 3.8 or higher
+- **RAM**: 4GB
+- **Disk**: 500MB free space
+- **Network**: Internet connection for initial setup
 
-- **OS:** macOS 12+, Linux (Ubuntu 18.04+), Windows 10+
-- **CPU:** 4 cores (8+ recommended)
-- **RAM:** 8GB (16GB+ recommended)
-- **Storage:** 40GB free space
-- **Python:** 3.9 or higher
+### Recommended Requirements
+- **OS**: Linux or macOS
+- **Python**: 3.9+
+- **RAM**: 8GB+
+- **Disk**: 2GB free space
+- **CPU**: Multi-core processor
+- **Ollama**: For AI features
 
-### Recommended for Best Performance
+## 🚀 Installation
 
-- **CPU:** 8+ cores, Apple Silicon (M1/M2/M3) or Intel 11th gen+
-- **RAM:** 16GB+ (32GB for Deep/Hybrid modes)
-- **Storage:** SSD with 50GB+ free space
-- **Network:** Internet for initial model download
+### Option 1: Pip Install (Recommended)
 
----
-
-## Installation Methods
-
-### Method 1: PyPI (Recommended)
-
+#### Install Python
 ```bash
-pip install parry-scanner
+# Ubuntu/Debian
+sudo apt update
+sudo apt install python3 python3-pip python3-venv
+
+# macOS (with Homebrew)
+brew install python
+
+# Windows (Chocolatey)
+choco install python
+
+# Verify installation
+python3 --version  # Should be 3.8+
+pip3 --version
 ```
 
-### Method 2: From Source
+#### Install Parry
+```bash
+# Install Parry
+pip3 install parry-scanner
 
+# Verify installation
+parry --version
+```
+
+### Option 2: From Source Code
+
+#### Clone Repository
+```bash
+git clone https://github.com/Parry-AI/parry-scanner.git
+cd parry-scanner
+```
+
+#### Create Virtual Environment
+```bash
+# Create virtual environment
+python3 -m venv parry-env
+
+# Activate virtual environment
+source parry-env/bin/activate  # Linux/macOS
+# parry-env\Scripts\activate    # Windows
+```
+
+#### Install Dependencies
+```bash
+# Install Parry in development mode
+pip install -e .
+
+# Verify installation
+parry --version
+```
+
+### Option 3: Docker Installation
+
+#### Build Docker Image
 ```bash
 # Clone repository
 git clone https://github.com/Parry-AI/parry-scanner.git
 cd parry-scanner
 
-# Install in development mode
-pip install -e .
+# Build Docker image
+docker build -t parry-scanner .
 
-# Or install production build
-pip install .
+# Run Parry in Docker
+docker run -v $(pwd):/app parry-scanner parry scan /app
 ```
 
-### Method 3: Homebrew (macOS)
+## 🤖 AI Setup (Optional but Recommended)
 
+### Install Ollama
+
+#### macOS
 ```bash
-brew install parry-scanner
-```
-
-**Note:** Homebrew formula coming soon
-
----
-
-## Ollama Setup (Required for AI Features)
-
-Parry uses Ollama for local AI processing. This is **required** for Deep and Hybrid modes.
-
-### Automatic Setup (Recommended)
-
-```bash
-# Interactive setup wizard handles everything
-parry setup
-```
-
-The wizard will:
-1. ✅ Check system requirements
-2. ✅ Install Ollama if missing
-3. ✅ Download CodeLlama 7B model (~4GB)
-4. ✅ Verify installation
-5. ✅ Test AI connection
-
-### Manual Setup
-
-#### Install Ollama
-
-**macOS:**
-```bash
+# Install Ollama
 brew install ollama
-```
 
-**Linux:**
-```bash
-curl -fsSL https://ollama.com/install.sh | sh
-```
-
-**Windows:**
-Download from: https://ollama.com/download
-
-#### Start Ollama Service
-
-```bash
-# macOS/Linux: Start as background service
-brew services start ollama  # macOS
-sudo systemctl start ollama  # Linux
-
-# Or run in foreground (for debugging)
+# Start Ollama service
 ollama serve
 ```
 
-#### Download CodeLlama Model
-
+#### Linux
 ```bash
-# This downloads ~4GB and takes 5-10 minutes
-ollama pull codellama:7b-instruct
+# Download and install
+curl -fsSL https://ollama.ai/install.sh | sh
 
-# Verify model installed
-ollama list
+# Start service
+systemctl start ollama  # systemd
+# or
+ollama serve            # manual start
 ```
 
-**Expected output:**
-```
-NAME                   ID             SIZE   MODIFIED
-codellama:7b-instruct  abc123...      4.1GB  2 hours ago
-```
-
----
-
-## Configuration
-
-### Interactive Configuration
-
+#### Windows
 ```bash
-parry configure
-```
-
-This creates `.parry.yml` in your home directory with recommended settings.
-
-### Manual Configuration
-
-Create `.parry.yml` in your project root or home directory:
-
-```yaml
-# Parry configuration
-version: 1.0
-
-# Default scan mode
-default_mode: hybrid  # fast, deep, or hybrid
-
-# Exclude patterns
-exclude:
-  - "*/node_modules/*"
-  - "*/venv/*"
-  - "*/__pycache__/*"
-  - "*.test.js"
-  - "*/tests/*"
-
-# Severity threshold
-severity_threshold: medium  # critical, high, medium, low
-
-# AI/LLM settings
-llm:
-  model: codellama:7b-instruct
-  temperature: 0.1
-  max_tokens: 2048
-  timeout: 30
-
-# Output settings
-output:
-  format: table  # table, json, markdown
-  color: true
-  verbose: false
-
-# SCA settings (Software Composition Analysis)
-sca:
-  enabled: false
-  check_updates: true
-  
-# Custom rules
-custom_rules:
-  enabled: true
-  path: .parry-rules/
-  
-# CI/CD settings
-ci:
-  fail_on_critical: true
-  fail_on_high: false
-  fail_on_medium: false
-```
-
----
-
-## Verification
-
-### System Check
-
-```bash
-parry doctor
-```
-
-**Expected output:**
-```
-┌─────────────── Parry System Status ───────────────┐
-│ Component         │ Status    │ Result           │
-├───────────────────┼───────────┼──────────────────┤
-│ Parry Version     │ 0.7.0     │ ✓                │
-│ Python            │ 3.11.5    │ ✓                │
-│ Ollama            │ Running   │ ✓                │
-│ CodeLlama Model   │ Found     │ ✓                │
-│ Disk Space        │ 50 GB     │ ✓                │
-│ RAM Available     │ 16 GB     │ ✓                │
-└───────────────────┴───────────┴──────────────────┘
-
-✓ All systems operational
-```
-
-### Test Scan
-
-```bash
-# Scan example vulnerable code
-parry scan examples/vulnerable_code.py
-
-# Or create a test file
-echo 'import subprocess; subprocess.call(["/usr/bin/whoami"])' > test.py
-parry scan test.py
-```
-
-**Expected output:**
-```
-Found 1 vulnerability:
-
-HIGH Command Injection (CWE-78)
-File: test.py:1
-Line: 1
-Impact: Command execution vulnerability detected
-✓ System is working correctly
-```
-
----
-
-## CI/CD Integration
-
-### GitHub Actions
-
-```yaml
-name: Parry Security Scan
-
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-
-jobs:
-  security:
-    runs-on: ubuntu-latest
-    
-    steps:
-    - uses: actions/checkout@v3
-    
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.9'
-    
-    - name: Install Parry
-      run: pip install parry-scanner
-    
-    - name: Install Ollama
-      run: |
-        curl -fsSL https://ollama.com/install.sh | sh
-    
-    - name: Download CodeLlama
-      run: ollama pull codellama:7b-instruct
-    
-    - name: Run Parry Scan
-      run: |
-        ollama serve &
-        sleep 5
-        parry scan . --mode fast --format json --output results.json
-    
-    - name: Upload Results
-      uses: actions/upload-artifact@v3
-      with:
-        name: security-results
-        path: results.json
-    
-    - name: Fail on Critical
-      if: failure()
-      run: |
-        cat results.json | jq '.vulnerabilities[] | select(.severity=="critical")'
-```
-
-### GitLab CI
-
-```yaml
-security_scan:
-  stage: test
-  image: python:3.9
-  before_script:
-    - pip install parry-scanner
-    - curl -fsSL https://ollama.com/install.sh | sh
-    - ollama pull codellama:7b-instruct
-  script:
-    - ollama serve &
-    - sleep 5
-    - parry scan . --mode hybrid --format json --output results.json
-  artifacts:
-    paths:
-      - results.json
-    expire_in: 1 week
-```
-
-### Jenkins
-
-```groovy
-pipeline {
-    agent any
-    
-    stages {
-        stage('Security Scan') {
-            steps {
-                sh '''
-                    pip install parry-scanner
-                    curl -fsSL https://ollama.com/install.sh | sh
-                    ollama pull codellama:7b-instruct
-                    ollama serve &
-                    sleep 5
-                    parry scan . --mode hybrid --format json --output results.json
-                '''
-            }
-        }
-    }
-    
-    post {
-        always {
-            archiveArtifacts artifacts: 'results.json'
-        }
-    }
-}
-```
-
----
-
-## Troubleshooting
-
-### Issue: "Cannot connect to Ollama"
-
-**Solution 1: Check if Ollama is running**
-```bash
-# Check process
-ps aux | grep ollama
-
-# Check port
-lsof -i :11434
-```
-
-**Solution 2: Start Ollama manually**
-```bash
-# macOS
-brew services start ollama
-
-# Linux
-sudo systemctl start ollama
-
-# Windows (run in terminal)
+# Using Scoop
+scoop install ollama
 ollama serve
+
+# Using PowerShell
+# Download from https://ollama.ai/download
+# Run installer
 ```
 
-**Solution 3: Check firewall**
+### Download AI Models
+
+#### Basic Model (Recommended)
 ```bash
-# macOS
-sudo /usr/libexec/ApplicationFirewall/socketfilterfw --getappblocked /usr/local/bin/ollama
-
-# Linux
-sudo iptables -L | grep 11434
+# Fast, lightweight model
+ollama pull qwen2.5-coder:0.5b
 ```
 
----
+#### Advanced Model (High Accuracy)
+```bash
+# Slower but more accurate
+ollama pull qwen2.5-coder:1.5b
+```
 
-### Issue: "Model not found"
-
-**Solution: Pull the model**
+#### Verify Models
 ```bash
 # List installed models
 ollama list
 
-# Pull if missing
-ollama pull codellama:7b-instruct
-
-# Verify
-ollama list | grep codellama
+# Expected output:
+# NAME                    SIZE
+# qwen2.5-coder:0.5b      1.5 GB
+# qwen2.5-coder:1.5b      4.7 GB
 ```
 
----
+## ⚙️ Configuration
 
-### Issue: "Out of memory"
+### Configuration File
 
-**Possible causes:**
-1. Not enough RAM for model
-2. Model too large for system
-3. Multiple processes using memory
+Create configuration file at `~/.parry/config.yaml`:
 
-**Solutions:**
+```yaml
+# Default scan settings
+mode: hybrid
+validate: true
+format: terminal
+severity: medium
 
-**1. Use smaller model (if available)**
-```bash
-# 7B is smallest recommended
-# Check if quantized version available
-ollama pull codellama:7b-instruct-q4_0
+# Performance settings
+max_workers: 4
+batch_size: 10
+timeout: 30
+
+# Output settings
+output_dir: ./parry-results
+reports:
+  - format: json
+  - format: html
+
+# Exclusions
+exclude_patterns:
+  - "**/test/**"
+  - "**/tests/**"
+  - "**/node_modules/**"
+  - "**/venv/**"
+  - "**/.venv/**"
+  - "**/__pycache__/**"
+  - "**/*.min.js"
+  - "**/*.min.css"
+  - "**/build/**"
+  - "**/dist/**"
+  - "**/.git/**"
+
+# Custom rules
+custom_rules_dir: ~/.parry/rules
+
+# AI settings
+ollama:
+  host: http://127.0.0.1:11434
+  models:
+    fast: qwen2.5-coder:0.5b
+    accurate: qwen2.5-coder:1.5b
+  timeout: 30
+  max_tokens: 512
 ```
 
-**2. Free up RAM**
-```bash
-# macOS
-sudo purge
+### Environment Variables
 
-# Linux
-sync && echo 3 | sudo tee /proc/sys/vm/drop_caches
+```bash
+# Ollama configuration
+export OLLAMA_HOST=http://127.0.0.1:11434
+
+# Parry configuration
+export PARRY_CONFIG=~/.parry/config.yaml
+export PARRY_CACHE_DIR=~/.parry/cache
+export PARRY_LOG_LEVEL=INFO
+
+# Proxy settings (if needed)
+export HTTP_PROXY=http://proxy.company.com:8080
+export HTTPS_PROXY=http://proxy.company.com:8080
 ```
 
-**3. Close other applications**
+## 🧪 Testing Installation
+
+### Basic Functionality Test
 ```bash
-# Check memory usage
-# macOS
-vm_stat
+# Test basic scan
+parry scan --help
 
-# Linux
-free -h
+# Create test file
+echo "print('hello')" > test.py
 
-# Windows
-wmic OS get TotalVisibleMemorySize,FreePhysicalMemory
+# Test scan on test file
+parry scan test.py
+
+# Expected output: No vulnerabilities found
 ```
 
----
-
-### Issue: "Scan is too slow"
-
-**Solution 1: Use Fast Mode**
+### AI Functionality Test
 ```bash
-parry scan . --mode fast  # 222 files/sec
+# Test AI features (requires Ollama)
+echo "eval(input('Enter code: '))" > dangerous.py
+parry scan dangerous.py --mode hybrid --validate
+
+# Expected output: Should detect CWE-95 (Code Injection)
 ```
 
-**Solution 2: Exclude files**
+### Custom Rules Test
 ```bash
-parry scan . --exclude "*/node_modules/*" --exclude "*/venv/*"
+# Create custom rules
+parry init-rules --output test-rules.yaml
+
+# Test custom rules
+parry scan . --custom-rules test-rules.yaml
 ```
 
-**Solution 3: Scan specific directories**
+## 🚨 Troubleshooting
+
+### Common Issues
+
+#### "parry command not found"
 ```bash
-parry scan ./src  # Only scan source directory
+# Check if virtual environment is activated
+source parry-env/bin/activate
+
+# Or add to PATH
+export PATH="$PATH:~/.local/bin"
 ```
 
-**Solution 4: Check system resources**
+#### "Ollama connection failed"
 ```bash
-# CPU usage
-top -pid $(pgrep ollama)
+# Check if Ollama is running
+ollama list
 
-# Disk I/O
-iostat -x 1
+# Start Ollama service
+ollama serve
+
+# Check Ollama version
+ollama --version
 ```
 
----
-
-### Issue: "Permission denied"
-
-**Solution: Check Python permissions**
+#### "ImportError: No module named 'parry'"
 ```bash
-# macOS/Linux
-which python3
-python3 --version
+# Install in development mode
+pip install -e .
 
-# Install in user space
-pip install --user parry-scanner
-
-# Or use virtual environment
-python3 -m venv venv
-source venv/bin/activate
+# Or install normally
 pip install parry-scanner
 ```
 
----
-
-### Issue: "Import errors"
-
-**Solution: Reinstall dependencies**
+#### Permission Errors
 ```bash
-# Uninstall
-pip uninstall parry-scanner
+# Fix permissions
+chmod +x $(which parry)
+
+# Or run with sudo (not recommended)
+sudo parry scan .
+```
+
+#### Memory Issues
+```bash
+# Reduce batch size
+parry scan . --batch-size 5
+
+# Use fast mode
+parry scan . --mode fast
+
+# Increase system memory or use smaller codebases
+```
+
+### Performance Tuning
+
+#### For Large Codebases
+```yaml
+# In ~/.parry/config.yaml
+max_workers: 8
+batch_size: 20
+streaming_chunk_size: 8192
+cache_enabled: true
+smart_prefilter: true
+```
+
+#### For Limited Resources
+```yaml
+# In ~/.parry/config.yaml
+max_workers: 2
+batch_size: 5
+ai_timeout: 10
+disable_cache: false  # Keep cache enabled
+```
+
+## 🔧 Advanced Setup
+
+### CI/CD Integration
+
+#### GitHub Actions
+```yaml
+name: Security Scan
+on: [push, pull_request]
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    - name: Install Parry
+      run: pip install parry-scanner
+    - name: Install Ollama
+      run: |
+        curl -fsSL https://ollama.ai/install.sh | sh
+        ollama serve &
+        sleep 5
+        ollama pull qwen2.5-coder:0.5b
+    - name: Run Security Scan
+      run: parry scan . --mode hybrid --validate --format sarif > results.sarif
+    - name: Upload results
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: results.sarif
+```
+
+#### GitLab CI
+```yaml
+security_scan:
+  image: python:3.9
+  before_script:
+    - pip install parry-scanner
+    - curl -fsSL https://ollama.ai/install.sh | sh
+    - ollama serve &
+    - sleep 5
+    - ollama pull qwen2.5-coder:0.5b
+  script:
+    - parry scan . --mode hybrid --validate --format json --output results.json
+  artifacts:
+    reports:
+      sast: results.json
+```
+
+### IDE Integration
+
+#### VS Code Extension
+```bash
+# Install VS Code extension
+code --install-extension parry.parry-vscode
+
+# Configure in settings.json
+{
+  "parry.scanOnSave": true,
+  "parry.scanMode": "hybrid",
+  "parry.enableValidation": true
+}
+```
+
+### API Server Setup
+
+#### Basic API Server
+```bash
+# Start API server
+parry serve --host 0.0.0.0 --port 8000
+
+# Test API
+curl http://localhost:8000/api/v1/health
+
+# Scan via API
+curl -X POST http://localhost:8000/api/v1/scan \
+  -H "Content-Type: application/json" \
+  -d '{"path": ".", "mode": "hybrid"}'
+```
+
+#### Production Deployment
+```bash
+# Using Gunicorn
+pip install gunicorn
+gunicorn --bind 0.0.0.0:8000 --workers 4 parry.api:app
+
+# Using Docker Compose
+version: '3.8'
+services:
+  parry:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+    depends_on:
+      - ollama
+
+  ollama:
+    image: ollama/ollama
+    volumes:
+      - ollama_data:/root/.ollama
+    command: serve
+
+volumes:
+  ollama_data:
+```
+
+## 📊 Monitoring and Maintenance
+
+### Log Files
+```bash
+# View logs
+tail -f ~/.parry/logs/parry.log
+
+# Log levels
+export PARRY_LOG_LEVEL=DEBUG  # For troubleshooting
+```
+
+### Cache Management
+```bash
+# View cache stats
+parry cache --stats
 
 # Clear cache
-pip cache purge
+parry cache --clear
 
-# Reinstall
-pip install parry-scanner --no-cache-dir
+# Prune old cache entries
+parry cache --prune 7  # Remove entries older than 7 days
 ```
 
----
-
-## Performance Optimization
-
-### For Faster Scanning
-
-**1. Use Fast Mode for CI/CD**
+### Update Management
 ```bash
-parry scan . --mode fast  # 222 files/sec
+# Check for updates
+pip show parry-scanner
+
+# Update Parry
+pip install --upgrade parry-scanner
+
+# Update AI models
+ollama pull qwen2.5-coder:0.5b  # Latest version
 ```
 
-**2. Configure exclusions**
-```yaml
-# .parry.yml
-exclude:
-  - "*/node_modules/*"
-  - "*/venv/*"
-  - "*/__pycache__/*"
-  - "*/dist/*"
-  - "*/build/*"
-```
+## 📞 Support
 
-**3. Enable incremental scanning**
+### Getting Help
 ```bash
-parry scan . --incremental  # Only scan changed files
-```
+# Show help
+parry --help
 
-**4. Parallel processing**
-```bash
-parry scan . --workers 8  # Use 8 CPU cores
-```
+# Run diagnostics
+parry doctor
 
----
-
-### For Better AI Performance
-
-**1. Use Apple Neural Engine (macOS)**
-```bash
-# Automatic on M1/M2/M3 Macs
-# Ensure:
-export DYLD_LIBRARY_PATH=/opt/homebrew/lib:$DYLD_LIBRARY_PATH
-```
-
-**2. Optimize model settings**
-```yaml
-# .parry.yml
-llm:
-  temperature: 0.0  # Deterministic output
-  max_tokens: 1024  # Reduce for speed
-  timeout: 15       # Faster timeout
-```
-
-**3. Use quantized models**
-```bash
-# Default Q4 quantization is best
-# For older machines, try Q3
-```
-
----
-
-### Recommended Settings by System
-
-**Mac M1/M2/M3 (16GB):**
-```yaml
-default_mode: hybrid
-llm:
-  model: codellama:7b-instruct
-  temperature: 0.1
-  max_tokens: 2048
-workers: 4
-```
-
-**Linux (32GB):**
-```yaml
-default_mode: deep
-llm:
-  model: codellama:13b-instruct  # If available
-  temperature: 0.2
-  max_tokens: 4096
-workers: 8
-```
-
-**Windows (16GB):**
-```yaml
-default_mode: fast
-llm:
-  model: codellama:7b-instruct
-  temperature: 0.1
-  max_tokens: 1024
-workers: 4
-```
-
----
-
-## Upgrading
-
-### Check Current Version
-
-```bash
+# Check version and components
 parry --version
 ```
 
-### Upgrade Parry
+### Community Support
+- **Documentation**: `docs/` directory
+- **GitHub Issues**: Bug reports and feature requests
+- **Discussions**: General questions and community support
 
-```bash
-# PyPI
-pip install --upgrade parry-scanner
-
-# From source
-git pull
-pip install --upgrade .
-```
-
-### Upgrade Ollama
-
-```bash
-# macOS
-brew upgrade ollama
-
-# Linux
-curl -fsSL https://ollama.com/install.sh | sh
-
-# Windows: Download latest from ollama.com
-```
-
-### Update CodeLlama Model
-
-```bash
-# Pull latest version
-ollama pull codellama:7b-instruct
-
-# Or specific version
-ollama pull codellama:7b-instruct-v1.0
-```
+### Enterprise Support
+For enterprise deployment and support:
+- Contact: enterprise@parry.ai
+- SLA options available
+- Custom integrations
+- Training and consulting
 
 ---
 
-## Uninstallation
-
-### Remove Parry
-
-```bash
-# Uninstall package
-pip uninstall parry-scanner
-
-# Remove config
-rm -rf ~/.parry
-rm -f ~/.parry.yml
-```
-
-### Remove Ollama (Optional)
-
-```bash
-# macOS
-brew uninstall ollama
-rm -rf ~/.ollama
-
-# Linux
-sudo systemctl stop ollama
-sudo rm /usr/local/bin/ollama
-rm -rf ~/.ollama
-
-# Windows: Use Control Panel > Uninstall
-```
-
-### Clean Up Models (~4GB freed)
-
-```bash
-rm -rf ~/.ollama/models
-```
-
----
-
-## Air-Gapped Installation
-
-For environments without internet access:
-
-### 1. Prepare Offline Package
-
-On a machine with internet:
-```bash
-# Export model
-ollama pull codellama:7b-instruct
-tar -czf codellama-7b.tar.gz ~/.ollama/models/
-
-# Export Parry
-pip download parry-scanner -d parry-packages/
-```
-
-### 2. Transfer to Air-Gapped System
-
-```bash
-# Copy files via USB or internal network
-cp codellama-7b.tar.gz parry-packages/ /path/to/airgapped/
-```
-
-### 3. Install on Air-Gapped System
-
-```bash
-# Install Parry from packages
-pip install --no-index --find-links parry-packages/ parry-scanner
-
-# Install Ollama manually
-# (See Ollama docs for offline installation)
-
-# Import model
-tar -xzf codellama-7b.tar.gz -C ~/.ollama/
-
-# Verify
-parry doctor
-```
-
----
-
-## Next Steps
-
-1. ✅ **Read Quick Start:** [QUICKSTART.md](QUICKSTART.md)
-2. 🔍 **Scan Your Code:** `parry scan /path/to/your/code`
-3. 📊 **Review Results:** Check output format options
-4. 🔧 **Configure:** Set up `.parry.yml` for your needs
-5. 🚀 **Integrate:** Add to CI/CD pipeline
-
----
-
-## Getting Help
-
-- 📖 **Documentation:** [README.md](README.md)
-- 🐛 **Issue Tracker:** https://github.com/Parry-AI/parry-scanner/issues
-- 💬 **Discussions:** https://github.com/Parry-AI/parry-scanner/discussions
-- 📧 **Email:** support@parry.dev
-
----
-
-**Last Updated:** November 2025  
-**Version:** 0.7.0 Beta
-
+🎉 **Setup Complete!** You're ready to start securing your code with Parry.

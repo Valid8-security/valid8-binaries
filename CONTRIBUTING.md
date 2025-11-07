@@ -1,263 +1,158 @@
 # Contributing to Parry
 
-Thank you for your interest in contributing to Parry! This document provides guidelines and instructions for contributing.
+Thank you for your interest in contributing to Parry! We welcome contributions from the community.
 
-## Development Setup
+## 🚀 Ways to Contribute
 
-### 1. Fork and Clone
+### Code Contributions
+- Bug fixes
+- Feature implementations
+- Performance optimizations
+- Documentation improvements
 
+### Non-Code Contributions
+- Bug reports
+- Feature requests
+- Documentation
+- Testing
+
+## 🛠️ Development Setup
+
+### Prerequisites
+- Python 3.8+
+- Ollama (for AI features)
+- Git
+
+### Installation
 ```bash
-git clone https://github.com/YOUR-USERNAME/parry.git
-cd parry
+# Clone the repository
+git clone https://github.com/Parry-AI/parry-scanner.git
+cd parry-scanner
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Install Ollama and models (optional, for AI features)
+ollama pull qwen2.5-coder:0.5b
+ollama pull qwen2.5-coder:1.5b
 ```
 
-### 2. Create Virtual Environment
-
+### Testing
 ```bash
-python3 -m venv venv
-source venv/bin/activate  # On macOS/Linux
+# Run tests
+python -m pytest
+
+# Run specific test categories
+python -m pytest tests/test_scanner.py
+python -m pytest tests/test_ai.py
 ```
 
-### 3. Install Development Dependencies
+## 📝 Code Style
 
-```bash
-pip install -e ".[dev]"
-```
+- Follow PEP 8 style guidelines
+- Use type hints for function parameters and return values
+- Write docstrings for all public functions and classes
+- Keep functions focused and modular
 
-### 4. Install Ollama and Model
-
-```bash
-brew install ollama
-ollama serve &
-ollama pull codellama:7b-instruct
-```
-
-### 5. Run Tests
-
-```bash
-pytest tests/ -v
-```
-
-## Project Structure
-
-```
-parry/
-├── parry/              # Main package
-│   ├── cli.py         # Command-line interface
-│   ├── scanner.py     # Vulnerability detection
-│   ├── llm.py         # LLM client
-│   ├── patch.py       # Patch generation
-│   ├── reporter.py    # Report generation
-│   ├── compare.py     # Benchmarking
-│   └── prompts.py     # LLM prompts
-├── tests/             # Test suite
-├── examples/          # Example vulnerable code
-├── scripts/           # Utility scripts
-└── docs/             # Documentation
-```
-
-## Adding New Vulnerability Detectors
-
-To add a new vulnerability detector:
-
-1. Create a new detector class in `parry/scanner.py`:
-
+### Example
 ```python
-class MyNewDetector(VulnerabilityDetector):
-    """Detects MY-VULNERABILITY (CWE-XXX)"""
-    
-    def detect(self, file_path: Path, content: str, lines: List[str]) -> List[Vulnerability]:
-        vulnerabilities = []
-        
-        patterns = [
-            r'vulnerable_pattern_1',
-            r'vulnerable_pattern_2',
-        ]
-        
-        for i, line in enumerate(lines, 1):
-            for pattern in patterns:
-                if re.search(pattern, line):
-                    vulnerabilities.append(Vulnerability(
-                        cwe="CWE-XXX",
-                        severity="high",
-                        title="My Vulnerability",
-                        description="Description of the vulnerability",
-                        file_path=str(file_path),
-                        line_number=i,
-                        code_snippet=line.strip(),
-                        confidence="medium",
-                        category="category"
-                    ))
-        
-        return vulnerabilities
+def scan_file(file_path: Path, config: ScanConfig) -> ScanResult:
+    """
+    Scan a single file for security vulnerabilities.
+
+    Args:
+        file_path: Path to the file to scan
+        config: Scanning configuration
+
+    Returns:
+        ScanResult with findings and metadata
+    """
+    # Implementation here
+    pass
 ```
 
-2. Add the detector to the scanner's `__init__` method:
+## 🐛 Reporting Bugs
 
-```python
-self.detectors = [
-    # ... existing detectors
-    MyNewDetector(),
-]
-```
+Please use the GitHub issue tracker to report bugs. Include:
 
-3. Add a prompt template in `parry/prompts.py`:
+- Clear title describing the issue
+- Steps to reproduce
+- Expected behavior
+- Actual behavior
+- Environment details (OS, Python version, etc.)
+- Relevant logs or error messages
 
-```python
-PATCH_PROMPTS = {
-    # ... existing prompts
-    "CWE-XXX": """
-Fix this vulnerability by:
-1. Step one
-2. Step two
-3. Step three
-
-Example:
-BAD:  vulnerable_code
-GOOD: secure_code
-""",
-}
-```
-
-4. Add tests in `tests/test_scanner.py`:
-
-```python
-def test_my_new_detector():
-    """Test MY-VULNERABILITY detection"""
-    detector = MyNewDetector()
-    
-    code = '''
-    vulnerable_code_example
-    '''
-    
-    vulns = detector.detect(Path("test.py"), code, code.split("\n"))
-    assert len(vulns) > 0
-    assert vulns[0].cwe == "CWE-XXX"
-```
-
-## Code Style
-
-We use Black for code formatting and Ruff for linting:
-
-```bash
-# Format code
-black parry/
-
-# Lint code
-ruff check parry/
-
-# Type checking
-mypy parry/
-```
-
-## Testing
-
-### Run All Tests
-
-```bash
-pytest tests/ -v
-```
-
-### Run Specific Test
-
-```bash
-pytest tests/test_scanner.py::test_sql_injection_detection -v
-```
-
-### Test Coverage
-
-```bash
-pytest tests/ --cov=parry --cov-report=html
-```
-
-## Submitting Changes
-
-### 1. Create a Branch
-
-```bash
-git checkout -b feature/my-new-feature
-```
-
-### 2. Make Your Changes
-
-- Write code
-- Add tests
-- Update documentation
-
-### 3. Run Tests and Linting
-
-```bash
-pytest tests/ -v
-black parry/
-ruff check parry/
-```
-
-### 4. Commit Changes
-
-```bash
-git add .
-git commit -m "Add new feature: description"
-```
-
-Use conventional commit messages:
-- `feat:` - New feature
-- `fix:` - Bug fix
-- `docs:` - Documentation changes
-- `test:` - Test changes
-- `refactor:` - Code refactoring
-
-### 5. Push and Create PR
-
-```bash
-git push origin feature/my-new-feature
-```
-
-Then create a Pull Request on GitHub.
-
-## PR Guidelines
-
-- Provide a clear description of changes
-- Reference any related issues
-- Include tests for new features
-- Update documentation as needed
-- Ensure all CI checks pass
-
-## Reporting Bugs
-
-When reporting bugs, please include:
-
-1. **Description**: Clear description of the bug
-2. **Steps to Reproduce**: Detailed steps to reproduce
-3. **Expected Behavior**: What you expected to happen
-4. **Actual Behavior**: What actually happened
-5. **Environment**:
-   - OS version
-   - Python version
-   - Parry version
-   - Ollama version
-6. **Logs**: Relevant error messages or logs
-
-## Feature Requests
+## 💡 Feature Requests
 
 We welcome feature requests! Please:
 
-1. Check if the feature already exists or is planned
-2. Provide a clear use case
-3. Describe the expected behavior
-4. Consider submitting a PR if you can implement it
+- Use the GitHub issue tracker
+- Clearly describe the proposed feature
+- Explain the use case and benefits
+- Consider if it's within Parry's scope
 
-## Code of Conduct
+## 📚 Documentation
 
-- Be respectful and inclusive
-- Welcome newcomers
-- Focus on constructive feedback
-- Help others learn and grow
+- Update documentation for any new features
+- Fix typos and improve clarity
+- Add examples and tutorials
+- Keep the README up to date
 
-## Questions?
+## 🔒 Security
 
-- 💬 [GitHub Discussions](https://github.com/parry-security/parry/discussions)
-- 📧 Email: dev@parry.dev
+- Report security vulnerabilities privately via email
+- Do not create public issues for security problems
+- Allow time for fixes before public disclosure
 
-Thank you for contributing to Parry! 🔒
+## 📋 Pull Request Process
 
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes
+4. Run tests (`python -m pytest`)
+5. Update documentation if needed
+6. Commit your changes (`git commit -m 'Add amazing feature'`)
+7. Push to the branch (`git push origin feature/amazing-feature`)
+8. Open a Pull Request
 
+### PR Requirements
+
+- All tests pass
+- Code follows style guidelines
+- Documentation updated
+- Clear description of changes
+- Screenshots for UI changes (if applicable)
+
+## 🎯 Areas for Contribution
+
+### High Priority
+- Additional CWE coverage
+- Performance optimizations
+- Language support expansion
+- Integration improvements
+
+### Medium Priority
+- UI/UX improvements
+- Advanced reporting features
+- Custom rule enhancements
+- API extensions
+
+### Future
+- Machine learning enhancements
+- Advanced analytics
+- Enterprise features
+
+## 📞 Getting Help
+
+- **Documentation**: Check the `docs/` directory
+- **Issues**: Search existing issues before creating new ones
+- **Discussions**: Use GitHub Discussions for questions
+
+## 🙏 Recognition
+
+Contributors will be recognized in:
+- README.md contributors section
+- Release notes
+- Project documentation
+
+Thank you for contributing to Parry! 🛡️

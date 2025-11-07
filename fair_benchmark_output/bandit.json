@@ -1,0 +1,980 @@
+{
+  "errors": [],
+  "generated_at": "2025-11-04T22:11:26Z",
+  "metrics": {
+    "/Users/sathvikkurapati/Downloads/parry-local/examples/__init__.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 3,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "/Users/sathvikkurapati/Downloads/parry-local/examples/test_extended_cwes.py": {
+      "CONFIDENCE.HIGH": 5,
+      "CONFIDENCE.LOW": 3,
+      "CONFIDENCE.MEDIUM": 2,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 1,
+      "SEVERITY.LOW": 3,
+      "SEVERITY.MEDIUM": 6,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 111,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "/Users/sathvikkurapati/Downloads/parry-local/examples/test_shreyan_patterns.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 1,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 1,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 26,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "/Users/sathvikkurapati/Downloads/parry-local/examples/vulnerable_advanced.py": {
+      "CONFIDENCE.HIGH": 9,
+      "CONFIDENCE.LOW": 3,
+      "CONFIDENCE.MEDIUM": 4,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 3,
+      "SEVERITY.LOW": 5,
+      "SEVERITY.MEDIUM": 8,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 111,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "/Users/sathvikkurapati/Downloads/parry-local/examples/vulnerable_code.py": {
+      "CONFIDENCE.HIGH": 6,
+      "CONFIDENCE.LOW": 2,
+      "CONFIDENCE.MEDIUM": 3,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 4,
+      "SEVERITY.LOW": 3,
+      "SEVERITY.MEDIUM": 4,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 54,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "/Users/sathvikkurapati/Downloads/parry-local/examples/vulnerable_complex.py": {
+      "CONFIDENCE.HIGH": 2,
+      "CONFIDENCE.LOW": 1,
+      "CONFIDENCE.MEDIUM": 3,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 1,
+      "SEVERITY.LOW": 3,
+      "SEVERITY.MEDIUM": 2,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 178,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "_totals": {
+      "CONFIDENCE.HIGH": 22,
+      "CONFIDENCE.LOW": 9,
+      "CONFIDENCE.MEDIUM": 13,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 9,
+      "SEVERITY.LOW": 15,
+      "SEVERITY.MEDIUM": 20,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 483,
+      "nosec": 0,
+      "skipped_tests": 0
+    }
+  },
+  "results": [
+    {
+      "code": "29     \"\"\"Another upload function\"\"\"\n30     file.save(\"/tmp/uploads.bin\")\n31 \n",
+      "col_offset": 14,
+      "end_col_offset": 32,
+      "filename": "/Users/sathvikkurapati/Downloads/parry-local/examples/test_extended_cwes.py",
+      "issue_confidence": "MEDIUM",
+      "issue_cwe": {
+        "id": 377,
+        "link": "https://cwe.mitre.org/data/definitions/377.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Probable insecure usage of temp file/directory.",
+      "line_number": 30,
+      "line_range": [
+        30
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b108_hardcoded_tmp_directory.html",
+      "test_id": "B108",
+      "test_name": "hardcoded_tmp_directory"
+    },
+    {
+      "code": "34     code = \"print('hello')\"\n35     return eval(code)  # Dangerous method\n36 \n",
+      "col_offset": 11,
+      "end_col_offset": 21,
+      "filename": "/Users/sathvikkurapati/Downloads/parry-local/examples/test_extended_cwes.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 78,
+        "link": "https://cwe.mitre.org/data/definitions/78.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of possibly insecure function - consider using safer ast.literal_eval.",
+      "line_number": 35,
+      "line_range": [
+        35
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/blacklists/blacklist_calls.html#b307-eval",
+      "test_id": "B307",
+      "test_name": "blacklist"
+    },
+    {
+      "code": "62     import random\n63     return random.choice('abcdefghijklmnop')  # Should use secrets module\n64 \n",
+      "col_offset": 11,
+      "end_col_offset": 44,
+      "filename": "/Users/sathvikkurapati/Downloads/parry-local/examples/test_extended_cwes.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 330,
+        "link": "https://cwe.mitre.org/data/definitions/330.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Standard pseudo-random generators are not suitable for security/cryptographic purposes.",
+      "line_number": 63,
+      "line_range": [
+        63
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/blacklists/blacklist_calls.html#b311-random",
+      "test_id": "B311",
+      "test_name": "blacklist"
+    },
+    {
+      "code": "67     import random\n68     session_key = random.randint(1, 1000)  # Weak for security\n69     return session_key\n",
+      "col_offset": 18,
+      "end_col_offset": 41,
+      "filename": "/Users/sathvikkurapati/Downloads/parry-local/examples/test_extended_cwes.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 330,
+        "link": "https://cwe.mitre.org/data/definitions/330.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Standard pseudo-random generators are not suitable for security/cryptographic purposes.",
+      "line_number": 68,
+      "line_range": [
+        68
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/blacklists/blacklist_calls.html#b311-random",
+      "test_id": "B311",
+      "test_name": "blacklist"
+    },
+    {
+      "code": "73     \"\"\"SSL verification disabled\"\"\"\n74     requests.get('https://example.com', verify=False)  # Dangerous!\n75 \n",
+      "col_offset": 4,
+      "end_col_offset": 53,
+      "filename": "/Users/sathvikkurapati/Downloads/parry-local/examples/test_extended_cwes.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 295,
+        "link": "https://cwe.mitre.org/data/definitions/295.html"
+      },
+      "issue_severity": "HIGH",
+      "issue_text": "Call to requests with verify=False disabling SSL certificate checks, security issue.",
+      "line_number": 74,
+      "line_range": [
+        74
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b501_request_with_no_cert_validation.html",
+      "test_id": "B501",
+      "test_name": "request_with_no_cert_validation"
+    },
+    {
+      "code": "73     \"\"\"SSL verification disabled\"\"\"\n74     requests.get('https://example.com', verify=False)  # Dangerous!\n75 \n",
+      "col_offset": 4,
+      "end_col_offset": 53,
+      "filename": "/Users/sathvikkurapati/Downloads/parry-local/examples/test_extended_cwes.py",
+      "issue_confidence": "LOW",
+      "issue_cwe": {
+        "id": 400,
+        "link": "https://cwe.mitre.org/data/definitions/400.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Call to requests without timeout",
+      "line_number": 74,
+      "line_range": [
+        74
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b113_request_without_timeout.html",
+      "test_id": "B113",
+      "test_name": "request_without_timeout"
+    },
+    {
+      "code": "78     import ssl\n79     context = ssl._create_unverified_context()\n80 \n",
+      "col_offset": 14,
+      "end_col_offset": 46,
+      "filename": "/Users/sathvikkurapati/Downloads/parry-local/examples/test_extended_cwes.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 295,
+        "link": "https://cwe.mitre.org/data/definitions/295.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "By default, Python will create a secure, verified ssl context for use in such classes as HTTPSConnection. However, it still allows using an insecure context via the _create_unverified_context that  reverts to the previous behavior that does not validate certificates or perform hostname checks.",
+      "line_number": 79,
+      "line_range": [
+        79
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/blacklists/blacklist_calls.html#b323-unverified-context",
+      "test_id": "B323",
+      "test_name": "blacklist"
+    },
+    {
+      "code": "88     \"\"\"Hardcoded secret\"\"\"\n89     SECRET_KEY = \"django-insecure-secret-key-here\"\n90     return SECRET_KEY\n",
+      "col_offset": 17,
+      "end_col_offset": 50,
+      "filename": "/Users/sathvikkurapati/Downloads/parry-local/examples/test_extended_cwes.py",
+      "issue_confidence": "MEDIUM",
+      "issue_cwe": {
+        "id": 259,
+        "link": "https://cwe.mitre.org/data/definitions/259.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Possible hardcoded password: 'django-insecure-secret-key-here'",
+      "line_number": 89,
+      "line_range": [
+        89
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b105_hardcoded_password_string.html",
+      "test_id": "B105",
+      "test_name": "hardcoded_password_string"
+    },
+    {
+      "code": "103     \"\"\"HTTP instead of HTTPS\"\"\"\n104     requests.post('http://api.example.com/login',\n105                   json={'user': username, 'pass': password})\n106 \n",
+      "col_offset": 4,
+      "end_col_offset": 60,
+      "filename": "/Users/sathvikkurapati/Downloads/parry-local/examples/test_extended_cwes.py",
+      "issue_confidence": "LOW",
+      "issue_cwe": {
+        "id": 400,
+        "link": "https://cwe.mitre.org/data/definitions/400.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Call to requests without timeout",
+      "line_number": 104,
+      "line_range": [
+        104,
+        105
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b113_request_without_timeout.html",
+      "test_id": "B113",
+      "test_name": "request_without_timeout"
+    },
+    {
+      "code": "108     \"\"\"Cleartext request\"\"\"\n109     return requests.get('http://example.com/data')\n110 \n",
+      "col_offset": 11,
+      "end_col_offset": 50,
+      "filename": "/Users/sathvikkurapati/Downloads/parry-local/examples/test_extended_cwes.py",
+      "issue_confidence": "LOW",
+      "issue_cwe": {
+        "id": 400,
+        "link": "https://cwe.mitre.org/data/definitions/400.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Call to requests without timeout",
+      "line_number": 109,
+      "line_range": [
+        109
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b113_request_without_timeout.html",
+      "test_id": "B113",
+      "test_name": "request_without_timeout"
+    },
+    {
+      "code": "8 \n9 JWT_SECRET = \"hardcoded-secret-key\"  # CWE-798: Hardcoded JWT Secret\n10 payload = {\"sub\": \"1234567890\"}\n",
+      "col_offset": 13,
+      "end_col_offset": 35,
+      "filename": "/Users/sathvikkurapati/Downloads/parry-local/examples/test_shreyan_patterns.py",
+      "issue_confidence": "MEDIUM",
+      "issue_cwe": {
+        "id": 259,
+        "link": "https://cwe.mitre.org/data/definitions/259.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Possible hardcoded password: 'hardcoded-secret-key'",
+      "line_number": 9,
+      "line_range": [
+        9
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b105_hardcoded_password_string.html",
+      "test_id": "B105",
+      "test_name": "hardcoded_password_string"
+    },
+    {
+      "code": "7 import sys\n8 import pickle\n9 import yaml\n",
+      "col_offset": 0,
+      "end_col_offset": 13,
+      "filename": "/Users/sathvikkurapati/Downloads/parry-local/examples/vulnerable_advanced.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Consider possible security implications associated with pickle module.",
+      "line_number": 8,
+      "line_range": [
+        8
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/blacklists/blacklist_imports.html#b403-import-pickle",
+      "test_id": "B403",
+      "test_name": "blacklist"
+    },
+    {
+      "code": "9 import yaml\n10 import subprocess\n11 import sqlite3\n",
+      "col_offset": 0,
+      "end_col_offset": 17,
+      "filename": "/Users/sathvikkurapati/Downloads/parry-local/examples/vulnerable_advanced.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 78,
+        "link": "https://cwe.mitre.org/data/definitions/78.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Consider possible security implications associated with the subprocess module.",
+      "line_number": 10,
+      "line_range": [
+        10
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/blacklists/blacklist_imports.html#b404-import-subprocess",
+      "test_id": "B404",
+      "test_name": "blacklist"
+    },
+    {
+      "code": "51 def fetch_data_insecure(url):\n52     requests.get(url, verify=False)  # Insecure SSL\n53 \n",
+      "col_offset": 4,
+      "end_col_offset": 35,
+      "filename": "/Users/sathvikkurapati/Downloads/parry-local/examples/vulnerable_advanced.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 295,
+        "link": "https://cwe.mitre.org/data/definitions/295.html"
+      },
+      "issue_severity": "HIGH",
+      "issue_text": "Call to requests with verify=False disabling SSL certificate checks, security issue.",
+      "line_number": 52,
+      "line_range": [
+        52
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b501_request_with_no_cert_validation.html",
+      "test_id": "B501",
+      "test_name": "request_with_no_cert_validation"
+    },
+    {
+      "code": "51 def fetch_data_insecure(url):\n52     requests.get(url, verify=False)  # Insecure SSL\n53 \n",
+      "col_offset": 4,
+      "end_col_offset": 35,
+      "filename": "/Users/sathvikkurapati/Downloads/parry-local/examples/vulnerable_advanced.py",
+      "issue_confidence": "LOW",
+      "issue_cwe": {
+        "id": 400,
+        "link": "https://cwe.mitre.org/data/definitions/400.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Call to requests without timeout",
+      "line_number": 52,
+      "line_range": [
+        52
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b113_request_without_timeout.html",
+      "test_id": "B113",
+      "test_name": "request_without_timeout"
+    },
+    {
+      "code": "57     import random\n58     return random.randint(0, 1000)  # Weak randomness\n59 \n",
+      "col_offset": 11,
+      "end_col_offset": 34,
+      "filename": "/Users/sathvikkurapati/Downloads/parry-local/examples/vulnerable_advanced.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 330,
+        "link": "https://cwe.mitre.org/data/definitions/330.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Standard pseudo-random generators are not suitable for security/cryptographic purposes.",
+      "line_number": 58,
+      "line_range": [
+        58
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/blacklists/blacklist_calls.html#b311-random",
+      "test_id": "B311",
+      "test_name": "blacklist"
+    },
+    {
+      "code": "61 # 8. Hardcoded Crypto Key\n62 SECRET_KEY = \"my-secret-key-12345\"  # Hardcoded encryption key\n63 \n",
+      "col_offset": 13,
+      "end_col_offset": 34,
+      "filename": "/Users/sathvikkurapati/Downloads/parry-local/examples/vulnerable_advanced.py",
+      "issue_confidence": "MEDIUM",
+      "issue_cwe": {
+        "id": 259,
+        "link": "https://cwe.mitre.org/data/definitions/259.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Possible hardcoded password: 'my-secret-key-12345'",
+      "line_number": 62,
+      "line_range": [
+        62
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b105_hardcoded_password_string.html",
+      "test_id": "B105",
+      "test_name": "hardcoded_password_string"
+    },
+    {
+      "code": "67     # No encryption of sensitive data\n68     return requests.post(\"http://api.example.com/data\", json=data)\n69 \n",
+      "col_offset": 11,
+      "end_col_offset": 66,
+      "filename": "/Users/sathvikkurapati/Downloads/parry-local/examples/vulnerable_advanced.py",
+      "issue_confidence": "LOW",
+      "issue_cwe": {
+        "id": 400,
+        "link": "https://cwe.mitre.org/data/definitions/400.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Call to requests without timeout",
+      "line_number": 68,
+      "line_range": [
+        68
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b113_request_without_timeout.html",
+      "test_id": "B113",
+      "test_name": "request_without_timeout"
+    },
+    {
+      "code": "72 def fetch_user_data(user_id):\n73     response = requests.get(f\"http://api.example.com/user/{user_id}\")  # HTTP not HTTPS\n74     return response\n",
+      "col_offset": 15,
+      "end_col_offset": 69,
+      "filename": "/Users/sathvikkurapati/Downloads/parry-local/examples/vulnerable_advanced.py",
+      "issue_confidence": "LOW",
+      "issue_cwe": {
+        "id": 400,
+        "link": "https://cwe.mitre.org/data/definitions/400.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Call to requests without timeout",
+      "line_number": 73,
+      "line_range": [
+        73
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b113_request_without_timeout.html",
+      "test_id": "B113",
+      "test_name": "request_without_timeout"
+    },
+    {
+      "code": "86 def load_data(data):\n87     return pickle.loads(data)  # Unsafe deserialization\n88 \n",
+      "col_offset": 11,
+      "end_col_offset": 29,
+      "filename": "/Users/sathvikkurapati/Downloads/parry-local/examples/vulnerable_advanced.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Pickle and modules that wrap it can be unsafe when used to deserialize untrusted data, possible security issue.",
+      "line_number": 87,
+      "line_range": [
+        87
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/blacklists/blacklist_calls.html#b301-pickle",
+      "test_id": "B301",
+      "test_name": "blacklist"
+    },
+    {
+      "code": "91 def parse_config(config_data):\n92     return yaml.load(config_data)  # YAML injection\n93 \n",
+      "col_offset": 11,
+      "end_col_offset": 33,
+      "filename": "/Users/sathvikkurapati/Downloads/parry-local/examples/vulnerable_advanced.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 20,
+        "link": "https://cwe.mitre.org/data/definitions/20.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe yaml load. Allows instantiation of arbitrary objects. Consider yaml.safe_load().",
+      "line_number": 92,
+      "line_range": [
+        92
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b506_yaml_load.html",
+      "test_id": "B506",
+      "test_name": "yaml_load"
+    },
+    {
+      "code": "96 def execute_command(user_input):\n97     subprocess.call(user_input, shell=True)  # Command injection\n98 \n",
+      "col_offset": 4,
+      "end_col_offset": 43,
+      "filename": "/Users/sathvikkurapati/Downloads/parry-local/examples/vulnerable_advanced.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 78,
+        "link": "https://cwe.mitre.org/data/definitions/78.html"
+      },
+      "issue_severity": "HIGH",
+      "issue_text": "subprocess call with shell=True identified, security issue.",
+      "line_number": 97,
+      "line_range": [
+        97
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b602_subprocess_popen_with_shell_equals_true.html",
+      "test_id": "B602",
+      "test_name": "subprocess_popen_with_shell_equals_true"
+    },
+    {
+      "code": "102     # Stored for later execution - second-order SQL injection\n103     db.execute(f\"SELECT * FROM queries WHERE query='{query}'\")\n104 \n",
+      "col_offset": 17,
+      "end_col_offset": 52,
+      "filename": "/Users/sathvikkurapati/Downloads/parry-local/examples/vulnerable_advanced.py",
+      "issue_confidence": "MEDIUM",
+      "issue_cwe": {
+        "id": 89,
+        "link": "https://cwe.mitre.org/data/definitions/89.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Possible SQL injection vector through string-based query construction.",
+      "line_number": 103,
+      "line_range": [
+        103
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b608_hardcoded_sql_expressions.html",
+      "test_id": "B608",
+      "test_name": "hardcoded_sql_expressions"
+    },
+    {
+      "code": "118     random.seed(123)\n119     return ''.join(random.choice(string.ascii_letters) for _ in range(8))\n120 \n",
+      "col_offset": 19,
+      "end_col_offset": 54,
+      "filename": "/Users/sathvikkurapati/Downloads/parry-local/examples/vulnerable_advanced.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 330,
+        "link": "https://cwe.mitre.org/data/definitions/330.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Standard pseudo-random generators are not suitable for security/cryptographic purposes.",
+      "line_number": 119,
+      "line_range": [
+        119
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/blacklists/blacklist_calls.html#b311-random",
+      "test_id": "B311",
+      "test_name": "blacklist"
+    },
+    {
+      "code": "129     # No authorization check\n130     return db.execute(f\"SELECT * FROM users WHERE id={user_id}\")\n131 \n",
+      "col_offset": 24,
+      "end_col_offset": 53,
+      "filename": "/Users/sathvikkurapati/Downloads/parry-local/examples/vulnerable_advanced.py",
+      "issue_confidence": "MEDIUM",
+      "issue_cwe": {
+        "id": 89,
+        "link": "https://cwe.mitre.org/data/definitions/89.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Possible SQL injection vector through string-based query construction.",
+      "line_number": 130,
+      "line_range": [
+        130
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b608_hardcoded_sql_expressions.html",
+      "test_id": "B608",
+      "test_name": "hardcoded_sql_expressions"
+    },
+    {
+      "code": "135     # No authentication required\n136     db.execute(f\"UPDATE users SET password='reset' WHERE username='{username}'\")\n137 \n",
+      "col_offset": 17,
+      "end_col_offset": 67,
+      "filename": "/Users/sathvikkurapati/Downloads/parry-local/examples/vulnerable_advanced.py",
+      "issue_confidence": "MEDIUM",
+      "issue_cwe": {
+        "id": 89,
+        "link": "https://cwe.mitre.org/data/definitions/89.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Possible SQL injection vector through string-based query construction.",
+      "line_number": 136,
+      "line_range": [
+        136
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b608_hardcoded_sql_expressions.html",
+      "test_id": "B608",
+      "test_name": "hardcoded_sql_expressions"
+    },
+    {
+      "code": "160         # Exposed dangerous method without authorization\n161         return os.system(cmd)\n162 \n",
+      "col_offset": 15,
+      "end_col_offset": 29,
+      "filename": "/Users/sathvikkurapati/Downloads/parry-local/examples/vulnerable_advanced.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 78,
+        "link": "https://cwe.mitre.org/data/definitions/78.html"
+      },
+      "issue_severity": "HIGH",
+      "issue_text": "Starting a process with a shell, possible injection detected, security issue.",
+      "line_number": 161,
+      "line_range": [
+        161
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b605_start_process_with_a_shell.html",
+      "test_id": "B605",
+      "test_name": "start_process_with_a_shell"
+    },
+    {
+      "code": "7 import sqlite3\n8 import subprocess\n9 import pickle\n",
+      "col_offset": 0,
+      "end_col_offset": 17,
+      "filename": "/Users/sathvikkurapati/Downloads/parry-local/examples/vulnerable_code.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 78,
+        "link": "https://cwe.mitre.org/data/definitions/78.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Consider possible security implications associated with the subprocess module.",
+      "line_number": 8,
+      "line_range": [
+        8
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/blacklists/blacklist_imports.html#b404-import-subprocess",
+      "test_id": "B404",
+      "test_name": "blacklist"
+    },
+    {
+      "code": "8 import subprocess\n9 import pickle\n10 import hashlib\n",
+      "col_offset": 0,
+      "end_col_offset": 13,
+      "filename": "/Users/sathvikkurapati/Downloads/parry-local/examples/vulnerable_code.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Consider possible security implications associated with pickle module.",
+      "line_number": 9,
+      "line_range": [
+        9
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/blacklists/blacklist_imports.html#b403-import-pickle",
+      "test_id": "B403",
+      "test_name": "blacklist"
+    },
+    {
+      "code": "15 # CWE-798: Hardcoded Credentials\n16 DATABASE_PASSWORD = \"supersecret123\"\n17 API_KEY = \"sk-1234567890abcdefghijklmnop\"\n",
+      "col_offset": 20,
+      "end_col_offset": 36,
+      "filename": "/Users/sathvikkurapati/Downloads/parry-local/examples/vulnerable_code.py",
+      "issue_confidence": "MEDIUM",
+      "issue_cwe": {
+        "id": 259,
+        "link": "https://cwe.mitre.org/data/definitions/259.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Possible hardcoded password: 'supersecret123'",
+      "line_number": 16,
+      "line_range": [
+        16
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b105_hardcoded_password_string.html",
+      "test_id": "B105",
+      "test_name": "hardcoded_password_string"
+    },
+    {
+      "code": "24     # Vulnerable: String concatenation in SQL query\n25     query = \"SELECT * FROM users WHERE id = \" + user_id\n26     cursor.execute(query)\n",
+      "col_offset": 12,
+      "end_col_offset": 45,
+      "filename": "/Users/sathvikkurapati/Downloads/parry-local/examples/vulnerable_code.py",
+      "issue_confidence": "LOW",
+      "issue_cwe": {
+        "id": 89,
+        "link": "https://cwe.mitre.org/data/definitions/89.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Possible SQL injection vector through string-based query construction.",
+      "line_number": 25,
+      "line_range": [
+        25
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b608_hardcoded_sql_expressions.html",
+      "test_id": "B608",
+      "test_name": "hardcoded_sql_expressions"
+    },
+    {
+      "code": "41     # Vulnerable: Passing user input to shell command\n42     result = os.system(f\"ping -c 1 {host}\")\n43     return str(result)\n",
+      "col_offset": 13,
+      "end_col_offset": 43,
+      "filename": "/Users/sathvikkurapati/Downloads/parry-local/examples/vulnerable_code.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 78,
+        "link": "https://cwe.mitre.org/data/definitions/78.html"
+      },
+      "issue_severity": "HIGH",
+      "issue_text": "Starting a process with a shell, possible injection detected, security issue.",
+      "line_number": 42,
+      "line_range": [
+        42
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b605_start_process_with_a_shell.html",
+      "test_id": "B605",
+      "test_name": "start_process_with_a_shell"
+    },
+    {
+      "code": "56     # Vulnerable: Unpickling untrusted data\n57     obj = pickle.loads(data)\n58     return str(obj)\n",
+      "col_offset": 10,
+      "end_col_offset": 28,
+      "filename": "/Users/sathvikkurapati/Downloads/parry-local/examples/vulnerable_code.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Pickle and modules that wrap it can be unsafe when used to deserialize untrusted data, possible security issue.",
+      "line_number": 57,
+      "line_range": [
+        57
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/blacklists/blacklist_calls.html#b301-pickle",
+      "test_id": "B301",
+      "test_name": "blacklist"
+    },
+    {
+      "code": "62     # Vulnerable: Using MD5 for passwords\n63     return hashlib.md5(password.encode()).hexdigest()\n64 \n",
+      "col_offset": 11,
+      "end_col_offset": 41,
+      "filename": "/Users/sathvikkurapati/Downloads/parry-local/examples/vulnerable_code.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 327,
+        "link": "https://cwe.mitre.org/data/definitions/327.html"
+      },
+      "issue_severity": "HIGH",
+      "issue_text": "Use of weak MD5 hash for security. Consider usedforsecurity=False",
+      "line_number": 63,
+      "line_range": [
+        63
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b324_hashlib.html",
+      "test_id": "B324",
+      "test_name": "hashlib"
+    },
+    {
+      "code": "70     # Vulnerable: No URL validation\n71     response = requests.get(url)\n72     return response.text\n",
+      "col_offset": 15,
+      "end_col_offset": 32,
+      "filename": "/Users/sathvikkurapati/Downloads/parry-local/examples/vulnerable_code.py",
+      "issue_confidence": "LOW",
+      "issue_cwe": {
+        "id": 400,
+        "link": "https://cwe.mitre.org/data/definitions/400.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Call to requests without timeout",
+      "line_number": 71,
+      "line_range": [
+        71
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b113_request_without_timeout.html",
+      "test_id": "B113",
+      "test_name": "request_without_timeout"
+    },
+    {
+      "code": "75 def create_temp_file():\n76     temp_file = '/tmp/sensitive.txt'\n77     with open(temp_file, 'w') as f:\n",
+      "col_offset": 16,
+      "end_col_offset": 36,
+      "filename": "/Users/sathvikkurapati/Downloads/parry-local/examples/vulnerable_code.py",
+      "issue_confidence": "MEDIUM",
+      "issue_cwe": {
+        "id": 377,
+        "link": "https://cwe.mitre.org/data/definitions/377.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Probable insecure usage of temp file/directory.",
+      "line_number": 76,
+      "line_range": [
+        76
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b108_hardcoded_tmp_directory.html",
+      "test_id": "B108",
+      "test_name": "hardcoded_tmp_directory"
+    },
+    {
+      "code": "79     # Vulnerable: World-writable permissions\n80     os.chmod(temp_file, 0o777)\n81 \n",
+      "col_offset": 4,
+      "end_col_offset": 30,
+      "filename": "/Users/sathvikkurapati/Downloads/parry-local/examples/vulnerable_code.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 732,
+        "link": "https://cwe.mitre.org/data/definitions/732.html"
+      },
+      "issue_severity": "HIGH",
+      "issue_text": "Chmod setting a permissive mask 0o777 on file (temp_file).",
+      "line_number": 80,
+      "line_range": [
+        80
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b103_set_bad_file_permissions.html",
+      "test_id": "B103",
+      "test_name": "set_bad_file_permissions"
+    },
+    {
+      "code": "82 if __name__ == '__main__':\n83     app.run(debug=True)\n84 \n",
+      "col_offset": 4,
+      "end_col_offset": 23,
+      "filename": "/Users/sathvikkurapati/Downloads/parry-local/examples/vulnerable_code.py",
+      "issue_confidence": "MEDIUM",
+      "issue_cwe": {
+        "id": 94,
+        "link": "https://cwe.mitre.org/data/definitions/94.html"
+      },
+      "issue_severity": "HIGH",
+      "issue_text": "A Flask app appears to be run with debug=True, which exposes the Werkzeug debugger and allows the execution of arbitrary code.",
+      "line_number": 83,
+      "line_range": [
+        83
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b201_flask_debug_true.html",
+      "test_id": "B201",
+      "test_name": "flask_debug_true"
+    },
+    {
+      "code": "7 import sqlite3\n8 import pickle\n9 from flask import Flask, request, session, redirect, render_template_string\n",
+      "col_offset": 0,
+      "end_col_offset": 13,
+      "filename": "/Users/sathvikkurapati/Downloads/parry-local/examples/vulnerable_complex.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Consider possible security implications associated with pickle module.",
+      "line_number": 8,
+      "line_range": [
+        8
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/blacklists/blacklist_imports.html#b403-import-pickle",
+      "test_id": "B403",
+      "test_name": "blacklist"
+    },
+    {
+      "code": "11 app = Flask(__name__)\n12 app.secret_key = \"dev\"  # Weak secret in production\n13 \n",
+      "col_offset": 17,
+      "end_col_offset": 22,
+      "filename": "/Users/sathvikkurapati/Downloads/parry-local/examples/vulnerable_complex.py",
+      "issue_confidence": "MEDIUM",
+      "issue_cwe": {
+        "id": 259,
+        "link": "https://cwe.mitre.org/data/definitions/259.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Possible hardcoded password: 'dev'",
+      "line_number": 12,
+      "line_range": [
+        12
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b105_hardcoded_password_string.html",
+      "test_id": "B105",
+      "test_name": "hardcoded_password_string"
+    },
+    {
+      "code": "140     # Pattern matching might not flag this as it's not obvious\n141     token = str(random.randint(100000, 999999))\n142     \n",
+      "col_offset": 16,
+      "end_col_offset": 46,
+      "filename": "/Users/sathvikkurapati/Downloads/parry-local/examples/vulnerable_complex.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 330,
+        "link": "https://cwe.mitre.org/data/definitions/330.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Standard pseudo-random generators are not suitable for security/cryptographic purposes.",
+      "line_number": 141,
+      "line_range": [
+        141
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/blacklists/blacklist_calls.html#b311-random",
+      "test_id": "B311",
+      "test_name": "blacklist"
+    },
+    {
+      "code": "205     # Pattern matching might miss this\n206     query = f\"SELECT * FROM products WHERE name LIKE ? ORDER BY {sort_by}\"\n207     \n",
+      "col_offset": 14,
+      "end_col_offset": 64,
+      "filename": "/Users/sathvikkurapati/Downloads/parry-local/examples/vulnerable_complex.py",
+      "issue_confidence": "LOW",
+      "issue_cwe": {
+        "id": 89,
+        "link": "https://cwe.mitre.org/data/definitions/89.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Possible SQL injection vector through string-based query construction.",
+      "line_number": 206,
+      "line_range": [
+        206
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b608_hardcoded_sql_expressions.html",
+      "test_id": "B608",
+      "test_name": "hardcoded_sql_expressions"
+    },
+    {
+      "code": "322     # Debug mode in production - CWE-489\n323     app.run(debug=True, host='0.0.0.0')\n324 \n",
+      "col_offset": 4,
+      "end_col_offset": 39,
+      "filename": "/Users/sathvikkurapati/Downloads/parry-local/examples/vulnerable_complex.py",
+      "issue_confidence": "MEDIUM",
+      "issue_cwe": {
+        "id": 94,
+        "link": "https://cwe.mitre.org/data/definitions/94.html"
+      },
+      "issue_severity": "HIGH",
+      "issue_text": "A Flask app appears to be run with debug=True, which exposes the Werkzeug debugger and allows the execution of arbitrary code.",
+      "line_number": 323,
+      "line_range": [
+        323
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b201_flask_debug_true.html",
+      "test_id": "B201",
+      "test_name": "flask_debug_true"
+    },
+    {
+      "code": "322     # Debug mode in production - CWE-489\n323     app.run(debug=True, host='0.0.0.0')\n324 \n",
+      "col_offset": 29,
+      "end_col_offset": 38,
+      "filename": "/Users/sathvikkurapati/Downloads/parry-local/examples/vulnerable_complex.py",
+      "issue_confidence": "MEDIUM",
+      "issue_cwe": {
+        "id": 605,
+        "link": "https://cwe.mitre.org/data/definitions/605.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Possible binding to all interfaces.",
+      "line_number": 323,
+      "line_range": [
+        323
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b104_hardcoded_bind_all_interfaces.html",
+      "test_id": "B104",
+      "test_name": "hardcoded_bind_all_interfaces"
+    }
+  ]
+}

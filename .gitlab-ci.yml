@@ -1,80 +1,144 @@
-# GitLab CI/CD Pipeline for Parry Security Scanning
+# GitLab CI/CD Pipeline with Parry Security Scanning
+# Requires GitLab Runner with Docker support
 
 stages:
-  - security
-  - deep-scan
+  - build
+  - test
+  - security-scan
+  - deploy
 
 variables:
-  PARRY_VERSION: "0.4.0"
+  DOCKER_DRIVER: overlay2
+  PARRY_VERSION: "latest"
+  SCAN_MODE: "hybrid"  # Options: fast, hybrid, deep
+  FAIL_ON_HIGH_SEVERITY: "true"
 
-# Fast scan on every commit
-parry-fast-scan:
-  stage: security
-  image: python:3.10
+# Security Scan Job
+parry-security-scan:
+  stage: security-scan
+  image: python:3.9-slim
+  services:
+    - docker:dind
+  variables:
+    DOCKER_TLS_CERTDIR: "/certs"
   before_script:
-    - pip install parry-scanner
-    - curl -fsSL https://ollama.ai/install.sh | sh
-    - ollama serve &
-    - sleep 5
-    - ollama pull codellama:7b-instruct-q4_K_M
+    - apt-get update && apt-get install -y curl jq
+    - pip install parry-security-scanner
+    # Install Ollama for AI scanning
+    - |
+      curl -fsSL https://ollama.ai/install.sh | sh
+      nohup ollama serve > /dev/null 2>&1 &
+      sleep 10
+      ollama pull qwen2.5-coder:1.5b || echo "AI model download failed, falling back to pattern-only mode"
   script:
-    - parry scan . --mode fast --format json --output parry-fast.json
-    - python scripts/check_critical.py parry-fast.json
+    - echo "🔒 Running Parry Security Scan in $SCAN_MODE mode..."
+    - |
+      if parry scan . --mode $SCAN_MODE --format json --output parry-results.json --severity low; then
+        echo "✅ Security scan completed successfully"
+      else
+        echo "⚠️ Security scan found issues"
+        SCAN_EXIT_CODE=$?
+      fi
+    - |
+      if [ -f parry-results.json ]; then
+        echo "📊 Scan Results Summary:"
+        jq -r '"Files scanned: " + (.files_scanned|tostring)' parry-results.json
+        jq -r '"Total vulnerabilities: " + (.vulnerabilities|length|tostring)' parry-results.json
+        jq -r '"High/Critical severity: " + ([.vulnerabilities[] | select(.severity == "high" or .severity == "critical")] | length | tostring)' parry-results.json
+        jq -r '"Medium severity: " + ([.vulnerabilities[] | select(.severity == "medium")] | length | tostring)' parry-results.json
+        jq -r '"Low severity: " + ([.vulnerabilities[] | select(.severity == "low")] | length | tostring)' parry-results.json
+      fi
   artifacts:
     reports:
-      # GitLab Security Report format
-      sast: parry-fast.json
+      sast: parry-results.json
     paths:
-      - parry-fast.json
-    expire_in: 30 days
+      - parry-results.json
+    expire_in: 1 week
+  coverage: '/Vulnerabilities found: (\d+)/'
+  allow_failure: true  # Don't fail pipeline on security findings
+
+# Security Results Processing
+process-security-results:
+  stage: security-scan
+  image: python:3.9-slim
+  dependencies:
+    - parry-security-scan
+  script:
+    - apt-get update && apt-get install -y jq curl
+    - |
+      if [ -f parry-results.json ]; then
+        # Extract vulnerability counts
+        HIGH_SEV=$(jq '[.vulnerabilities[] | select(.severity == "high" or .severity == "critical")] | length' parry-results.json)
+        MEDIUM_SEV=$(jq '[.vulnerabilities[] | select(.severity == "medium")] | length' parry-results.json)
+        TOTAL_VULN=$(jq '.vulnerabilities | length' parry-results.json)
+        FILES_SCANNED=$(jq '.files_scanned' parry-results.json)
+
+        echo "🔍 Security Scan Summary:"
+        echo "Files scanned: $FILES_SCANNED"
+        echo "Total vulnerabilities: $TOTAL_VULN"
+        echo "High/Critical: $HIGH_SEV"
+        echo "Medium: $MEDIUM_SEV"
+
+        # Create GitLab badge
+        if [ "$HIGH_SEV" -gt 0 ]; then
+          echo "SECURITY_STATUS=failing" >> build.env
+          echo "❌ Security issues found - review required"
+        else
+          echo "SECURITY_STATUS=passing" >> build.env
+          echo "✅ No high-severity security issues"
+        fi
+
+        # Post results to merge request (if applicable)
+        if [ -n "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME" ]; then
+          curl -X POST "$CI_API_V4_URL/projects/$CI_PROJECT_ID/merge_requests/$CI_MERGE_REQUEST_IID/notes" \
+            --header "PRIVATE-TOKEN: $GITLAB_API_TOKEN" \
+            --header "Content-Type: application/json" \
+            --data "{
+              \"body\": \"## 🔒 Parry Security Scan Results\\n\\n**Files Scanned:** $FILES_SCANNED\\n**Total Vulnerabilities:** $TOTAL_VULN\\n**High/Critical:** $HIGH_SEV\\n**Medium:** $MEDIUM_SEV\\n\\n[View detailed results]($CI_JOB_URL)\"
+            }"
+        fi
+      fi
+  artifacts:
+    reports:
+      dotenv: build.env
+  allow_failure: true
+
+# Fail pipeline on high-severity vulnerabilities (optional)
+fail-on-security-issues:
+  stage: security-scan
+  image: python:3.9-slim
+  dependencies:
+    - process-security-results
+  script:
+    - apt-get update && apt-get install -y jq
+    - |
+      if [ "$FAIL_ON_HIGH_SEVERITY" = "true" ] && [ -f parry-results.json ]; then
+        HIGH_COUNT=$(jq '[.vulnerabilities[] | select(.severity == "high" or .severity == "critical")] | length' parry-results.json)
+        if [ "$HIGH_COUNT" -gt 0 ]; then
+          echo "❌ Pipeline failed: Found $HIGH_COUNT high-severity security vulnerabilities"
+          echo "Please address these security issues before merging."
+          exit 1
+        fi
+      fi
+    - echo "✅ No blocking security issues found"
   allow_failure: false
-  only:
-    - branches
-    - merge_requests
 
-# Deep scan on main branch and scheduled
-parry-deep-scan:
-  stage: deep-scan
-  image: python:3.10
-  before_script:
-    - pip install parry-scanner
-    - curl -fsSL https://ollama.ai/install.sh | sh
-    - ollama serve &
-    - sleep 10
-    - ollama pull codellama:7b-instruct-q4_K_M
-  script:
-    - parry scan . --mode deep --validate --format json --output parry-deep.json
-    - parry scan . --sca --format json --output parry-sca.json
-  artifacts:
-    reports:
-      sast: parry-deep.json
-      dependency_scanning: parry-sca.json
-    paths:
-      - parry-deep.json
-      - parry-sca.json
-    expire_in: 90 days
+# Scheduled security scans (weekly)
+weekly-security-audit:
+  stage: security-scan
+  image: python:3.9-slim
   only:
-    - main
-    - schedules
-  when: always
-
-# Incremental scan (uses cache)
-parry-incremental:
-  stage: security
-  image: python:3.10
-  cache:
-    key: ${CI_PROJECT_ID}
-    paths:
-      - .parry/cache/
-  before_script:
-    - pip install parry-scanner
+    refs:
+      - main
+    variables:
+      - $CI_PIPELINE_SOURCE == "schedule"
   script:
-    - parry scan . --mode fast --incremental --format json --output parry-incremental.json
+    - echo "📅 Running weekly security audit..."
+    - pip install parry-security-scanner
+    - parry scan . --mode deep --format json --output weekly-audit.json
+    - echo "Weekly security audit completed. Results saved to weekly-audit.json"
   artifacts:
     paths:
-      - parry-incremental.json
-    expire_in: 7 days
-  only:
-    - merge_requests
-
-
+      - weekly-audit.json
+    expire_in: 1 month
+  allow_failure: true

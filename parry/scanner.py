@@ -18,6 +18,29 @@ from .language_support import (
     FILE_EXTENSIONS
 )
 
+# 🚀 PERFORMANCE OPTIMIZATIONS
+from .streaming_processor import StreamingFileProcessor, SmartFilePreFilter
+from .cache_system import cache_system, generate_file_fingerprint
+from .detectors.base_detector import regex_pool
+
+# Import CWE expansion detectors
+# Note: This is imported lazily in __init__ to avoid circular imports
+CWE_EXPANSION_AVAILABLE = False
+get_all_cwe_expansion_detectors = None
+
+def _load_cwe_expansion():
+    """Lazy load CWE expansion detectors to avoid circular imports"""
+    global CWE_EXPANSION_AVAILABLE, get_all_cwe_expansion_detectors
+    if not CWE_EXPANSION_AVAILABLE:
+        try:
+            from .detectors.cwe_expansion import get_all_cwe_expansion_detectors as _get_all
+            get_all_cwe_expansion_detectors = _get_all
+            CWE_EXPANSION_AVAILABLE = True
+        except (ImportError, SyntaxError, AttributeError):
+            CWE_EXPANSION_AVAILABLE = False
+            get_all_cwe_expansion_detectors = None
+    return CWE_EXPANSION_AVAILABLE
+
 
 @dataclass(frozen=True)
 class Vulnerability:
@@ -43,22 +66,91 @@ class Scanner:
     
     def __init__(self, exclude_patterns: Optional[List[str]] = None, languages: Optional[List[str]] = None):
         self.exclude_patterns = exclude_patterns or [
-            "*/node_modules/*",
-            "*/.git/*",
-            "*/venv/*",
-            "*/__pycache__/*",
-            "*/dist/*",
-            "*/build/*",
+            # Version control
+            ".git/**",
+            ".svn/**",
+            ".hg/**",
+            ".bzr/**",
+
+            # Python environments and cache
+            "venv/**",
+            ".venv/**",
+            "__pycache__/**",
+            "*.pyc",
+            "*.pyo",
+            "*.pyd",
+            ".Python/**",
+            "pip-log.txt",
+            "pip-delete-this-directory.txt",
+
+            # Node.js
+            "node_modules/**",
+            "npm-debug.log*",
+            "yarn-debug.log*",
+            "yarn-error.log*",
             "*.min.js",
             "*.min.css",
-            "*/vendor/*",
-            "*/target/*",
-            "*.test.js",
-            "*.spec.js",
+
+            # Java/Maven/Gradle
+            "target/**",
+            ".gradle/**",
+            "build/**",
+            ".class/**",
+            "*.class",
+
+            # .NET
+            "bin/**",
+            "obj/**",
+            ".vs/**",
+            "*.user",
+
+            # Go
+            "vendor/**",
+
+            # Rust
+            "target/**",
+            "Cargo.lock",
+
+            # IDE and editor files
+            ".vscode/**",
+            ".idea/**",
+            "*.swp",
+            "*.swo",
+            "*~",
+
+            # OS files
+            ".DS_Store",
+            "Thumbs.db",
+
+            # Build and dist directories
+            "dist/**",
+            "out/**",
+            "release/**",
+
+            # Test files and coverage
+            "coverage/**",
+            ".coverage/**",
+            "*.test.*",
+            "*.spec.*",
+            "test-results/**",
+
+            # Documentation and assets
+            "docs/_build/**",
+            "site/**",
+
+            # Temporary files
+            "*.tmp",
+            "*.temp",
+            ".tmp/**",
+            ".temp/**",
         ]
-        
+
         # Filter languages if specified
         self.languages = languages or list(LANGUAGE_ANALYZERS.keys())
+
+        # 🚀 PERFORMANCE OPTIMIZATIONS
+        self.streaming_processor = StreamingFileProcessor()
+        self.pre_filter = SmartFilePreFilter()
         
         # Legacy detectors for backward compatibility
         self.detectors = [
@@ -73,7 +165,31 @@ class Scanner:
             SSRFDetector(),
             PermissionDetector(),
         ]
-    
+        
+        # Add comprehensive CWE expansion detectors (200+ CWEs)
+        # Load lazily to avoid circular import issues
+        if _load_cwe_expansion() and get_all_cwe_expansion_detectors:
+            try:
+                cwe_expansion_detectors = get_all_cwe_expansion_detectors()
+                self.detectors.extend(cwe_expansion_detectors)
+            except Exception as e:
+                # If CWE expansion fails to load, continue with legacy detectors
+                pass
+
+        # Initialize custom rules engine
+        self.custom_rules_engine = None
+        self._load_custom_rules()
+
+    def _load_custom_rules(self):
+        """Load custom security rules"""
+        try:
+            from .custom_rules import CustomRulesEngine
+            self.custom_rules_engine = CustomRulesEngine()
+            self.custom_rules_engine.load_rules()
+        except Exception as e:
+            # Custom rules are optional, continue without them
+            pass
+
     def scan(self, path: Path) -> Dict[str, Any]:
         """
         Scan a file or directory for vulnerabilities
@@ -89,7 +205,7 @@ class Scanner:
         
         # Check if path exists
         if not path.exists():
-            raise FileNotFoundError(f"Path does not exist: {path}")
+            raise FileNotFoundError("Path does not exist")
         
         if path.is_file():
             files = [path]
@@ -110,44 +226,144 @@ class Scanner:
         }
     
     def _get_scannable_files(self, directory: Path) -> List[Path]:
-        """Get list of files to scan, excluding patterns"""
+        """Get list of files to scan, excluding patterns efficiently"""
         files = []
-        
+
         # Supported file extensions
-        extensions = {
-            ".py", ".js", ".ts", ".jsx", ".tsx", ".java", ".go", 
-            ".rb", ".php", ".cs", ".cpp", ".c", ".h", ".hpp",
-            ".rs", ".swift", ".kt", ".sql", ".yaml", ".yml", ".json"
+        extensions = set(FILE_EXTENSIONS.keys())
+
+        # Directories to skip entirely for performance
+        skip_dirs = {
+            '.git', '.svn', '.hg', '.bzr',
+            'venv', '.venv', '__pycache__',
+            'node_modules', 'target', 'build', 'bin', 'obj',
+            '.gradle', '.vscode', '.idea', '.vs',
+            'vendor', 'dist', 'out', 'coverage', '.coverage',
+            'complex_test_codebase', 'fair_benchmark_output', 'benchmark_output'
         }
-        
-        for file_path in directory.rglob("*"):
-            if file_path.is_file() and file_path.suffix in extensions:
-                # Check exclusion patterns
-                if not any(file_path.match(pattern) for pattern in self.exclude_patterns):
-                    files.append(file_path)
-        
+
+        def scan_directory(dir_path: Path):
+            """Recursively scan directory while skipping excluded dirs"""
+            try:
+                for item in dir_path.iterdir():
+                    # Skip entire directories early for massive performance boost
+                    if item.is_dir():
+                        if item.name in skip_dirs:
+                            continue  # Skip this entire directory tree
+                        # Check exclude patterns for directories
+                        if any(item.match(pattern) for pattern in self.exclude_patterns):
+                            continue
+                        # Recursively scan subdirectory
+                        scan_directory(item)
+                    elif item.is_file() and item.suffix in extensions:
+                        # Check file-level exclusions
+                        if not any(item.match(pattern) for pattern in self.exclude_patterns):
+                            files.append(item)
+            except (PermissionError, OSError):
+                # Skip directories we can't read
+                pass
+
+        scan_directory(directory)
         return files
     
     def _scan_file(self, file_path: Path) -> List[Vulnerability]:
-        """Scan a single file for vulnerabilities using language-specific analyzers"""
+        """
+        🚀 PERFORMANCE OPTIMIZATION: Scan file with streaming and caching
+        """
         vulnerabilities = []
-        
+
+        # 🚀 Pre-filtering: Skip obviously irrelevant files
+        should_analyze, reason = self.pre_filter.should_analyze_file(file_path)
+        if not should_analyze:
+            return []
+
         try:
+            # 🚀 CACHING: Check if file has been analyzed recently
+            fingerprint = generate_file_fingerprint(file_path)
+            cache_key = f"scan:{fingerprint}"
+
+            cached_result = cache_system.get(cache_key)
+            if cached_result is not None:
+                # Cache hit - return cached vulnerabilities
+                return cached_result
+
             # Detect file language
             language = get_language_from_file(str(file_path))
-            
+
             # Skip if language not supported or not in filter
             if language == 'unknown' or language not in self.languages:
                 # Fall back to legacy detectors for unsupported languages
+                # 🚀 STREAMING: Use streaming processor for large files
+                def analyze_chunk(chunk_text: str, file_path: Path, offset: int) -> List[Vulnerability]:
+                    # For legacy detectors, we need full content
+                    return []
+
+                result = self.streaming_processor.process_file_streaming(
+                    file_path, analyze_chunk, early_exit_threshold=50
+                )
+
+                if result.early_termination:
+                    # File too large or binary, skip
+                    return []
+
+                # Fall back to full read for legacy detectors
                 content = file_path.read_text(encoding="utf-8", errors="ignore")
                 lines = content.split("\n")
                 for detector in self.detectors:
                     vulns = detector.detect(file_path, content, lines)
                     vulnerabilities.extend(vulns)
+
+                # 🚀 CACHING: Store result
+                cache_system.set(cache_key, vulnerabilities, ttl=3600)  # 1 hour
                 return vulnerabilities
-            
-            # Read file content
-            content = file_path.read_text(encoding="utf-8", errors="ignore")
+
+            # 🚀 STREAMING: Use streaming analysis for supported languages
+            def analyze_chunk_streaming(chunk_text: str, file_path: Path, offset: int) -> List[Vulnerability]:
+                """Analyze file chunks for vulnerabilities"""
+                chunk_vulns = []
+
+                # Get language-specific analyzer
+                analyzer = get_analyzer(language)
+                if analyzer:
+                    # Analyze this chunk
+                    try:
+                        lang_vulns = analyzer.analyze(chunk_text, str(file_path))
+
+                        # Adjust line numbers based on chunk offset
+                        for vuln in lang_vulns:
+                            # Estimate line number from offset (rough approximation)
+                            estimated_lines = chunk_text[:offset].count('\n') if offset > 0 else 0
+                            vuln.line_number += estimated_lines
+
+                            chunk_vulns.append(Vulnerability(
+                                cwe=vuln.cwe,
+                                severity=vuln.severity,
+                                title=vuln.title,
+                                description=vuln.description,
+                                file_path=vuln.file_path,
+                                line_number=vuln.line_number,
+                                code_snippet=vuln.code_snippet,
+                                confidence=vuln.confidence,
+                                category="security",
+                                language=language
+                            ))
+                    except Exception:
+                        # Chunk analysis failed, will fall back to full analysis
+                        pass
+
+                return chunk_vulns
+
+            # Try streaming analysis first
+            streaming_result = self.streaming_processor.process_file_streaming(
+                file_path, analyze_chunk_streaming, early_exit_threshold=20
+            )
+
+            if streaming_result.vulnerabilities:
+                vulnerabilities = streaming_result.vulnerabilities
+            else:
+                # Fall back to full file analysis if streaming didn't find anything
+                # or if file is small enough for full analysis
+                content = file_path.read_text(encoding="utf-8", errors="ignore")
             
             # Get language-specific analyzer
             analyzer = get_analyzer(language)
@@ -175,11 +391,31 @@ class Scanner:
                 for detector in self.detectors:
                     vulns = detector.detect(file_path, content, lines)
                     vulnerabilities.extend(vulns)
-        
+
+            # Check custom rules
+            if self.custom_rules_engine:
+                custom_violations = self.custom_rules_engine.check_file(file_path, content, language)
+                for violation in custom_violations:
+                    vulnerabilities.append(Vulnerability(
+                        cwe=violation.get('metadata', {}).get('cwe', 'CWE-CUSTOM'),
+                        severity=violation['severity'],
+                        title=f"Custom Rule: {violation['rule_id']}",
+                        description=violation['message'],
+                        file_path=violation['file'],
+                        line_number=violation['line'],
+                        code_snippet=violation['matched_text'],
+                        confidence="high",
+                        category="custom",
+                        language=language
+                    ))
+
         except Exception as e:
             # Skip files that can't be read
             pass
-        
+
+        # 🚀 CACHING: Store successful analysis results
+        cache_system.set(cache_key, vulnerabilities, ttl=3600)  # 1 hour cache
+
         return vulnerabilities
 
 

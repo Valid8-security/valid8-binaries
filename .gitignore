@@ -19,42 +19,55 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+MANIFEST
 
 # Virtual environments
 venv/
+.venv/
 ENV/
 env/
-.venv
 
-# IDE
+# IDEs
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
 
-# OS
-.DS_Store
-Thumbs.db
-
 # Testing
 .pytest_cache/
 .coverage
 htmlcov/
 .tox/
+.cache
 
-# Parry specific
-.parry-cache/
-.parry-backups/
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
 *.log
+logs/
 
-# Build artifacts
-*.pyd
-*.pyx
-
-# Ollama
-ollama_models/
-
-# Temporary
+# Temporary files
+test_data/
+benchmark_results/
+complex_test_codebase/
 *.tmp
-*.temp
+*.bak
+
+# LaTeX build files
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz

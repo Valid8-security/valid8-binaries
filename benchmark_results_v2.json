@@ -1,0 +1,53 @@
+{
+  "parry_fast": {
+    "time": 0.28165769577026367,
+    "metrics": {
+      "total": 24,
+      "critical": 7,
+      "high": 14,
+      "medium": 3,
+      "low": 0
+    }
+  },
+  "parry_hybrid": {
+    "time": 0.2799191474914551,
+    "metrics": {
+      "total": 24,
+      "critical": 7,
+      "high": 14,
+      "medium": 3,
+      "low": 0
+    }
+  },
+  "parry_incremental": {
+    "time": 0.26246118545532227,
+    "metrics": {
+      "total": 24,
+      "critical": 7,
+      "high": 14,
+      "medium": 3,
+      "low": 0
+    },
+    "speedup": 1.0258005840727427
+  },
+  "semgrep": {
+    "time": 3.580921173095703,
+    "metrics": {
+      "total": 16,
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 0
+    }
+  },
+  "bandit": {
+    "time": 0.09227824211120605,
+    "metrics": {
+      "total": 11,
+      "critical": 0,
+      "high": 4,
+      "medium": 4,
+      "low": 3
+    }
+  }
+}

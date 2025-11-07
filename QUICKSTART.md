@@ -1,255 +1,232 @@
 # Parry Quick Start Guide
 
-Get up and running with Parry in 5 minutes!
+Get up and running with Parry security scanner in under 5 minutes.
 
-## Prerequisites
+## ⚡ Quick Installation
 
-- macOS with Apple Silicon (M1/M2/M3) or Intel
-- Python 3.9+
-- 40GB+ free disk space
-- 16GB+ RAM recommended
-
-## Installation
-
-### Option 1: Automatic Installation (Recommended)
-
+### Option 1: Pip Install (Recommended)
 ```bash
-curl -sSL https://raw.githubusercontent.com/parry-security/parry/main/install.sh | bash
+pip install parry-scanner
 ```
 
-### Option 2: Manual Installation
-
+### Option 2: From Source
 ```bash
-# Install Ollama
+git clone https://github.com/Parry-AI/parry-scanner.git
+cd parry-scanner
+pip install -e .
+```
+
+## 🤖 AI Setup (Optional but Recommended)
+
+Parry works without AI, but AI features dramatically improve accuracy.
+
+### Install Ollama
+```bash
+# macOS
 brew install ollama
 
-# Start Ollama service
-brew services start ollama
+# Linux
+curl -fsSL https://ollama.ai/install.sh | sh
 
-# Pull the model (this takes a few minutes)
-ollama pull codellama:7b-instruct
-
-# Install Parry
-git clone https://github.com/parry-security/parry.git
-cd parry
-pip install -e .
-
-# Verify installation
-parry doctor
+# Windows (PowerShell)
+scoop install ollama
 ```
 
-## Your First Scan
-
-### 1. Scan a Single File
-
+### Download AI Models
 ```bash
-parry scan examples/vulnerable_code.py
+# Fast model (recommended for most users)
+ollama pull qwen2.5-coder:0.5b
+
+# High-accuracy model (requires more resources)
+ollama pull qwen2.5-coder:1.5b
 ```
 
-You should see output like:
+## 🚀 Your First Scan
 
-```
-┌─────────────── Scan Summary ───────────────┐
-│ Target: examples/vulnerable_code.py        │
-│ Files Scanned: 1                           │
-│ Vulnerabilities: 8                         │
-└────────────────────────────────────────────┘
-
-Found 8 vulnerabilities:
-
-HIGH SQL Injection (CWE-89)
-File: examples/vulnerable_code.py:18
-```
-
-### 2. Scan a Directory
-
+### Basic Scan (No AI)
 ```bash
-parry scan /path/to/your/project
+# Scan current directory
+parry scan .
+
+# Scan specific directory
+parry scan /path/to/your/code
+
+# Scan with output to file
+parry scan . --output results.json --format json
 ```
 
-### 3. Generate JSON Report
-
+### AI-Powered Scan (Recommended)
 ```bash
-parry scan ./src --format json --output report.json
+# Hybrid mode: Pattern-based + AI validation
+parry scan . --mode hybrid --validate
+
+# Deep mode: Full AI analysis (slower but most accurate)
+parry scan . --mode deep
 ```
 
-### 4. Filter by Severity
+## 📊 Understanding Results
 
+### Terminal Output
+```
+🔍 Scanning 1,247 files across 45 directories...
+⚡ Fast scan completed in 8.3 seconds
+📊 Results Summary:
+   Files scanned: 1,247
+   Vulnerabilities found: 23
+   High severity: 3
+   Medium severity: 12
+   Low severity: 8
+
+🚨 High Severity Issues:
+   CWE-79: Cross-site Scripting in login.js:42
+   CWE-89: SQL Injection in user.py:156
+   CWE-434: File Upload Vulnerability in upload.py:78
+```
+
+### Output Formats
 ```bash
-parry scan ./src --severity high
+# JSON (machine-readable)
+parry scan . --format json --output results.json
+
+# SARIF (GitHub Security tab)
+parry scan . --format sarif --output results.sarif
+
+# HTML Dashboard
+parry scan . --format html --output dashboard.html
 ```
 
-## Generate Patches
+## 🎯 Scan Modes
 
-### Interactive Mode (Recommended)
+| Mode | Speed | Accuracy | Use Case |
+|------|-------|----------|----------|
+| **fast** | ⚡ Fastest | 85% precision | Quick checks, CI/CD |
+| **hybrid** | ⚖️ Balanced | 92% precision | Most projects |
+| **deep** | 🎯 Slowest | 95%+ precision | Critical code |
 
+## 🔧 Common Commands
+
+### Custom Rules
 ```bash
-parry patch examples/vulnerable_code.py --interactive
+# Create custom rules template
+parry init-rules --output my-rules.yaml
+
+# Edit my-rules.yaml with your custom patterns
+# Then scan with custom rules
+parry scan . --custom-rules my-rules.yaml
 ```
 
-This will:
-1. Detect vulnerabilities
-2. Generate AI-powered fixes
-3. Show you each fix
-4. Ask for confirmation before applying
-
-### Automatic Mode
-
+### Natural Language Filtering
 ```bash
-parry patch examples/vulnerable_code.py --apply
+# Add filter for known false positives
+parry add-nl-filter "eval() in test files is always safe"
+
+# List all filters
+parry list-nl-filters
+
+# Remove filter
+parry remove-nl-filter nl_filter_1
 ```
 
-⚠️ **Warning:** This automatically applies all patches without confirmation!
-
-## Benchmark Against Snyk
-
-```bash
-# Compare with Snyk
-parry compare snyk /path/to/your/project
-
-# Save comparison report
-parry compare snyk /path/to/your/project --output comparison.json
-```
-
-## Example Workflow
-
-Here's a complete workflow for securing a project:
-
-```bash
-# 1. Initial scan
-parry scan ./myproject --format markdown --output initial-scan.md
-
-# 2. Filter critical issues
-parry scan ./myproject --severity critical
-
-# 3. Generate patches for a specific file
-parry patch ./myproject/api.py --interactive
-
-# 4. Re-scan to verify fixes
-parry scan ./myproject
-
-# 5. Compare with Snyk
-parry compare snyk ./myproject
-```
-
-## Configuration
-
-Create a `.parry.yml` file in your project root:
-
+### CI/CD Integration
 ```yaml
+# GitHub Actions
+- name: Security Scan
+  run: |
+    pip install parry-scanner
+    parry scan . --mode hybrid --validate --format sarif > results.sarif
+```
+
+### API Server
+```bash
+# Start local API server
+parry serve --host 127.0.0.1 --port 8000
+
+# Webhook endpoint available at /api/v1/webhook
+# REST API at /api/v1/scan
+```
+
+## 🎨 Customization
+
+### Configuration File
+Create `~/.parry/config.yaml`:
+```yaml
+# Default scan settings
+mode: hybrid
+validate: true
+format: terminal
+severity: medium
+exclude_patterns:
+  - "**/test/**"
+  - "**/node_modules/**"
+  - "**/*.min.js"
+```
+
+### Environment Variables
+```bash
+# Ollama configuration
+export OLLAMA_HOST=127.0.0.1:11434
+
 # Parry configuration
-exclude:
-  - "*/node_modules/*"
-  - "*/test/*"
-  - "*.test.js"
-
-severity_threshold: medium
-
-llm:
-  model: codellama:7b-instruct
-  temperature: 0.1
+export PARRY_CONFIG=~/.parry/config.yaml
+export PARRY_CACHE_DIR=~/.parry/cache
 ```
 
-## Troubleshooting
+## 🚨 Troubleshooting
 
-### Ollama Not Running
+### Common Issues
 
+**"Ollama not found"**
 ```bash
-# Start Ollama
-brew services start ollama
-
-# Or run in foreground
-ollama serve
+# Install Ollama
+brew install ollama  # macOS
+ollama serve         # Start Ollama service
 ```
 
-### Model Not Found
-
+**"Model not found"**
 ```bash
-# List installed models
-ollama list
-
-# Pull the model if missing
-ollama pull codellama:7b-instruct
+ollama pull qwen2.5-coder:0.5b
 ```
 
-### Check System Status
-
+**"Permission denied"**
 ```bash
+# Fix permissions
+chmod +x $(which parry)
+```
+
+**Slow scans**
+```bash
+# Use fast mode for large codebases
+parry scan . --mode fast
+
+# Exclude unnecessary directories
+parry scan . --exclude "**/node_modules/**" --exclude "**/build/**"
+```
+
+### Getting Help
+```bash
+# Show all options
+parry --help
+
+# Show scan options
+parry scan --help
+
+# Doctor command for diagnostics
 parry doctor
 ```
 
-This will verify:
-- Python version
-- Ollama installation
-- Model availability
+## 📚 Next Steps
 
-## Performance Tips
+- **Documentation**: See `docs/` directory for detailed guides
+- **API Reference**: Check `docs/api/API_REFERENCE.md`
+- **Contributing**: Read `CONTRIBUTING.md`
+- **Examples**: Explore the `examples/` directory
 
-### For Faster Scans
+## 🎯 Pro Tips
 
-1. **Use exclusion patterns** to skip unnecessary files:
-   ```bash
-   parry scan ./src --exclude "*/node_modules/*" --exclude "*/dist/*"
-   ```
+1. **Use hybrid mode** for the best balance of speed and accuracy
+2. **Enable validation** (`--validate`) for significantly reduced false positives
+3. **Create custom rules** for project-specific security patterns
+4. **Use natural language filtering** for recurring false positives
+5. **Integrate into CI/CD** for automated security checks
 
-2. **Scan specific file types** by organizing scans:
-   ```bash
-   parry scan ./src --format json > python-results.json
-   ```
-
-### For Better LLM Performance
-
-1. **Use quantized models** (default: 7B Q4)
-2. **Close other applications** to free up RAM
-3. **Use Apple Neural Engine** (automatic on M-series Macs)
-
-## Next Steps
-
-- Read the [full documentation](README.md)
-- Check out [example vulnerable code](examples/)
-- Run the [benchmark suite](scripts/benchmark.py)
-- Integrate with your [CI/CD pipeline](#cicd-integration)
-
-## CI/CD Integration
-
-### GitHub Actions
-
-```yaml
-name: Parry Security Scan
-
-on: [push, pull_request]
-
-jobs:
-  security:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v3
-      
-      - name: Install Parry
-        run: |
-          brew install ollama
-          ollama pull codellama:7b-instruct
-          pip install parry-security
-      
-      - name: Run Parry Scan
-        run: |
-          parry scan . --format json --output parry-results.json
-          
-      - name: Upload Results
-        uses: actions/upload-artifact@v3
-        with:
-          name: security-results
-          path: parry-results.json
-```
-
-## Getting Help
-
-- 📖 [Documentation](README.md)
-- 🐛 [Issue Tracker](https://github.com/parry-security/parry/issues)
-- 💬 [Discussions](https://github.com/parry-security/parry/discussions)
-
-## Support
-
-Found a bug? Have a feature request? [Open an issue](https://github.com/parry-security/parry/issues)!
-
-
+Happy scanning! 🛡️

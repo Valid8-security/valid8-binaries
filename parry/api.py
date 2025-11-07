@@ -12,6 +12,7 @@ import uvicorn
 import tempfile
 import shutil
 import uuid
+import time
 from datetime import datetime
 import logging
 
@@ -197,24 +198,55 @@ async def upload_and_scan(
 ):
     """
     Upload a zip file and scan it
+    Security: Only accepts .zip files, validates file size and content
     """
+    # SECURITY: Validate file type and size
+    if not file.filename:
+        raise HTTPException(status_code=400, detail="No filename provided")
+
+    # SECURITY: Only allow .zip files
+    if not file.filename.lower().endswith('.zip'):
+        raise HTTPException(status_code=400, detail="Only .zip files are allowed")
+
+    # SECURITY: Check file size (max 50MB)
+    file_size = 0
+    content = await file.read()
+    file_size = len(content)
+
+    if file_size > 50 * 1024 * 1024:  # 50MB limit
+        raise HTTPException(status_code=400, detail="File too large (max 50MB)")
+
+    if file_size == 0:
+        raise HTTPException(status_code=400, detail="Empty file")
+
     # Create temp directory
     temp_dir = Path(tempfile.mkdtemp())
-    
+
     try:
-        # Save uploaded file
-        zip_path = temp_dir / file.filename
+        # Save uploaded file with safe filename
+        safe_filename = f"upload_{int(time.time())}_{hash(file.filename) % 10000}.zip"
+        zip_path = temp_dir / safe_filename
         with open(zip_path, "wb") as f:
-            shutil.copyfileobj(file.file, f)
-        
-        # Extract if zip
-        if file.filename.endswith(".zip"):
-            import zipfile
-            with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-                zip_ref.extractall(temp_dir / "project")
-            project_path = temp_dir / "project"
-        else:
-            project_path = temp_dir
+            f.write(content)
+
+        # Extract with security checks
+        project_path = temp_dir / "project"
+        project_path.mkdir(exist_ok=True)
+
+        import zipfile
+        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+            # SECURITY: Check for zip bombs and malicious paths
+            for member in zip_ref.namelist():
+                # Prevent path traversal attacks
+                if ".." in member or member.startswith("/"):
+                    raise HTTPException(status_code=400, detail="Invalid file path in zip")
+
+                # Prevent zip bombs (files that extract to very large sizes)
+                if zip_ref.getinfo(member).file_size > 100 * 1024 * 1024:  # 100MB per file
+                    raise HTTPException(status_code=400, detail="Zip contains file too large")
+
+            # Extract safely
+            zip_ref.extractall(project_path)
         
         # Run scan immediately (synchronous for uploads)
         scanner = Scanner()
