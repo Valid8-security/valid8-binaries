@@ -55,3 +55,4 @@ def get_code_quality_detectors():
         ImproperNeutralizationOfDirectivesDetector(), ImproperControlOfFilenameForIncludeDetector(),
     ]
 
+

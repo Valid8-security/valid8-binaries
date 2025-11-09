@@ -1,0 +1,3 @@
+# Config for csharp application
+# Vulnerabilities: ['xxe', 'sql_injection', 'deserialization', 'file_upload', 'auth_bypass', 'idor', 'hardcoded_credentials']
+# Languages: ['csharp', 'javascript', 'python', 'rust']

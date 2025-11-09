@@ -213,3 +213,66 @@ if Path('parry-results.json').exists():
         }
     }
 }
+        
+        stage('Check Vulnerabilities') {
+            steps {
+                script {
+                    def results = readJSON file: 'parry-fast-results.json'
+                    def critical = results.vulnerabilities.findAll { it.severity == 'CRITICAL' }
+                    def high = results.vulnerabilities.findAll { it.severity == 'HIGH' }
+                    
+                    echo "Security Scan Results:"
+                    echo "  Critical: ${critical.size()}"
+                    echo "  High: ${high.size()}"
+                    echo "  Total: ${results.vulnerabilities.size()}"
+                    
+                    if (critical.size() > 0) {
+                        error("Build failed: ${critical.size()} critical vulnerabilities found!")
+                    }
+                    
+                    // Warning for high severity (don't fail build)
+                    if (high.size() > 5) {
+                        unstable("Warning: ${high.size()} high severity vulnerabilities found!")
+                    }
+                }
+            }
+        }
+    }
+    
+    post {
+        always {
+            // Archive scan results
+            archiveArtifacts artifacts: 'parry-*-results.json', fingerprint: true
+            
+            // Publish to Jenkins dashboard
+            publishHTML([
+                allowMissing: false,
+                alwaysLinkToLastBuild: true,
+                keepAll: true,
+                reportDir: '.',
+                reportFiles: 'parry-report.html',
+                reportName: 'Parry Security Report'
+            ])
+        }
+        
+        success {
+            echo '✅ Security scan passed!'
+        }
+        
+        failure {
+            emailext(
+                subject: "Security Scan Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: """
+                Security scan failed with critical vulnerabilities.
+                
+                Build: ${env.BUILD_URL}
+                
+                Please review the findings and remediate before merging.
+                """,
+                to: "${env.CHANGE_AUTHOR_EMAIL}"
+            )
+        }
+    }
+}
+
+

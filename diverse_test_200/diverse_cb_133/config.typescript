@@ -1,0 +1,3 @@
+# Config for typescript application
+# Vulnerabilities: ['command_injection', 'auth_bypass', 'info_disclosure', 'xxe', 'path_traversal']
+# Languages: ['rust', 'typescript']

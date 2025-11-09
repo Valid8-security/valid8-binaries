@@ -61,3 +61,4 @@ def get_path_traversal_detectors():
         PathTraversalInFilenameDetector(),
     ]
 
+

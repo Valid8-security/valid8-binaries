@@ -1,0 +1,3 @@
+# Config for rust application
+# Vulnerabilities: ['deserialization', 'sql_injection', 'weak_crypto', 'auth_bypass', 'info_disclosure']
+# Languages: ['rust', 'go']

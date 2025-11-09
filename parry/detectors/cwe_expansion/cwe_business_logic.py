@@ -531,3 +531,4 @@ def get_business_logic_detectors():
         BusinessLogicDataTamperingDetector(),
         BusinessLogicInsufficientValidationDetector(),
     ]
+    return [BehavioralWorkflowDetector()]

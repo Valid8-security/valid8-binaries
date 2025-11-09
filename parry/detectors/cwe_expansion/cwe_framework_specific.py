@@ -562,3 +562,4 @@ def get_framework_specific_detectors():
         GoPanicRecoveryDetector(),
         RubyMassAssignmentDetector(),
     ]
+    return [DjangoCSRFDetector(), ReactXSSDetector()]

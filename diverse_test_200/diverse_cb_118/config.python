@@ -1,0 +1,3 @@
+# Config for python application
+# Vulnerabilities: ['idor', 'deserialization', 'auth_bypass', 'xss', 'info_disclosure', 'weak_crypto', 'ssrf']
+# Languages: ['python', 'typescript']

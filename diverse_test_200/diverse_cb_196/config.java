@@ -1,0 +1,3 @@
+# Config for java application
+# Vulnerabilities: ['deserialization', 'hardcoded_credentials', 'weak_crypto', 'ssrf', 'file_upload', 'sql_injection', 'xxe']
+# Languages: ['rust', 'typescript', 'java', 'python']

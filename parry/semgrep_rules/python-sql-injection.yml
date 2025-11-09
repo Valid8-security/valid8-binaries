@@ -1,0 +1,15 @@
+rules:
+- id: python-sql-injection-exec
+  pattern: $DB.execute(f"...{$VAR}...")
+  message: Potential SQL injection via f-string formatting
+  severity: HIGH
+  metadata:
+    cwe: CWE-89
+
+- id: python-sql-injection-format
+  pattern: $DB.execute("...%s..." % $VAR)
+  message: Potential SQL injection via string formatting
+  severity: HIGH
+  metadata:
+    cwe: CWE-89
+

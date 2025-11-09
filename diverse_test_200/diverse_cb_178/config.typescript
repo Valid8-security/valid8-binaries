@@ -1,0 +1,3 @@
+# Config for typescript application
+# Vulnerabilities: ['file_upload', 'deserialization', 'path_traversal', 'xss', 'weak_crypto', 'idor', 'csrf', 'auth_bypass']
+# Languages: ['python', 'typescript', 'rust']

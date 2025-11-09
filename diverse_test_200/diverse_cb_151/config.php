@@ -1,0 +1,3 @@
+# Config for php application
+# Vulnerabilities: ['command_injection', 'deserialization', 'sql_injection', 'xxe', 'idor', 'weak_crypto']
+# Languages: ['rust', 'python', 'php', 'go']

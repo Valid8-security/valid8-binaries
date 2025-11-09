@@ -1,0 +1,3 @@
+# Config for javascript application
+# Vulnerabilities: ['file_upload', 'sql_injection', 'weak_crypto', 'path_traversal', 'command_injection', 'xss']
+# Languages: ['python', 'javascript', 'php', 'typescript']

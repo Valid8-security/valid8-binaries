@@ -1,0 +1,3 @@
+# Config for csharp application
+# Vulnerabilities: ['weak_crypto', 'sql_injection', 'xxe', 'deserialization', 'command_injection', 'idor', 'ssrf']
+# Languages: ['php', 'typescript', 'csharp']

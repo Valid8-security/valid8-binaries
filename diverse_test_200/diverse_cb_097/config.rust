@@ -1,0 +1,3 @@
+# Config for rust application
+# Vulnerabilities: ['deserialization', 'idor', 'hardcoded_credentials', 'xss', 'sql_injection', 'path_traversal']
+# Languages: ['csharp', 'rust', 'java', 'php']

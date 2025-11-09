@@ -1,0 +1,3 @@
+# Config for typescript application
+# Vulnerabilities: ['hardcoded_credentials', 'csrf', 'ssrf']
+# Languages: ['typescript', 'javascript', 'go']

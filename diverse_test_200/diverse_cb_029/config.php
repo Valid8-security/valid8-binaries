@@ -1,0 +1,3 @@
+# Config for php application
+# Vulnerabilities: ['file_upload', 'deserialization', 'auth_bypass', 'sql_injection', 'hardcoded_credentials']
+# Languages: ['php', 'rust', 'java']

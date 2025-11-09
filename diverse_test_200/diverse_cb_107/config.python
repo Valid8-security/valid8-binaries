@@ -1,0 +1,3 @@
+# Config for python application
+# Vulnerabilities: ['weak_crypto', 'file_upload', 'command_injection', 'ssrf']
+# Languages: ['typescript', 'python']

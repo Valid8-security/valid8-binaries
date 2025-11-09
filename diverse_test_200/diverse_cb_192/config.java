@@ -1,0 +1,3 @@
+# Config for java application
+# Vulnerabilities: ['hardcoded_credentials', 'weak_crypto', 'xxe', 'csrf', 'deserialization', 'auth_bypass', 'file_upload', 'ssrf']
+# Languages: ['java', 'typescript']

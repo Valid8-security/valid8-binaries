@@ -1,0 +1,3 @@
+# Config for java application
+# Vulnerabilities: ['xss', 'info_disclosure', 'deserialization', 'weak_crypto', 'auth_bypass']
+# Languages: ['java', 'python', 'typescript']

@@ -1,0 +1,3 @@
+# Config for python application
+# Vulnerabilities: ['hardcoded_credentials', 'xxe', 'idor', 'xss']
+# Languages: ['csharp', 'python', 'php']

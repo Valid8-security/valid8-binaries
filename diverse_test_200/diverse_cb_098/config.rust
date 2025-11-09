@@ -1,0 +1,3 @@
+# Config for rust application
+# Vulnerabilities: ['path_traversal', 'hardcoded_credentials', 'ssrf', 'file_upload']
+# Languages: ['rust', 'typescript', 'csharp', 'go']

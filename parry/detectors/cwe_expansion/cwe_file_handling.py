@@ -72,3 +72,4 @@ def get_file_handling_detectors():
         ImproperFilePermissionsDetector(), MissingFileCloseDetector(),
     ]
 
+

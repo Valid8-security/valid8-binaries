@@ -1,0 +1,3 @@
+# Config for python application
+# Vulnerabilities: ['xss', 'path_traversal', 'hardcoded_credentials', 'weak_crypto', 'deserialization', 'command_injection', 'info_disclosure', 'auth_bypass']
+# Languages: ['php', 'csharp', 'python', 'typescript']

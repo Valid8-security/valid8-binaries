@@ -1,0 +1,3 @@
+# Config for javascript application
+# Vulnerabilities: ['info_disclosure', 'csrf', 'auth_bypass', 'hardcoded_credentials', 'xxe', 'path_traversal', 'weak_crypto', 'deserialization']
+# Languages: ['javascript', 'java', 'typescript', 'rust']

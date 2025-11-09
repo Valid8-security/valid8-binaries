@@ -516,3 +516,4 @@ def get_error_handling_detectors():
         ErrorMaskingDetector(),
         UnhandledAsynchronousErrorDetector(),
     ]
+    return [UncheckedReturnValueDetector(), UncaughtExceptionDetector(), ErrorConditionWithoutActionDetector()]

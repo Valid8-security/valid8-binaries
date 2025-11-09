@@ -1,0 +1,3 @@
+# Config for go application
+# Vulnerabilities: ['idor', 'info_disclosure', 'sql_injection', 'xss', 'weak_crypto', 'file_upload', 'deserialization', 'command_injection']
+# Languages: ['typescript', 'javascript', 'go']

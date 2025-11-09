@@ -1,0 +1,3 @@
+# Config for javascript application
+# Vulnerabilities: ['info_disclosure', 'xss', 'xxe', 'sql_injection']
+# Languages: ['csharp', 'javascript', 'rust']

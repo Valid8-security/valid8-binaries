@@ -1,0 +1,3 @@
+# Config for php application
+# Vulnerabilities: ['deserialization', 'idor', 'auth_bypass', 'csrf', 'file_upload', 'hardcoded_credentials', 'sql_injection', 'info_disclosure']
+# Languages: ['typescript', 'php']

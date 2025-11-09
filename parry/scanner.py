@@ -353,24 +353,15 @@ class Scanner:
 
                 return chunk_vulns
 
-            # Try streaming analysis first
-            streaming_result = self.streaming_processor.process_file_streaming(
-                file_path, analyze_chunk_streaming, early_exit_threshold=20
-            )
+            # Always read full content for comprehensive analysis
+            content = file_path.read_text(encoding="utf-8", errors="ignore")
 
-            if streaming_result.vulnerabilities:
-                vulnerabilities = streaming_result.vulnerabilities
-            else:
-                # Fall back to full file analysis if streaming didn't find anything
-                # or if file is small enough for full analysis
-                content = file_path.read_text(encoding="utf-8", errors="ignore")
-            
-            # Get language-specific analyzer
+            # PRIMARY: Use language-specific analyzer (highest priority for accuracy)
             analyzer = get_analyzer(language)
             if analyzer:
-                # Use new language-specific analyzer
+                # Use new language-specific analyzer on full content
                 lang_vulns = analyzer.analyze(content, str(file_path))
-                
+
                 # Convert to Scanner Vulnerability format
                 for vuln in lang_vulns:
                     vulnerabilities.append(Vulnerability(
@@ -385,6 +376,14 @@ class Scanner:
                         category="security",
                         language=language
                     ))
+
+            # DISABLE streaming analysis for now to ensure analyzer priority
+            # Streaming can be re-enabled later for large file optimization
+            # streaming_result = self.streaming_processor.process_file_streaming(
+            #     file_path, analyze_chunk_streaming, early_exit_threshold=50
+            # )
+            # if streaming_result.vulnerabilities:
+            #     vulnerabilities.extend(streaming_result.vulnerabilities)
             else:
                 # Fall back to legacy detectors
                 lines = content.split("\n")
@@ -473,31 +472,104 @@ class XSSDetector(VulnerabilityDetector):
     """Detects Cross-Site Scripting vulnerabilities (CWE-79)"""
     
     def detect(self, file_path: Path, content: str, lines: List[str]) -> List[Vulnerability]:
-        vulnerabilities = []
-        
-        patterns = [
-            r'innerHTML\s*=',
-            r'document\.write\s*\(',
-            r'dangerouslySetInnerHTML',
-            r'\.html\s*\([^)]*\+',
-            r'<script>.*\{.*\}.*</script>',
+        vulnerabilities: List[Vulnerability] = []
+
+        base_patterns = [
+            re.compile(r'innerHTML\s*=', re.IGNORECASE),
+            re.compile(r'document\.write\s*\(', re.IGNORECASE),
+            re.compile(r'dangerouslySetInnerHTML', re.IGNORECASE),
+            re.compile(r'\.html\s*\([^)]*\+', re.IGNORECASE),
+            re.compile(r'<script>.*\{.*\}.*</script>', re.IGNORECASE),
         ]
-        
-        for i, line in enumerate(lines, 1):
-            for pattern in patterns:
-                if re.search(pattern, line, re.IGNORECASE):
+
+        python_source_patterns = [
+            re.compile(r'\b([A-Za-z_][\w]*)\s*=\s*request\.(?:args|form|values)\.get', re.IGNORECASE),
+            re.compile(r'\b([A-Za-z_][\w]*)\s*=\s*request\.(GET|POST)\[', re.IGNORECASE),
+        ]
+
+        js_source_patterns = [
+            re.compile(r'\b(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*=\s*req\.(?:query|body|params)\.', re.IGNORECASE),
+            re.compile(r'\b(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*=\s*req\.getParameter\(', re.IGNORECASE),
+        ]
+
+        tainted_vars: Dict[str, int] = {}
+
+        for index, raw_line in enumerate(lines, start=1):
+            line = raw_line.strip()
+            if not line:
+                continue
+
+            for pattern in python_source_patterns + js_source_patterns:
+                match = pattern.search(line)
+                if match:
+                    tainted_vars[match.group(1)] = index
+
+            emitted = False
+            for pattern in base_patterns:
+                if pattern.search(line):
                     vulnerabilities.append(Vulnerability(
                         cwe="CWE-79",
                         severity="high",
                         title="Cross-Site Scripting (XSS)",
                         description="Potential XSS vulnerability. User input may be rendered without proper sanitization.",
                         file_path=str(file_path),
-                        line_number=i,
-                        code_snippet=line.strip(),
+                        line_number=index,
+                        code_snippet=line,
                         confidence="medium",
                         category="injection"
                     ))
-        
+                    emitted = True
+                    break
+
+            if emitted:
+                continue
+
+            lower_line = line.lower()
+            js_sink = re.search(r'\b(res|response)\.(send|write)\s*\(', lower_line)
+            if js_sink:
+                if any(f'${{{var}' in line or f'+ {var}' in line or f'{var} +' in line for var in tainted_vars):
+                    vulnerabilities.append(Vulnerability(
+                        cwe="CWE-79",
+                        severity="high",
+                        title="Cross-Site Scripting (XSS)",
+                        description="User-controlled data appears in an HTML response without escaping.",
+                        file_path=str(file_path),
+                        line_number=index,
+                        code_snippet=line,
+                        confidence="medium",
+                        category="injection"
+                    ))
+                    continue
+
+            if ('return' in lower_line or 'render_template_string' in lower_line) and ('f"' in line or "f'" in line):
+                if any(f'{{{var}' in line for var in tainted_vars):
+                    vulnerabilities.append(Vulnerability(
+                        cwe="CWE-79",
+                        severity="high",
+                        title="Cross-Site Scripting (XSS)",
+                        description="User-controlled data appears in HTML output without escaping.",
+                        file_path=str(file_path),
+                        line_number=index,
+                        code_snippet=line,
+                        confidence="medium",
+                        category="injection"
+                    ))
+                    continue
+
+            if re.search(r'return\s+"[^"]*"\s*\+\s*', line) or re.search(r"return\s+'[^']*'\s*\+\s*", line):
+                if any(re.search(fr'\b{var}\b', line) for var in tainted_vars):
+                    vulnerabilities.append(Vulnerability(
+                        cwe="CWE-79",
+                        severity="high",
+                        title="Cross-Site Scripting (XSS)",
+                        description="User-controlled data appears in HTML output without escaping.",
+                        file_path=str(file_path),
+                        line_number=index,
+                        code_snippet=line,
+                        confidence="medium",
+                        category="injection"
+                    ))
+
         return vulnerabilities
 
 
@@ -547,31 +619,87 @@ class PathTraversalDetector(VulnerabilityDetector):
     """Detects path traversal vulnerabilities (CWE-22)"""
     
     def detect(self, file_path: Path, content: str, lines: List[str]) -> List[Vulnerability]:
-        vulnerabilities = []
-        
-        patterns = [
-            r'open\s*\([^)]*\+',
-            r'readFile\s*\([^)]*\+',
-            r'readFileSync\s*\([^)]*\+',
-            r'File\s*\([^)]*\+',
-            r'\.read\s*\([^)]*\+',
+        vulnerabilities: List[Vulnerability] = []
+
+        base_patterns = [
+            re.compile(r'open\s*\([^)]*\+', re.IGNORECASE),
+            re.compile(r'readFile\s*\([^)]*\+', re.IGNORECASE),
+            re.compile(r'readFileSync\s*\([^)]*\+', re.IGNORECASE),
+            re.compile(r'File\s*\([^)]*\+', re.IGNORECASE),
+            re.compile(r'\.read\s*\([^)]*\+', re.IGNORECASE),
         ]
-        
-        for i, line in enumerate(lines, 1):
-            for pattern in patterns:
-                if re.search(pattern, line):
+
+        python_source_patterns = [
+            re.compile(r'\b([A-Za-z_][\w]*)\s*=\s*request\.(?:args|form|values)\.get', re.IGNORECASE),
+            re.compile(r'\b([A-Za-z_][\w]*)\s*=\s*request\.(GET|POST)\[', re.IGNORECASE),
+        ]
+
+        js_source_patterns = [
+            re.compile(r'\b(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*=\s*req\.(?:query|body|params)\.', re.IGNORECASE),
+            re.compile(r'\b(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*=\s*req\.getParameter\(', re.IGNORECASE),
+        ]
+
+        tainted_vars: Dict[str, int] = {}
+
+        for index, raw_line in enumerate(lines, start=1):
+            line = raw_line.strip()
+            if not line:
+                continue
+
+            for pattern in python_source_patterns + js_source_patterns:
+                match = pattern.search(line)
+                if match:
+                    tainted_vars[match.group(1)] = index
+
+            emitted = False
+            for pattern in base_patterns:
+                if pattern.search(line):
                     vulnerabilities.append(Vulnerability(
                         cwe="CWE-22",
                         severity="high",
                         title="Path Traversal",
                         description="Potential path traversal vulnerability. File paths should be validated to prevent directory traversal attacks.",
                         file_path=str(file_path),
-                        line_number=i,
-                        code_snippet=line.strip(),
+                        line_number=index,
+                        code_snippet=line,
                         confidence="medium",
                         category="injection"
                     ))
-        
+                    emitted = True
+                    break
+
+            if emitted:
+                continue
+
+            if 'open(' in line or 'os.path.join' in line or 'Path(' in line:
+                if any(f'{{{var}' in line or re.search(fr'\b{var}\b', line) for var in tainted_vars):
+                    vulnerabilities.append(Vulnerability(
+                        cwe="CWE-22",
+                        severity="high",
+                        title="Path Traversal",
+                        description="User-controlled path appears in file system access.",
+                        file_path=str(file_path),
+                        line_number=index,
+                        code_snippet=line,
+                        confidence="medium",
+                        category="injection"
+                    ))
+                    continue
+
+            if re.search(r'fs\.(readFile|createReadStream|readFileSync)\s*\(', line, re.IGNORECASE):
+                if any(re.search(fr'\b{var}\b', line) for var in tainted_vars):
+                    vulnerabilities.append(Vulnerability(
+                        cwe="CWE-22",
+                        severity="high",
+                        title="Path Traversal",
+                        description="User-controlled file path appears in file system access.",
+                        file_path=str(file_path),
+                        line_number=index,
+                        code_snippet=line,
+                        confidence="medium",
+                        category="injection"
+                    ))
+
         return vulnerabilities
 
 
@@ -674,36 +802,61 @@ class WeakCryptoDetector(VulnerabilityDetector):
 
 class XXEDetector(VulnerabilityDetector):
     """Detects XML External Entity vulnerabilities (CWE-611)"""
-    
+
+    SOURCE_PATTERNS = [
+        re.compile(r'\b([A-Za-z_][\w]*)\s*=\s*request\.(?:data|body|get_data)\b', re.IGNORECASE),
+        re.compile(r'\b([A-Za-z_][\w]*)\s*=\s*req\.(?:body|rawBody|files)\b', re.IGNORECASE),
+        re.compile(r'\b([A-Za-z_][\w]*)\s*=\s*context\.get(?:String|Bytes)Extra\(', re.IGNORECASE),
+    ]
+
+    SINK_PATTERNS = [
+        re.compile(r'ET\.(fromstring|parse)\s*\(', re.IGNORECASE),
+        re.compile(r'ElementTree\.(fromstring|parse)\s*\(', re.IGNORECASE),
+        re.compile(r'xmltodict\.parse\s*\(', re.IGNORECASE),
+        re.compile(r'minidom\.(parse|parseString)\s*\(', re.IGNORECASE),
+        re.compile(r'SAXParser\s*\(', re.IGNORECASE),
+        re.compile(r'DocumentBuilderFactory\.[^;]*newDocumentBuilder\(\)', re.IGNORECASE),
+    ]
+
     def detect(self, file_path: Path, content: str, lines: List[str]) -> List[Vulnerability]:
-        vulnerabilities = []
-        
-        patterns = [
-            r'parse\s*\([^)]*xml',
-            r'XMLParser\s*\(',
-            r'etree\.parse\s*\(',
-            r'ElementTree\.parse\s*\(',
-        ]
-        
-        for i, line in enumerate(lines, 1):
-            for pattern in patterns:
-                if re.search(pattern, line, re.IGNORECASE):
-                    # Check if safe parsing is used
-                    if "resolve_entities=False" in line or "no_network=True" in line:
-                        continue
-                    
+        vulnerabilities: List[Vulnerability] = []
+        tainted_vars: Dict[str, int] = {}
+
+        for index, raw_line in enumerate(lines, start=1):
+            line = raw_line.strip()
+            if not line or line.startswith('#'):
+                continue
+
+            for pattern in self.SOURCE_PATTERNS:
+                match = pattern.search(line)
+                if match:
+                    tainted_vars[match.group(1)] = index
+
+            for sink in self.SINK_PATTERNS:
+                if not sink.search(line):
+                    continue
+
+                if any(keyword in line for keyword in ('resolve_entities=False', 'defusedxml', 'no_network=True')):
+                    continue
+
+                is_tainted = any(var in line for var in tainted_vars)
+                if not is_tainted:
+                    context = '\n'.join(lines[max(0, index - 3): index + 2]).lower()
+                    is_tainted = any(token in context for token in ('request.data', 'request.body', 'req.body', 'req.rawbody'))
+
+                if is_tainted:
                     vulnerabilities.append(Vulnerability(
                         cwe="CWE-611",
-                        severity="medium",
+                        severity="high",
                         title="XML External Entity (XXE)",
-                        description="Potential XXE vulnerability. XML parsers should disable external entity resolution.",
+                        description="XML parsing of user-controlled input without disabling external entities.",
                         file_path=str(file_path),
-                        line_number=i,
-                        code_snippet=line.strip(),
-                        confidence="low",
-                        category="injection"
+                        line_number=index,
+                        code_snippet=raw_line.strip(),
+                        confidence="medium",
+                        category="xml"
                     ))
-        
+
         return vulnerabilities
 
 
@@ -711,31 +864,59 @@ class SSRFDetector(VulnerabilityDetector):
     """Detects Server-Side Request Forgery (CWE-918)"""
     
     def detect(self, file_path: Path, content: str, lines: List[str]) -> List[Vulnerability]:
-        vulnerabilities = []
-        
-        patterns = [
-            r'requests\.get\s*\([^)]*\+',
-            r'requests\.post\s*\([^)]*\+',
-            r'fetch\s*\([^)]*\+',
-            r'urllib\.request\.urlopen\s*\([^)]*\+',
-            r'http\.get\s*\([^)]*\+',
+        vulnerabilities: List[Vulnerability] = []
+        tainted_vars: Dict[str, int] = {}
+
+        source_patterns = [
+            re.compile(r'\b([A-Za-z_$][\w$]*)\s*=\s*request\.(?:args|form|values|get_json)\b', re.IGNORECASE),
+            re.compile(r'\b([A-Za-z_$][\w$]*)\s*=\s*request\.(?:GET|POST)\[', re.IGNORECASE),
+            re.compile(r'\b([A-Za-z_$][\w$]*)\s*=\s*req\.(?:query|body|params)\.', re.IGNORECASE),
+            re.compile(r'\b([A-Za-z_$][\w$]*)\s*=\s*req\.getParameter\(', re.IGNORECASE),
+            re.compile(r'\b([A-Za-z_$][\w$]*)\s*=\s*context\.getStringExtra\(', re.IGNORECASE),
         ]
-        
-        for i, line in enumerate(lines, 1):
-            for pattern in patterns:
-                if re.search(pattern, line):
+
+        sink_patterns = [
+            re.compile(r'requests\.(get|post|put|delete|request)\s*\(', re.IGNORECASE),
+            re.compile(r'httpx\.(get|post)\s*\(', re.IGNORECASE),
+            re.compile(r'urllib\.request\.(urlopen|Request)\s*\(', re.IGNORECASE),
+            re.compile(r'fetch\s*\(', re.IGNORECASE),
+            re.compile(r'axios\.(get|post|request)\s*\(', re.IGNORECASE),
+            re.compile(r'http\.get\s*\(', re.IGNORECASE),
+            re.compile(r'WebClient\.(create|builder)\(', re.IGNORECASE),
+        ]
+
+        for index, raw_line in enumerate(lines, start=1):
+            line = raw_line.strip()
+            if not line or line.startswith('#'):
+                continue
+
+            for pattern in source_patterns:
+                match = pattern.search(line)
+                if match:
+                    tainted_vars[match.group(1)] = index
+
+            for sink in sink_patterns:
+                if not sink.search(line):
+                    continue
+
+                inlined = any(keyword in line for keyword in (
+                    'request.args', 'request.form', 'request.GET', 'request.POST', 'req.query', 'req.body', 'req.params', 'req.getParameter'
+                ))
+                referenced = any(var in line for var in tainted_vars)
+
+                if inlined or referenced:
                     vulnerabilities.append(Vulnerability(
                         cwe="CWE-918",
                         severity="high",
                         title="Server-Side Request Forgery (SSRF)",
-                        description="Potential SSRF vulnerability. URLs should be validated to prevent requests to internal resources.",
+                        description="External request appears to use user-controlled input without validation.",
                         file_path=str(file_path),
-                        line_number=i,
-                        code_snippet=line.strip(),
+                        line_number=index,
+                        code_snippet=raw_line.strip(),
                         confidence="medium",
                         category="injection"
                     ))
-        
+
         return vulnerabilities
 
 

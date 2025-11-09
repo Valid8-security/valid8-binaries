@@ -1,0 +1,3 @@
+# Config for java application
+# Vulnerabilities: ['xss', 'command_injection', 'idor', 'path_traversal', 'weak_crypto', 'auth_bypass', 'xxe']
+# Languages: ['python', 'csharp', 'java', 'typescript']

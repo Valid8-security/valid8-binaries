@@ -1,0 +1,3 @@
+# Config for python application
+# Vulnerabilities: ['xxe', 'xss', 'csrf', 'auth_bypass']
+# Languages: ['php', 'csharp', 'python']

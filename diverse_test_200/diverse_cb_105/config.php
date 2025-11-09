@@ -1,0 +1,3 @@
+# Config for php application
+# Vulnerabilities: ['weak_crypto', 'xxe', 'info_disclosure', 'command_injection', 'auth_bypass', 'sql_injection']
+# Languages: ['typescript', 'php', 'java']

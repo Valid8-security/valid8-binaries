@@ -1,0 +1,3 @@
+# Config for javascript application
+# Vulnerabilities: ['sql_injection', 'info_disclosure', 'deserialization']
+# Languages: ['typescript', 'javascript', 'python', 'go']

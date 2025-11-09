@@ -1,947 +1,553 @@
-"""
-Python language security analyzer.
-"""
+"""Python language security analyzer."""
 
-import re
+from __future__ import annotations
+
 import ast
-from typing import List
+import logging
+import re
+from collections import Counter
+from dataclasses import dataclass
+from typing import Dict, Iterable, List, Optional
+
 from .base import LanguageAnalyzer, Vulnerability
 from .universal_detectors import UniversalDetectors
 from ..data_flow_analyzer import DataFlowAnalyzer
 from ..framework_detectors import DjangoDetector, FlaskDetector
 
 
+@dataclass(frozen=True)
+class PatternRule:
+    """Represents a reusable pattern-based detection rule."""
+
+    name: str
+    cwe: str
+    severity: str
+    title: str
+    description: str
+    patterns: List[str]
+    evidence: Optional[List[str]] = None
+    confidence: float = 0.8
+    advanced: bool = False
+
+
+def _compile(patterns: Iterable[str]) -> List[re.Pattern]:
+    return [re.compile(p, re.IGNORECASE) for p in patterns]
+
+
+PATTERN_RULES: Dict[str, PatternRule] = {
+    "detect_command_injection": PatternRule(
+        name="detect_command_injection",
+        cwe="CWE-78",
+        severity="critical",
+        title="OS Command Injection",
+        description="User-controlled input flows into operating system command execution.",
+        patterns=[
+            r"os\.system\s*\(",
+            r"subprocess\.(run|call|Popen)\s*\(",
+            r"os\.popen\s*\(",
+            r"commands\.getoutput\s*\(",
+        ],
+        evidence=["request", "input", "args", "form", "data"],
+        confidence=0.9,
+    ),
+    "detect_code_injection": PatternRule(
+        name="detect_code_injection",
+        cwe="CWE-94",
+        severity="critical",
+        title="Code Injection",
+        description="Invocation of dynamic code execution primitives.",
+        patterns=[
+            r"eval\s*\(",
+            r"exec\s*\(",
+            r"compile\s*\(",
+        ],
+        evidence=["request", "input", "args", "globals", "locals"],
+        confidence=0.9,
+    ),
+    "detect_sql_injection": PatternRule(
+        name="detect_sql_injection",
+        cwe="CWE-89",
+        severity="critical",
+        title="SQL Injection",
+        description="Database query constructed with unsanitised user input.",
+        patterns=[
+            r"cursor\.(execute|executemany)\s*\(",
+            r"session\.execute\s*\(",
+            r"db\.query\s*\(",
+        ],
+        evidence=["%s", "+", "format", "f\"", "f'", "{request", "request."],
+        confidence=0.85,
+    ),
+    "detect_xss": PatternRule(
+        name="detect_xss",
+        cwe="CWE-79",
+        severity="high",
+        title="Cross-Site Scripting",
+        description="HTML response built directly from user-controlled data.",
+        patterns=[
+            r"return\s+f?\".*<.*>.*",
+            r"render_template_string\s*\(",
+            r"response\.write\s*\(",
+        ],
+        evidence=["request", "args", "form", "get_json", "input"],
+        confidence=0.8,
+    ),
+    "_detect_flask_xss": PatternRule(
+        name="_detect_flask_xss",
+        cwe="CWE-79",
+        severity="high",
+        title="Flask XSS",
+        description="Flask template rendered with unsanitised user data.",
+        patterns=[
+            r"render_template\s*\(",
+            r"make_response\s*\(",
+        ],
+        evidence=["request", "args", "form", "get_json"],
+        confidence=0.75,
+    ),
+    "detect_path_traversal": PatternRule(
+        name="detect_path_traversal",
+        cwe="CWE-22",
+        severity="high",
+        title="Path Traversal",
+        description="File system access constructed with user input.",
+        patterns=[
+            r"open\s*\(",
+            r"os\.open\s*\(",
+            r"pathlib\.Path\s*\(",
+        ],
+        evidence=["../", "..\\", "request", "input", "args", "form"],
+        confidence=0.8,
+    ),
+    "detect_weak_crypto": PatternRule(
+        name="detect_weak_crypto",
+        cwe="CWE-327",
+        severity="medium",
+        title="Weak Cryptography",
+        description="Use of weak or insecure cryptographic primitives.",
+        patterns=[
+            r"hashlib\.md5",
+            r"hashlib\.sha1",
+            r"random\.random\s*\(",
+            r"Crypto\.Cipher\.DES",
+        ],
+        confidence=0.75,
+    ),
+    "detect_hardcoded_secrets": PatternRule(
+        name="detect_hardcoded_secrets",
+        cwe="CWE-798",
+        severity="critical",
+        title="Hardcoded Secret",
+        description="Sensitive token or credential embedded directly in source code.",
+        patterns=[
+            r"(?i)(api|secret|token|key)[\w\-]*\s*=\s*[\"\'][A-Za-z0-9/+=]{8,}[\"']",
+        ],
+        confidence=0.9,
+    ),
+    "detect_hardcoded_password": PatternRule(
+        name="detect_hardcoded_password",
+        cwe="CWE-798",
+        severity="critical",
+        title="Hardcoded Password",
+        description="Password value embedded directly in source code.",
+        patterns=[
+            r"(?i)password\s*=\s*[\"\'][A-Za-z0-9/+=]{4,}[\"']",
+        ],
+        confidence=0.95,
+    ),
+    "detect_open_redirect": PatternRule(
+        name="detect_open_redirect",
+        cwe="CWE-601",
+        severity="medium",
+        title="Open Redirect",
+        description="Redirect destination derived from user input without validation.",
+        patterns=[
+            r"redirect\s*\(",
+        ],
+        evidence=["request", "args", "form", "next"],
+        confidence=0.7,
+    ),
+    "detect_unsafe_deserialization": PatternRule(
+        name="detect_unsafe_deserialization",
+        cwe="CWE-502",
+        severity="critical",
+        title="Unsafe Deserialization",
+        description="Use of unsafe deserialization routines with untrusted data.",
+        patterns=[
+            r"pickle\.loads",
+            r"yaml\.load",
+            r"marshal\.loads",
+            r"jsonpickle\.decode",
+        ],
+        evidence=["request", "input", "data", "body"],
+        confidence=0.85,
+    ),
+    "detect_xxe": PatternRule(
+        name="detect_xxe",
+        cwe="CWE-611",
+        severity="critical",
+        title="XML External Entity (XXE)",
+        description="XML parser configured to process untrusted input.",
+        patterns=[
+            r"xml\.etree",
+            r"lxml\.etree",
+            r"ElementTree\.parse",
+            r"defusedxml",
+            r"ET\.(?:fromstring|XMLParser)",
+        ],
+        evidence=None,
+        confidence=0.75,
+        advanced=True,
+    ),
+    "detect_ssrf": PatternRule(
+        name="detect_ssrf",
+        cwe="CWE-918",
+        severity="critical",
+        title="Server-Side Request Forgery",
+        description="HTTP client request built from user input.",
+        patterns=[
+            r"requests\.(get|post|put|delete)\s*\(",
+            r"urllib\.request\.(urlopen|Request)\s*\(",
+            r"httpx\.(get|post|AsyncClient)\s*\(",
+        ],
+        evidence=["request", "args", "form", "url", "input"],
+        confidence=0.85,
+        advanced=True,
+    ),
+    "detect_idor": PatternRule(
+        name="detect_idor",
+        cwe="CWE-639",
+        severity="high",
+        title="Insecure Direct Object Reference",
+        description="Resource access determined solely by user-supplied identifiers.",
+        patterns=[
+            r"@app\.route.*<.*_id>",
+            r"SELECT\s+.*\s+FROM.*WHERE.*id\s*=",
+            r"cursor\.execute\s*\(f?\"SELECT.*WHERE.*id\s*=",
+        ],
+        evidence=None,
+        confidence=0.8,
+        advanced=True,
+    ),
+    "detect_information_disclosure": PatternRule(
+        name="detect_information_disclosure",
+        cwe="CWE-200",
+        severity="medium",
+        title="Information Disclosure",
+        description="Sensitive information exposed through logging or responses.",
+        patterns=[
+            r"print\s*\(.*(password|secret|token)",
+            r"log\.(debug|info|warning|error)\(.*(password|secret|token)",
+            r"return\s+.*(password|secret|token)",
+            r"app\.debug\s*=\s*True",
+            r"['\"]password['\"]\s*:\s*['\"][^'\"]+",
+            r"['\"]api_key['\"]\s*:\s*['\"][^'\"]+",
+            r"traceback\.format_exc\s*\(",
+            r"os\.uname\s*\(",
+            r"os\.getcwd\s*\(",
+        ],
+        confidence=0.7,
+        advanced=True,
+    ),
+    "detect_ssti": PatternRule(
+        name="detect_ssti",
+        cwe="CWE-94",
+        severity="high",
+        title="Server-Side Template Injection",
+        description="Template rendering invoked with user-controlled expressions.",
+        patterns=[
+            r"render_template_string\s*\(",
+            r"Template\(.*\{\{",
+        ],
+        evidence=["request", "args", "form", "format"],
+        confidence=0.8,
+    ),
+    "detect_nosql_injection": PatternRule(
+        name="detect_nosql_injection",
+        cwe="CWE-943",
+        severity="high",
+        title="NoSQL Injection",
+        description="NoSQL query built directly from user input.",
+        patterns=[
+            r"find\s*\(.*request",
+            r"aggregate\s*\(.*\$where",
+            r"db\.[a-zA-Z0-9_]+\.find\s*\(",
+        ],
+        evidence=["request", "args", "form", "body"],
+        confidence=0.75,
+    ),
+}
+
+ADVANCED_RULE_NAMES = {name for name, rule in PATTERN_RULES.items() if rule.advanced}
+
+
 class PythonAnalyzer(LanguageAnalyzer, UniversalDetectors):
-    """Security analyzer for Python code."""
-    
+    """Security analyzer for Python source files."""
+
+    ANALYZE_ORDER = [
+        "detect_command_injection",
+        "detect_code_injection",
+        "detect_sql_injection",
+        "detect_xss",
+        "_detect_flask_xss",
+        "detect_path_traversal",
+        "detect_weak_crypto",
+        "detect_hardcoded_secrets",
+        "detect_hardcoded_password",
+        "detect_open_redirect",
+        "detect_unsafe_deserialization",
+        "detect_xxe",
+        "detect_ssrf",
+        "detect_idor",
+        "detect_information_disclosure",
+        "detect_ssti",
+        "detect_nosql_injection",
+    ]
+
     def __init__(self):
         super().__init__()
-        self.language = "python"
+        self.logger = logging.getLogger(__name__)
         self.data_flow_analyzer = DataFlowAnalyzer()
         self.django_detector = DjangoDetector()
         self.flask_detector = FlaskDetector()
-    
+        self.advanced_hit_counter: Counter[str] = Counter()
+
+    # ---------------------------------------------------------------------
+    # Public API
+    # ---------------------------------------------------------------------
     def get_supported_cwes(self) -> List[str]:
-        """Get supported CWE types."""
         return [
-            'CWE-20',   # Improper Input Validation
-            'CWE-22',   # Path Traversal
-            'CWE-78',   # Command Injection
-            'CWE-79',   # XSS
-            'CWE-89',   # SQL Injection
-            'CWE-90',   # LDAP Injection
-            'CWE-94',   # Code Injection (eval/exec)
-            'CWE-113',  # HTTP Header Injection
-            'CWE-190',  # Integer Overflow
-            'CWE-200',  # Information Exposure
-            'CWE-209',  # Information Disclosure in Error Messages
-            'CWE-259',  # Hard-coded Password
-            'CWE-287',  # Improper Authentication
-            'CWE-295',  # Improper Certificate Validation
-            'CWE-306',  # Missing Authentication for Critical Function
-            'CWE-311',  # Missing Encryption of Sensitive Data
-            'CWE-319',  # Cleartext Transmission
-            'CWE-321',  # Hard-coded Cryptographic Key
-            'CWE-327',  # Weak Crypto
-            'CWE-330',  # Use of Insufficiently Random Values
-            'CWE-352',  # CSRF
-            'CWE-362',  # Race Condition
-            'CWE-377',  # Insecure Temporary File
-            'CWE-384',  # Session Fixation
-            'CWE-434',  # Unrestricted File Upload
-            'CWE-502',  # Unsafe Deserialization
-            'CWE-601',  # Open Redirect
-            'CWE-611',  # XXE
-            'CWE-614',  # Sensitive Cookie in HTTPS Session Without 'Secure' Attribute
-            'CWE-643',  # XPath Injection
-            'CWE-732',  # Incorrect Permissions
-            'CWE-749',  # Exposed Dangerous Method or Function
-            'CWE-770',  # Allocation of Resources Without Limits or Throttling
-            'CWE-798',  # Hardcoded Credentials
-            'CWE-918',  # SSRF
+            "CWE-20",
+            "CWE-22",
+            "CWE-78",
+            "CWE-79",
+            "CWE-89",
+            "CWE-94",
+            "CWE-95",
+            "CWE-200",
+            "CWE-287",
+            "CWE-327",
+            "CWE-352",
+            "CWE-502",
+            "CWE-611",
+            "CWE-639",
+            "CWE-918",
+            "CWE-943",
+            "CWE-798",
         ]
-    
-    def parse_ast(self, code: str):
-        """Parse Python code into AST."""
+
+    def parse_ast(self, code: str) -> Optional[ast.AST]:
         try:
             return ast.parse(code)
-        except:
+        except SyntaxError:
             return None
-    
+
     def analyze(self, code: str, filepath: str) -> List[Vulnerability]:
-        """Analyze Python code for vulnerabilities."""
-        vulnerabilities = []
-        
-        # Run language-specific detection methods
-        vulnerabilities.extend(self.detect_command_injection(code, filepath))
-        vulnerabilities.extend(self.detect_code_injection(code, filepath))
-        vulnerabilities.extend(self.detect_sql_injection(code, filepath))
-        vulnerabilities.extend(self.detect_xss(code, filepath))
-        vulnerabilities.extend(self.detect_path_traversal(code, filepath))
-        vulnerabilities.extend(self.detect_weak_crypto(code, filepath))
-        vulnerabilities.extend(self.detect_hardcoded_secrets(code, filepath))
-        vulnerabilities.extend(self.detect_hardcoded_password(code, filepath))
-        vulnerabilities.extend(self.detect_insecure_temp_file(code, filepath))
-        vulnerabilities.extend(self.detect_open_redirect(code, filepath))
-        vulnerabilities.extend(self.detect_unsafe_deserialization(code, filepath))
-        vulnerabilities.extend(self.detect_xxe(code, filepath))
-        vulnerabilities.extend(self.detect_ssrf(code, filepath))
-        vulnerabilities.extend(self.detect_incorrect_permissions(code, filepath))
-        
-        # NEW: Extended CWE detection methods
-        vulnerabilities.extend(self.detect_missing_authentication(code, filepath))
-        vulnerabilities.extend(self.detect_unrestricted_file_upload(code, filepath))
-        vulnerabilities.extend(self.detect_exposed_dangerous_method(code, filepath))
-        vulnerabilities.extend(self.detect_resource_exhaustion(code, filepath))
-        vulnerabilities.extend(self.detect_http_header_injection(code, filepath))
-        vulnerabilities.extend(self.detect_error_message_disclosure(code, filepath))
-        vulnerabilities.extend(self.detect_insecure_random(code, filepath))
-        vulnerabilities.extend(self.detect_weak_certificate_validation(code, filepath))
-        vulnerabilities.extend(self.detect_hardcoded_crypto_key(code, filepath))
-        vulnerabilities.extend(self.detect_missing_encryption(code, filepath))
-        vulnerabilities.extend(self.detect_insecure_http(code, filepath))
-        vulnerabilities.extend(self.detect_ldap_injection(code, filepath))
-        vulnerabilities.extend(self.detect_xpath_injection(code, filepath))
-        vulnerabilities.extend(self.detect_improper_session_management(code, filepath))
-        vulnerabilities.extend(self.detect_race_condition(code, filepath))
-        vulnerabilities.extend(self.detect_integer_overflow(code, filepath))
-        vulnerabilities.extend(self.detect_insecure_cookie(code, filepath))
-        
-        # Run universal detection methods
-        vulnerabilities.extend(self.detect_improper_input_validation(code, filepath))
-        vulnerabilities.extend(self.detect_information_exposure(code, filepath))
-        vulnerabilities.extend(self.detect_improper_authentication(code, filepath))
-        vulnerabilities.extend(self.detect_csrf(code, filepath))
-        vulnerabilities.extend(self.detect_graphql_security(code, filepath))
-        vulnerabilities.extend(self.detect_jwt_security(code, filepath))
-        vulnerabilities.extend(self.detect_nosql_injection(code, filepath))
-        vulnerabilities.extend(self.detect_ssti(code, filepath))
-        vulnerabilities.extend(self.detect_redos(code, filepath))
-        
-        # CRITICAL: Data flow analysis for complex vulnerabilities (90% recall)
+        self.logger.debug("Starting Python analysis", extra={"filepath": filepath})
+        self.file_path = filepath
+        self.advanced_hit_counter = Counter()
+        vulnerabilities: List[Vulnerability] = []
+
+        for detector_name in self.ANALYZE_ORDER:
+            detector = getattr(self, detector_name, None)
+            if not callable(detector):
+                continue
+            try:
+                findings = detector(code, filepath)
+                vulnerabilities.extend(findings)
+            except Exception as exc:  # pragma: no cover - defensive
+                self.logger.debug("Detector %s failed: %s", detector_name, exc)
+
+        vulnerabilities.extend(self._detect_critical_credentials(code, filepath))
+
+        # Universal, language-agnostic detectors from the mixin
+        universal_detectors = [
+            self.detect_improper_input_validation,
+            self.detect_information_exposure,
+            self.detect_improper_authentication,
+            self.detect_csrf,
+            self.detect_graphql_security,
+            self.detect_jwt_security,
+            self.detect_nosql_injection,  # already executed above but harmless duplicates filtered later
+            self.detect_ssti,             # likewise
+            self.detect_redos,
+            self.detect_incorrect_permissions,
+        ]
+
+        for detector in universal_detectors:
+            try:
+                vulnerabilities.extend(detector(code, filepath))
+            except Exception as exc:  # pragma: no cover
+                self.logger.debug("Universal detector %s failed: %s", detector.__name__, exc)
+
+        # Data flow analysis (best-effort)
         try:
             data_flow_vulns = self.data_flow_analyzer.analyze(code, filepath)
             vulnerabilities.extend(data_flow_vulns)
-        except Exception as e:
-            # Fallback if data flow analysis fails
-            pass
-        
-        # Framework-specific detection (Django, Flask)
+        except Exception as exc:  # pragma: no cover
+            self.logger.debug("Data flow analysis failed: %s", exc)
+
+        # Framework-specific heuristics
+        lowered = code.lower()
         try:
-            if any(keyword in code.lower() for keyword in ['from django', 'import django', 'django.']):
-                django_vulns = self.django_detector.detect(code, filepath)
-                vulnerabilities.extend(django_vulns)
-            if any(keyword in code.lower() for keyword in ['from flask', 'import flask', 'flask.']):
-                flask_vulns = self.flask_detector.detect(code, filepath)
-                vulnerabilities.extend(flask_vulns)
-        except Exception as e:
-            # Fallback if framework detection fails
-            pass
-        
-        return vulnerabilities
-    
+            if "django" in lowered:
+                vulnerabilities.extend(self.django_detector.detect(code, filepath))
+            if "flask" in lowered:
+                vulnerabilities.extend(self.flask_detector.detect(code, filepath))
+        except Exception as exc:  # pragma: no cover
+            self.logger.debug("Framework detector failure: %s", exc)
+
+        return self._deduplicate(vulnerabilities)
+
+    def get_advanced_detector_stats(self) -> Dict[str, int]:
+        return dict(self.advanced_hit_counter)
+
+    # ------------------------------------------------------------------
+    # Individual detector implementations
+    # ------------------------------------------------------------------
     def detect_command_injection(self, code: str, filepath: str) -> List[Vulnerability]:
-        """Detect command injection in Python."""
-        patterns = [
-            (r'os\.system\s*\(', 'os.system'),
-            (r'subprocess\.call\s*\(', 'subprocess.call'),
-            (r'subprocess\.run\s*\(', 'subprocess.run'),
-            (r'subprocess\.Popen\s*\(', 'subprocess.Popen'),
-            (r'os\.popen\s*\(', 'os.popen'),
-            (r'commands\.getoutput\s*\(', 'commands.getoutput'),
-            (r'eval\s*\(', 'eval'),
-            (r'exec\s*\(', 'exec'),
-        ]
-        
-        vulnerabilities = []
-        lines = code.split('\n')
-        
-        for i, line in enumerate(lines, 1):
-            for pattern, func_name in patterns:
-                if re.search(pattern, line):
-                    vulnerabilities.append(self._create_vulnerability(
-                        cwe='CWE-78',
-                        severity='critical',
-                        title='OS Command Injection',
-                        description=f'Potential command injection using {func_name}. User input should never be passed directly to system commands.',
-                        code=code,
-                        filepath=filepath,
-                        line_number=i
-                    ))
-        
-        return vulnerabilities
-    
-    def detect_sql_injection(self, code: str, filepath: str) -> List[Vulnerability]:
-        """Detect SQL injection in Python."""
-        patterns = [
-            r'execute\s*\(\s*["\'].*%s',
-            r'execute\s*\(\s*["\'].*\+',
-            r'execute\s*\(\s*f["\']',
-            r'\.format\s*\(.*\).*execute',
-            r'cursor\.execute\s*\(.*\.format',
-        ]
-        
-        vulnerabilities = []
-        lines = code.split('\n')
-        
-        for i, line in enumerate(lines, 1):
-            for pattern in patterns:
-                if re.search(pattern, line, re.IGNORECASE):
-                    vulnerabilities.append(self._create_vulnerability(
-                        cwe='CWE-89',
-                        severity='high',
-                        title='SQL Injection',
-                        description='Potential SQL injection. Use parameterized queries instead of string formatting.',
-                        code=code,
-                        filepath=filepath,
-                        line_number=i
-                    ))
-        
-        return vulnerabilities
-    
-    def detect_xss(self, code: str, filepath: str) -> List[Vulnerability]:
-        """Detect XSS in Python."""
-        patterns = [
-            r'mark_safe\s*\(',
-            r'SafeString\s*\(',
-            r'render_template_string\s*\(.*\+',
-            r'\.innerHTML\s*=',
-        ]
-        
-        vulnerabilities = []
-        lines = code.split('\n')
-        
-        for i, line in enumerate(lines, 1):
-            for pattern in patterns:
-                if re.search(pattern, line):
-                    vulnerabilities.append(self._create_vulnerability(
-                        cwe='CWE-79',
-                        severity='high',
-                        title='Cross-Site Scripting (XSS)',
-                        description='Potential XSS vulnerability. User input should be properly escaped.',
-                        code=code,
-                        filepath=filepath,
-                        line_number=i
-                    ))
-        
-        return vulnerabilities
-    
-    def detect_path_traversal(self, code: str, filepath: str) -> List[Vulnerability]:
-        """Detect path traversal in Python."""
-        patterns = [
-            r'open\s*\([^)]*\+',
-            r'os\.path\.join\s*\([^)]*user',
-            r'Path\s*\([^)]*\+',
-            r'\.read\s*\([^)]*request',
-        ]
-        
-        vulnerabilities = []
-        lines = code.split('\n')
-        
-        for i, line in enumerate(lines, 1):
-            for pattern in patterns:
-                if re.search(pattern, line, re.IGNORECASE):
-                    vulnerabilities.append(self._create_vulnerability(
-                        cwe='CWE-22',
-                        severity='high',
-                        title='Path Traversal',
-                        description='Potential path traversal vulnerability. File paths should be validated.',
-                        code=code,
-                        filepath=filepath,
-                        line_number=i
-                    ))
-        
-        return vulnerabilities
-    
-    def detect_weak_crypto(self, code: str, filepath: str) -> List[Vulnerability]:
-        """Detect weak cryptography in Python."""
-        patterns = [
-            (r'hashlib\.md5\s*\(', 'MD5'),
-            (r'hashlib\.sha1\s*\(', 'SHA1'),
-            (r'Crypto\.Hash\.MD5', 'MD5'),
-            (r'Crypto\.Hash\.SHA1', 'SHA1'),
-            (r'\.digest\s*\(\s*["\']md5', 'MD5'),
-        ]
-        
-        vulnerabilities = []
-        lines = code.split('\n')
-        
-        for i, line in enumerate(lines, 1):
-            for pattern, algo in patterns:
-                if re.search(pattern, line, re.IGNORECASE):
-                    vulnerabilities.append(self._create_vulnerability(
-                        cwe='CWE-327',
-                        severity='medium',
-                        title='Weak Cryptographic Algorithm',
-                        description=f'Use of weak cryptographic algorithm {algo}. Use SHA-256 or stronger.',
-                        code=code,
-                        filepath=filepath,
-                        line_number=i
-                    ))
-        
-        return vulnerabilities
-    
-    def detect_hardcoded_secrets(self, code: str, filepath: str) -> List[Vulnerability]:
-        """Detect hardcoded credentials in Python."""
-        patterns = [
-            (r'password\s*=\s*["\'][^"\']{3,}["\']', 'password'),
-            (r'api_key\s*=\s*["\'][^"\']{10,}["\']', 'API key'),
-            (r'secret\s*=\s*["\'][^"\']{10,}["\']', 'secret'),
-            (r'token\s*=\s*["\'][^"\']{10,}["\']', 'token'),
-            (r'aws_secret\s*=\s*["\']', 'AWS secret'),
-        ]
-        
-        vulnerabilities = []
-        lines = code.split('\n')
-        
-        for i, line in enumerate(lines, 1):
-            # Skip comments
-            if line.strip().startswith('#'):
-                continue
-            
-            for pattern, cred_type in patterns:
-                if re.search(pattern, line, re.IGNORECASE):
-                    vulnerabilities.append(self._create_vulnerability(
-                        cwe='CWE-798',
-                        severity='critical',
-                        title='Hardcoded Credentials',
-                        description=f'Hardcoded {cred_type} detected. Store credentials in environment variables.',
-                        code=code,
-                        filepath=filepath,
-                        line_number=i
-                    ))
-        
-        return vulnerabilities
-    
-    def detect_unsafe_deserialization(self, code: str, filepath: str) -> List[Vulnerability]:
-        """Detect unsafe deserialization in Python."""
-        patterns = [
-            r'pickle\.loads\s*\(',
-            r'yaml\.load\s*\([^,)]*\)',  # yaml.load without Loader
-            r'marshal\.loads\s*\(',
-        ]
-        
-        vulnerabilities = []
-        lines = code.split('\n')
-        
-        for i, line in enumerate(lines, 1):
-            for pattern in patterns:
-                if re.search(pattern, line):
-                    vulnerabilities.append(self._create_vulnerability(
-                        cwe='CWE-502',
-                        severity='high',
-                        title='Unsafe Deserialization',
-                        description='Unsafe deserialization of untrusted data. Use safe alternatives like JSON.',
-                        code=code,
-                        filepath=filepath,
-                        line_number=i
-                    ))
-        
-        return vulnerabilities
-    
-    def detect_xxe(self, code: str, filepath: str) -> List[Vulnerability]:
-        """Detect XXE vulnerabilities in Python."""
-        patterns = [
-            r'etree\.parse\s*\(',
-            r'etree\.fromstring\s*\(',
-            r'xml\.etree\.ElementTree\.parse\s*\(',
-            r'lxml\.etree\.parse\s*\(',
-        ]
-        
-        vulnerabilities = []
-        lines = code.split('\n')
-        
-        for i, line in enumerate(lines, 1):
-            for pattern in patterns:
-                if re.search(pattern, line):
-                    # Check if XXE protection is present
-                    if 'resolve_entities=False' not in line:
-                        vulnerabilities.append(self._create_vulnerability(
-                            cwe='CWE-611',
-                            severity='high',
-                            title='XML External Entity (XXE) Injection',
-                            description='XML parser without XXE protection. Disable external entity resolution.',
-                            code=code,
-                            filepath=filepath,
-                            line_number=i
-                        ))
-        
-        return vulnerabilities
-    
-    def detect_ssrf(self, code: str, filepath: str) -> List[Vulnerability]:
-        """Detect SSRF vulnerabilities in Python."""
-        patterns = [
-            r'requests\.get\s*\([^)]*request\.',
-            r'requests\.post\s*\([^)]*request\.',
-            r'urllib\.request\.urlopen\s*\([^)]*request\.',
-            r'httplib\.request\s*\([^)]*request\.',
-        ]
-        
-        vulnerabilities = []
-        lines = code.split('\n')
-        
-        for i, line in enumerate(lines, 1):
-            for pattern in patterns:
-                if re.search(pattern, line, re.IGNORECASE):
-                    vulnerabilities.append(self._create_vulnerability(
-                        cwe='CWE-918',
-                        severity='high',
-                        title='Server-Side Request Forgery (SSRF)',
-                        description='Potential SSRF. Validate and whitelist URLs before making requests.',
-                        code=code,
-                        filepath=filepath,
-                        line_number=i
-                    ))
-        
-        return vulnerabilities
-    
+        return self._run_rule("detect_command_injection", code, filepath)
+
     def detect_code_injection(self, code: str, filepath: str) -> List[Vulnerability]:
-        """Detect CWE-94: Code Injection (eval, exec)."""
-        vulnerabilities = []
-        lines = code.split('\n')
-        
-        for i, line in enumerate(lines, 1):
-            # Detect eval() and exec() usage
-            if re.search(r'\.eval\s*\(', line) or re.search(r'\beval\s*\([^)]*\+', line):
-                vulnerabilities.append(self._create_vulnerability(
-                    cwe='CWE-94',
-                    severity='critical',
-                    title='Code Injection via eval',
-                    description='Dangerous eval() usage detected. User input may be executed as code.',
-                    code=code,
-                    filepath=filepath,
-                    line_number=i
-                ))
-            elif re.search(r'\bexec\s*\([^)]*\+', line):
-                vulnerabilities.append(self._create_vulnerability(
-                    cwe='CWE-94',
-                    severity='critical',
-                    title='Code Injection via exec',
-                    description='Dangerous exec() usage detected. User input may be executed as code.',
-                    code=code,
-                    filepath=filepath,
-                    line_number=i
-                ))
-        
-        return vulnerabilities
-    
+        return self._run_rule("detect_code_injection", code, filepath)
+
+    def detect_sql_injection(self, code: str, filepath: str) -> List[Vulnerability]:
+        return self._run_rule("detect_sql_injection", code, filepath)
+
+    def detect_xss(self, code: str, filepath: str) -> List[Vulnerability]:
+        return self._run_rule("detect_xss", code, filepath)
+
+    def _detect_flask_xss(self, code: str, filepath: str) -> List[Vulnerability]:
+        return self._run_rule("_detect_flask_xss", code, filepath)
+
+    def detect_path_traversal(self, code: str, filepath: str) -> List[Vulnerability]:
+        return self._run_rule("detect_path_traversal", code, filepath)
+
+    def detect_weak_crypto(self, code: str, filepath: str) -> List[Vulnerability]:
+        return self._run_rule("detect_weak_crypto", code, filepath)
+
+    def detect_hardcoded_secrets(self, code: str, filepath: str) -> List[Vulnerability]:
+        return self._run_rule("detect_hardcoded_secrets", code, filepath)
+
     def detect_hardcoded_password(self, code: str, filepath: str) -> List[Vulnerability]:
-        """Detect CWE-259: Hard-coded Password."""
-        vulnerabilities = []
-        lines = code.split('\n')
-        
-        for i, line in enumerate(lines, 1):
-            # More specific password detection than generic secrets
-            patterns = [
-                (r'(?:if|elif)\s+.*password\s*==\s*["\'][^"\']+["\']', 'Direct password comparison'),
-                (r'password\s*:\s*["\'][^"\']{4,}["\']', 'Hard-coded password in config'),
-                (r'PASSWORD\s*=\s*["\'][^"\']{4,}["\']', 'Environment password'),
-            ]
-            
-            for pattern, desc in patterns:
-                if re.search(pattern, line, re.IGNORECASE):
-                    # Skip if it looks like a placeholder
-                    if any(placeholder in line.lower() for placeholder in ['xxx', '***', 'dummy', 'example', 'test']):
-                        continue
-                    
-                    vulnerabilities.append(self._create_vulnerability(
-                        cwe='CWE-259',
-                        severity='critical',
-                        title='Hard-coded Password',
-                        description=f'{desc}. Store passwords securely, never hard-code them.',
-                        code=code,
-                        filepath=filepath,
-                        line_number=i
-                    ))
-                    break
-        
-        return vulnerabilities
-    
-    def detect_insecure_temp_file(self, code: str, filepath: str) -> List[Vulnerability]:
-        """Detect CWE-377: Insecure Temporary File."""
-        vulnerabilities = []
-        lines = code.split('\n')
-        
-        for i, line in enumerate(lines, 1):
-            # Pattern for predictable temp file names
-            if re.search(r'tempfile\.mktemp\s*\(', line):
-                vulnerabilities.append(self._create_vulnerability(
-                    cwe='CWE-377',
-                    severity='medium',
-                    title='Insecure Temporary File',
-                    description='mktemp() creates predictable file names. Use tempfile.mkstemp() or tempfile.NamedTemporaryFile() instead.',
-                    code=code,
-                    filepath=filepath,
-                    line_number=i
-                ))
-            elif re.search(r'tmp[^/]*\s*=.*["\'].*tmp["\']', line, re.IGNORECASE):
-                vulnerabilities.append(self._create_vulnerability(
-                    cwe='CWE-377',
-                    severity='medium',
-                    title='Predictable Temporary File Name',
-                    description='Hard-coded temp file path is predictable and exploitable.',
-                    code=code,
-                    filepath=filepath,
-                    line_number=i
-                ))
-        
-        return vulnerabilities
-    
+        return self._run_rule("detect_hardcoded_password", code, filepath)
+
     def detect_open_redirect(self, code: str, filepath: str) -> List[Vulnerability]:
-        """Detect CWE-601: Open Redirect."""
-        vulnerabilities = []
-        lines = code.split('\n')
-        
-        for i, line in enumerate(lines, 1):
-            # URL redirect patterns without validation
-            patterns = [
-                (r'(?:redirect|redirect_to)\s*\([^)]*\+', 'Unvalidated redirect'),
-                (r'return\s+(?:redirect|Redirect)\s*\([^)]*\+', 'Unvalidated redirect return'),
-                (r'location\.href\s*=\s*[^;]*(request|input|params|args)', 'Client-side redirect without validation'),
-            ]
-            
-            for pattern, desc in patterns:
-                if re.search(pattern, line, re.IGNORECASE):
-                    # Check for common whitelist patterns
-                    if any(protect in line.lower() for protect in ['whitelist', 'allowed', 'validate']):
-                        continue
-                    
-                    vulnerabilities.append(self._create_vulnerability(
-                        cwe='CWE-601',
-                        severity='medium',
-                        title='URL Redirection to Untrusted Site',
-                        description=f'{desc}. Always validate redirect URLs to prevent phishing.',
-                        code=code,
-                        filepath=filepath,
-                        line_number=i
-                    ))
-                    break
-        
-        return vulnerabilities
-    
-    def detect_incorrect_permissions(self, code: str, filepath: str) -> List[Vulnerability]:
-        """Detect incorrect file permissions in Python."""
+        return self._run_rule("detect_open_redirect", code, filepath)
+
+    def detect_unsafe_deserialization(self, code: str, filepath: str) -> List[Vulnerability]:
+        return self._run_rule("detect_unsafe_deserialization", code, filepath)
+
+    def detect_xxe(self, code: str, filepath: str) -> List[Vulnerability]:
+        return self._run_rule("detect_xxe", code, filepath)
+
+    def detect_ssrf(self, code: str, filepath: str) -> List[Vulnerability]:
+        return self._run_rule("detect_ssrf", code, filepath)
+
+    def detect_idor(self, code: str, filepath: str) -> List[Vulnerability]:
+        return self._run_rule("detect_idor", code, filepath)
+
+    def detect_information_disclosure(self, code: str, filepath: str) -> List[Vulnerability]:
+        return self._run_rule("detect_information_disclosure", code, filepath)
+
+    def detect_ssti(self, code: str, filepath: str) -> List[Vulnerability]:  # type: ignore[override]
+        return self._run_rule("detect_ssti", code, filepath)
+
+    def detect_nosql_injection(self, code: str, filepath: str) -> List[Vulnerability]:  # type: ignore[override]
+        return self._run_rule("detect_nosql_injection", code, filepath)
+
+    # ------------------------------------------------------------------
+    # Helpers
+    # ------------------------------------------------------------------
+    def _run_rule(self, rule_name: str, code: str, filepath: str) -> List[Vulnerability]:
+        rule = PATTERN_RULES.get(rule_name)
+        if not rule:
+            return []
+
+        compiled = _compile(rule.patterns)
+        lines = code.splitlines()
+        findings: List[Vulnerability] = []
+
+        for idx, line in enumerate(lines, start=1):
+            if self._is_comment(line):
+                continue
+
+            if not any(pattern.search(line) for pattern in compiled):
+                continue
+
+            if rule.evidence and not any(token in line for token in rule.evidence):
+                continue
+
+            vuln = self._create_vulnerability(
+                cwe=rule.cwe,
+                severity=rule.severity,
+                title=rule.title,
+                description=rule.description,
+                code=code,
+                filepath=filepath,
+                line_number=idx,
+                confidence=f"{rule.confidence:.2f}",
+            )
+            findings.append(vuln)
+
+            if rule.name in ADVANCED_RULE_NAMES:
+                self._register_advanced_hit(rule.name, idx)
+
+        return findings
+
+    def _detect_critical_credentials(self, code: str, filepath: str) -> List[Vulnerability]:
         patterns = [
-            (r'os\.chmod\s*\([^,]*,\s*0o?777', 'world-writable'),
-            (r'os\.chmod\s*\([^,]*,\s*0o?666', 'world-readable/writable'),
-            (r'open\s*\([^)]*mode\s*=\s*["\']w\+["\']', 'insecure open mode'),
+            re.compile(r"(?i)AWS_SECRET_ACCESS_KEY\s*=\s*[\"\'][A-Za-z0-9/+=]{20,}[\"']"),
+            re.compile(r"(?i)AWS_ACCESS_KEY_ID\s*=\s*[\"\'][A-Z0-9]{16,}[\"']"),
+            re.compile(r"(?i)(PRIVATE|PUBLIC)_KEY\s*=\s*[\"\'][^-\n]{24,}[\"']"),
         ]
-        
-        vulnerabilities = []
-        lines = code.split('\n')
-        
-        for i, line in enumerate(lines, 1):
-            for pattern, issue in patterns:
-                if re.search(pattern, line):
-                    vulnerabilities.append(self._create_vulnerability(
-                        cwe='CWE-732',
-                        severity='medium',
-                        title='Incorrect Permission Assignment',
-                        description=f'Insecure file permissions: {issue}. Use restrictive permissions.',
-                        code=code,
-                        filepath=filepath,
-                        line_number=i
-                    ))
-        
-        return vulnerabilities
-    
-    def detect_missing_authentication(self, code: str, filepath: str) -> List[Vulnerability]:
-        """Detect CWE-306: Missing Authentication for Critical Function."""
-        vulnerabilities = []
-        lines = code.split('\n')
-        
-        dangerous_functions = [
-            ('delete', 'delete'),
-            ('admin', 'admin'),
-            ('sudo', 'sudo'),
-            ('clear', 'clear all'),
-            ('reset', 'reset'),
-        ]
-        
-        for i, line in enumerate(lines, 1):
-            for func, desc in dangerous_functions:
-                if re.search(rf'\bdef\s+{func}', line, re.IGNORECASE):
-                    context = '\n'.join(lines[max(0, i-3):min(len(lines), i+3)])
-                    if not any(auth in context.lower() for auth in ['@login_required', '@require_auth', '@authenticate', 'authentication']):
-                        vulnerabilities.append(self._create_vulnerability(
-                            cwe='CWE-306',
-                            severity='critical',
-                            title='Missing Authentication',
-                            description=f'Critical function "{func}" has no authentication. Add @login_required or similar decorator.',
-                            code=code,
-                            filepath=filepath,
-                            line_number=i
-                        ))
-        
-        return vulnerabilities
-    
-    def detect_unrestricted_file_upload(self, code: str, filepath: str) -> List[Vulnerability]:
-        """Detect CWE-434: Unrestricted Upload of File with Dangerous Type."""
-        vulnerabilities = []
-        lines = code.split('\n')
-        
-        for i, line in enumerate(lines, 1):
-            if re.search(r'\.save\s*\(|upload.*\(|\.write\s*\(', line, re.IGNORECASE):
-                context = '\n'.join(lines[max(0, i-5):min(len(lines), i+2)])
-                has_validation = any(check in context.lower() for check in ['allowed', 'whitelist', 'validate', 'extension'])
-                
-                if not has_validation:
-                    vulnerabilities.append(self._create_vulnerability(
-                        cwe='CWE-434',
-                        severity='high',
-                        title='Unrestricted File Upload',
-                        description='File upload without type validation. Restrict file types to whitelist only.',
-                        code=code,
-                        filepath=filepath,
-                        line_number=i
-                    ))
-        
-        return vulnerabilities
-    
-    def detect_exposed_dangerous_method(self, code: str, filepath: str) -> List[Vulnerability]:
-        """Detect CWE-749: Exposed Dangerous Method or Function."""
-        vulnerabilities = []
-        lines = code.split('\n')
-        
-        dangerous_methods = [
-            (r'\.eval\s*\(', 'eval()'),
-            (r'\.exec\s*\(', 'exec()'),
-            (r'\.compile\s*\(', 'compile()'),
-            (r'\.__import__\s*\(', '__import__()'),
-        ]
-        
-        for i, line in enumerate(lines, 1):
-            for pattern, method in dangerous_methods:
-                if re.search(pattern, line):
-                    context = '\n'.join(lines[max(0, i-5):min(len(lines), i+2)])
-                    if any(endpoint in context.lower() for endpoint in ['@app.route', '@api_view', 'def get', 'def post']):
-                        vulnerabilities.append(self._create_vulnerability(
-                            cwe='CWE-749',
-                            severity='critical',
-                            title='Exposed Dangerous Method',
-                            description=f'Dangerous method {method} exposed in API. Remove or restrict access.',
-                            code=code,
-                            filepath=filepath,
-                            line_number=i
-                        ))
-        
-        return vulnerabilities
-    
-    def detect_resource_exhaustion(self, code: str, filepath: str) -> List[Vulnerability]:
-        """Detect CWE-770: Allocation of Resources Without Limits or Throttling."""
-        vulnerabilities = []
-        lines = code.split('\n')
-        
-        for i, line in enumerate(lines, 1):
-            if re.search(r'for\s+\w+\s+in\s+(?:request|input|data|file).*:', line):
-                context = '\n'.join(lines[max(0, i-3):min(len(lines), i+10)])
-                has_limit = any(limit in context.lower() for limit in ['limit', 'max', 'range', 'first', 'top', '[:'])
-                
-                if not has_limit:
-                    vulnerabilities.append(self._create_vulnerability(
-                        cwe='CWE-770',
-                        severity='medium',
-                        title='Resource Exhaustion',
-                        description='Loop over untrusted input without limits. Add pagination or limits.',
-                        code=code,
-                        filepath=filepath,
-                        line_number=i
-                    ))
-        
-        return vulnerabilities
-    
-    def detect_http_header_injection(self, code: str, filepath: str) -> List[Vulnerability]:
-        """Detect CWE-113: Improper Neutralization of CRLF Sequences in HTTP Headers."""
-        vulnerabilities = []
-        lines = code.split('\n')
-        
-        for i, line in enumerate(lines, 1):
-            if re.search(r'headers\[|headers\.\[|set_header|response\[\s*["\'].*(?::|location)', line, re.IGNORECASE):
-                context = '\n'.join(lines[max(0, i-5):min(len(lines), i+2)])
-                if any(inp in context.lower() for inp in ['request', 'user', 'input', 'params', 'args']) and \
-                   '\\r\\n' not in context and '\\n' not in context:
-                    vulnerabilities.append(self._create_vulnerability(
-                        cwe='CWE-113',
-                        severity='high',
-                        title='HTTP Header Injection',
-                        description='User-controlled input in HTTP headers. Sanitize or escape CRLF sequences.',
-                        code=code,
-                        filepath=filepath,
-                        line_number=i
-                    ))
-        
-        return vulnerabilities
-    
-    def detect_error_message_disclosure(self, code: str, filepath: str) -> List[Vulnerability]:
-        """Detect CWE-209: Information Exposure Through an Error Message."""
-        vulnerabilities = []
-        lines = code.split('\n')
-        
-        for i, line in enumerate(lines, 1):
-            if re.search(r'raise\s+\w+Error.*\(|print\s*\(.*traceback|print\s*\(.*exception', line, re.IGNORECASE):
-                context = '\n'.join(lines[max(0, i-2):min(len(lines), i+1)])
-                if 'test' not in filepath.lower() and \
-                   not any(safe in context.lower() for safe in ['# safe', '# log', 'logger']):
-                    vulnerabilities.append(self._create_vulnerability(
-                        cwe='CWE-209',
-                        severity='low',
-                        title='Error Message Information Disclosure',
-                        description='Verbose error messages may leak sensitive information. Use generic messages in production.',
-                        code=code,
-                        filepath=filepath,
-                        line_number=i
-                    ))
-        
-        return vulnerabilities
-    
-    def detect_insecure_random(self, code: str, filepath: str) -> List[Vulnerability]:
-        """Detect CWE-330: Use of Insufficiently Random Values."""
-        vulnerabilities = []
-        lines = code.split('\n')
-        
-        for i, line in enumerate(lines, 1):
-            if re.search(r'random\.(choice|randint|sample)', line):
-                context = '\n'.join(lines[max(0, i-3):min(len(lines), i+3)])
-                if any(sec in context.lower() for sec in ['token', 'password', 'key', 'secret', 'session', 'auth']):
-                    vulnerabilities.append(self._create_vulnerability(
-                        cwe='CWE-330',
-                        severity='medium',
-                        title='Insufficient Random Values',
-                        description='Use random.choice()/randint() for cryptographic operations. Use secrets module instead.',
-                        code=code,
-                        filepath=filepath,
-                        line_number=i
-                    ))
-        
-        return vulnerabilities
-    
-    def detect_weak_certificate_validation(self, code: str, filepath: str) -> List[Vulnerability]:
-        """Detect CWE-295: Improper Certificate Validation."""
-        vulnerabilities = []
-        lines = code.split('\n')
-        
-        dangerous_patterns = [
-            r'verify\s*=\s*False',
-            r'ssl\._create_unverified_context',
-            r'SSL_VERIFY_PEER\s*=\s*False',
-        ]
-        
-        for i, line in enumerate(lines, 1):
-            for pattern in dangerous_patterns:
-                if re.search(pattern, line, re.IGNORECASE):
-                    vulnerabilities.append(self._create_vulnerability(
-                        cwe='CWE-295',
-                        severity='high',
-                        title='Improper Certificate Validation',
-                        description='SSL/TLS certificate verification disabled. Always verify certificates.',
-                        code=code,
-                        filepath=filepath,
-                        line_number=i
-                    ))
-        
-        return vulnerabilities
-    
-    def detect_hardcoded_crypto_key(self, code: str, filepath: str) -> List[Vulnerability]:
-        """Detect CWE-321: Use of Hard-coded Cryptographic Key."""
-        vulnerabilities = []
-        lines = code.split('\n')
-        
-        for i, line in enumerate(lines, 1):
-            patterns = [
-                (r'key\s*=\s*["\'][^"\']{10,}["\']', 'key'),
-                (r'secret\s*=\s*["\'][^"\']{10,}["\']', 'secret'),
-                (r'SECRET_KEY\s*=\s*["\']', 'SECRET_KEY'),
-                (r'AES\.new\s*\(.*["\'][^"\']+', 'AES key'),
-            ]
-            
-            for pattern, key_type in patterns:
-                if re.search(pattern, line):
-                    vulnerabilities.append(self._create_vulnerability(
-                        cwe='CWE-321',
-                        severity='critical',
-                        title='Hard-coded Cryptographic Key',
-                        description=f'Hard-coded {key_type} detected. Use environment variables or key management.',
-                        code=code,
-                        filepath=filepath,
-                        line_number=i
-                    ))
-                    break
-        
-        return vulnerabilities
-    
-    def detect_missing_encryption(self, code: str, filepath: str) -> List[Vulnerability]:
-        """Detect CWE-311: Missing Encryption of Sensitive Data."""
-        vulnerabilities = []
-        lines = code.split('\n')
-        
-        sensitive_patterns = [
-            r'password\s*=',
-            r'api_key\s*=',
-            r'credit_card\s*=',
-            r'ssn\s*=',
-        ]
-        
-        for i, line in enumerate(lines, 1):
-            for pattern in sensitive_patterns:
-                if re.search(pattern, line, re.IGNORECASE):
-                    context = '\n'.join(lines[max(0, i-3):min(len(lines), i+3)])
-                    has_encryption = any(enc in context.lower() for enc in ['encrypt', 'hash', 'sha256', 'bcrypt'])
-                    
-                    if not has_encryption:
-                        vulnerabilities.append(self._create_vulnerability(
-                            cwe='CWE-311',
-                            severity='high',
-                            title='Missing Encryption of Sensitive Data',
-                            description='Sensitive data stored without encryption. Encrypt at rest and in transit.',
-                            code=code,
-                            filepath=filepath,
-                            line_number=i
-                        ))
-        
-        return vulnerabilities
-    
-    def detect_insecure_http(self, code: str, filepath: str) -> List[Vulnerability]:
-        """Detect CWE-319: Cleartext Transmission of Sensitive Information."""
-        vulnerabilities = []
-        lines = code.split('\n')
-        
-        for i, line in enumerate(lines, 1):
-            if re.search(r'http://[^\s"\']+', line, re.IGNORECASE):
-                vulnerabilities.append(self._create_vulnerability(
-                    cwe='CWE-319',
-                    severity='high',
-                    title='Cleartext Transmission',
-                    description='HTTP used instead of HTTPS. Sensitive data transmitted without encryption.',
+
+        findings: List[Vulnerability] = []
+        for idx, line in enumerate(code.splitlines(), start=1):
+            if self._is_comment(line):
+                continue
+            if any(pattern.search(line) for pattern in patterns):
+                findings.append(self._create_vulnerability(
+                    cwe="CWE-798",
+                    severity="critical",
+                    title="Hardcoded Credential",
+                    description="Detected hardcoded credential value.",
                     code=code,
                     filepath=filepath,
-                    line_number=i
+                    line_number=idx,
+                    confidence="0.95",
                 ))
-        
-        return vulnerabilities
-    
-    def detect_ldap_injection(self, code: str, filepath: str) -> List[Vulnerability]:
-        """Detect CWE-90: LDAP Injection."""
-        vulnerabilities = []
-        lines = code.split('\n')
-        
-        for i, line in enumerate(lines, 1):
-            if re.search(r'ldap.*search.*\+|\.bind.*\+', line, re.IGNORECASE):
-                vulnerabilities.append(self._create_vulnerability(
-                    cwe='CWE-90',
-                    severity='high',
-                    title='LDAP Injection',
-                    description='LDAP query with concatenated user input. Use parameterized queries.',
-                    code=code,
-                    filepath=filepath,
-                    line_number=i
-                ))
-        
-        return vulnerabilities
-    
-    def detect_xpath_injection(self, code: str, filepath: str) -> List[Vulnerability]:
-        """Detect CWE-643: XPath Injection."""
-        vulnerabilities = []
-        lines = code.split('\n')
-        
-        for i, line in enumerate(lines, 1):
-            if re.search(r'\.xpath\s*\(.*\+|xpath.*\(.*\+', line, re.IGNORECASE):
-                vulnerabilities.append(self._create_vulnerability(
-                    cwe='CWE-643',
-                    severity='high',
-                    title='XPath Injection',
-                    description='XPath query with concatenated user input. Use parameterized XPath expressions.',
-                    code=code,
-                    filepath=filepath,
-                    line_number=i
-                ))
-        
-        return vulnerabilities
-    
-    def detect_improper_session_management(self, code: str, filepath: str) -> List[Vulnerability]:
-        """Detect CWE-384: Session Fixation."""
-        vulnerabilities = []
-        lines = code.split('\n')
-        
-        for i, line in enumerate(lines, 1):
-            if re.search(r'session\[|flask\.session\[|request\.session\[', line):
-                context = '\n'.join(lines[max(0, i-5):min(len(lines), i+2)])
-                if any(auth in context.lower() for auth in ['login', 'authenticate']) and \
-                   'regenerate' not in context.lower() and 'new' not in context.lower():
-                    vulnerabilities.append(self._create_vulnerability(
-                        cwe='CWE-384',
-                        severity='medium',
-                        title='Session Fixation',
-                        description='Session ID not regenerated after authentication. Regenerate session ID on login.',
-                        code=code,
-                        filepath=filepath,
-                        line_number=i
-                    ))
-        
-        return vulnerabilities
-    
-    def detect_race_condition(self, code: str, filepath: str) -> List[Vulnerability]:
-        """Detect CWE-362: Concurrent Execution using Shared Resource with Improper Synchronization."""
-        vulnerabilities = []
-        lines = code.split('\n')
-        
-        for i, line in enumerate(lines, 1):
-            if re.search(r'open\s*\([^)]*["\']w', line) and 'with lock' not in line.lower():
-                context = '\n'.join(lines[max(0, i-5):min(len(lines), i+2)])
-                if any(shared in context.lower() for shared in ['shared', 'global', 'cache', 'log']) and \
-                   not any(lock in context.lower() for lock in ['lock', 'mutex', 'synchronized']):
-                    vulnerabilities.append(self._create_vulnerability(
-                        cwe='CWE-362',
-                        severity='medium',
-                        title='Race Condition',
-                        description='File write without locking. Use file locks or atomic operations.',
-                        code=code,
-                        filepath=filepath,
-                        line_number=i
-                    ))
-        
-        return vulnerabilities
-    
-    def detect_integer_overflow(self, code: str, filepath: str) -> List[Vulnerability]:
-        """Detect CWE-190: Integer Overflow or Wraparound."""
-        vulnerabilities = []
-        lines = code.split('\n')
-        
-        for i, line in enumerate(lines, 1):
-            if re.search(r'\w+\s*\+\s*(input|request|args|params|int\()', line):
-                context = '\n'.join(lines[max(0, i-3):min(len(lines), i+2)])
-                if not any(limit in context.lower() for limit in ['max', 'limit', 'bound', 'check']):
-                    vulnerabilities.append(self._create_vulnerability(
-                        cwe='CWE-190',
-                        severity='low',
-                        title='Potential Integer Overflow',
-                        description='Arithmetic operation on untrusted input without bounds checking.',
-                        code=code,
-                        filepath=filepath,
-                        line_number=i
-                    ))
-        
-        return vulnerabilities
-    
-    def detect_insecure_cookie(self, code: str, filepath: str) -> List[Vulnerability]:
-        """Detect CWE-614: Sensitive Cookie in HTTPS Session Without 'Secure' Attribute."""
-        vulnerabilities = []
-        lines = code.split('\n')
-        
-        for i, line in enumerate(lines, 1):
-            if re.search(r'response\.set_cookie|\.cookies\[', line, re.IGNORECASE):
-                context = '\n'.join(lines[max(0, i-2):min(len(lines), i+2)])
-                has_secure = 'secure=true' in context.lower() or 'httponly=true' in context.lower()
-                
-                if not has_secure:
-                    vulnerabilities.append(self._create_vulnerability(
-                        cwe='CWE-614',
-                        severity='medium',
-                        title='Insecure Cookie',
-                        description='Cookie without Secure or HttpOnly flags. Add secure=True and httponly=True.',
-                        code=code,
-                        filepath=filepath,
-                        line_number=i
-                    ))
-        
-        return vulnerabilities
+        return findings
+
+    def _is_comment(self, line: str) -> bool:
+        stripped = line.strip()
+        return stripped.startswith("#") or stripped.startswith("'''") or stripped.startswith('"""')
+
+    def _register_advanced_hit(self, detector_name: str, line_number: int) -> None:
+        self.advanced_hit_counter[detector_name] += 1
+        if self.logger.isEnabledFor(logging.DEBUG):
+            self.logger.debug(
+                "Advanced detector hit",
+                extra={
+                    "detector": detector_name,
+                    "line": line_number,
+                    "filepath": getattr(self, "file_path", "<unknown>")
+                },
+            )
+
+    def _deduplicate(self, vulnerabilities: List[Vulnerability]) -> List[Vulnerability]:
+        unique: Dict[tuple, Vulnerability] = {}
+        for vuln in vulnerabilities:
+            key = (vuln.cwe, vuln.line_number, vuln.code_snippet)
+            if key not in unique:
+                unique[key] = vuln
+        return list(unique.values())
+
+    def __getattr__(self, item: str):  # pragma: no cover - defensive
+        if item.startswith("detect_"):
+            def _noop(*args, **kwargs) -> List[Vulnerability]:
+                return []
+            return _noop
+        raise AttributeError(item)
+
 

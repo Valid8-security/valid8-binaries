@@ -128,3 +128,45 @@ jobs:
             exit 1
           fi
         fi
+        python -c "
+        import json
+        with open('parry-results.json') as f:
+            results = json.load(f)
+            critical = [v for v in results.get('vulnerabilities', []) if v.get('severity') == 'CRITICAL']
+            if critical:
+                print(f'Found {len(critical)} CRITICAL vulnerabilities!')
+                for v in critical:
+                    print(f\"  - {v.get('cwe_id')}: {v.get('description')}\")
+                exit(1)
+        "
+    
+    - name: Comment PR with results (optional)
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          const results = JSON.parse(fs.readFileSync('parry-results.json', 'utf8'));
+          const vulns = results.vulnerabilities || [];
+          const critical = vulns.filter(v => v.severity === 'CRITICAL').length;
+          const high = vulns.filter(v => v.severity === 'HIGH').length;
+          const medium = vulns.filter(v => v.severity === 'MEDIUM').length;
+          
+          const comment = `## 🛡️ Parry Security Scan Results
+          
+          - 🔴 Critical: ${critical}
+          - 🟠 High: ${high}
+          - 🟡 Medium: ${medium}
+          - Total: ${vulns.length}
+          
+          ${critical > 0 ? '⚠️ **Action required:** Critical vulnerabilities detected!' : '✅ No critical issues'}
+          `;
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: comment
+          });
+
+

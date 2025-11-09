@@ -1,0 +1,3 @@
+# Config for go application
+# Vulnerabilities: ['hardcoded_credentials', 'xss', 'ssrf', 'xxe', 'deserialization', 'sql_injection']
+# Languages: ['go', 'javascript', 'python']

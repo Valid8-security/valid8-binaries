@@ -1,0 +1,3 @@
+# Config for java application
+# Vulnerabilities: ['path_traversal', 'command_injection', 'file_upload', 'idor', 'xxe', 'csrf', 'ssrf']
+# Languages: ['javascript', 'typescript', 'java', 'rust']

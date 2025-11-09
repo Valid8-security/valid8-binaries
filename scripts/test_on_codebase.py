@@ -84,3 +84,4 @@ if __name__ == "__main__":
     success = test_on_codebase(args.target, args.min_findings)
     sys.exit(0 if success else 1)
 
+

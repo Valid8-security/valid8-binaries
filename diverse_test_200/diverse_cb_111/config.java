@@ -1,0 +1,3 @@
+# Config for java application
+# Vulnerabilities: ['weak_crypto', 'sql_injection', 'xss', 'file_upload', 'ssrf', 'path_traversal', 'auth_bypass']
+# Languages: ['java', 'python']

@@ -1,0 +1,3 @@
+# Config for rust application
+# Vulnerabilities: ['path_traversal', 'command_injection', 'file_upload', 'idor', 'auth_bypass', 'xss', 'weak_crypto']
+# Languages: ['rust', 'javascript', 'php']

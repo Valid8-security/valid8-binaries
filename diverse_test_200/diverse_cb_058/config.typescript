@@ -1,0 +1,3 @@
+# Config for typescript application
+# Vulnerabilities: ['ssrf', 'command_injection', 'deserialization', 'auth_bypass', 'xss']
+# Languages: ['javascript', 'python', 'typescript']

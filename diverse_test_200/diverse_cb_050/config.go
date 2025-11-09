@@ -1,0 +1,3 @@
+# Config for go application
+# Vulnerabilities: ['idor', 'info_disclosure', 'csrf', 'auth_bypass', 'sql_injection', 'ssrf']
+# Languages: ['go', 'rust']

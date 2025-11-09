@@ -177,8 +177,8 @@ def scan(path: str, format: str, output: Optional[str], severity: Optional[str],
                 )
 
                 # Show incremental scanning stats
-                if 'metadata' in results:
-                    meta = results['metadata']
+                if '_metadata' in results:
+                    meta = results['_metadata']
                     speedup = meta.get('speedup_estimate', 1)
                     if speedup > 1:
                         console.print(f"[green]🚀 {speedup:.1f}x speedup! Only scanned {meta['impacted_files']} of {meta.get('total_files', meta['impacted_files'])} files[/green]")
@@ -251,15 +251,9 @@ def scan(path: str, format: str, output: Optional[str], severity: Optional[str],
             
             # Apply incremental filtering if requested
             if incremental and len(scanned_files) > 1:
-                from parry.incremental import IncrementalScanner
-                original_count = len(scanned_files)
-                scanned_files = IncrementalScanner.filter_changed_files(scanned_files, target)
-                filtered_count = len(scanned_files)
-                
-                if filtered_count < original_count:
-                    console.print(f"[cyan]📊 Incremental mode: {filtered_count}/{original_count} files changed[/cyan]")
-                else:
-                    console.print(f"[dim]Incremental mode: All files changed or first scan[/dim]")
+                # Note: Incremental scanning is now handled by IncrementalScanner class
+                # This legacy filtering is deprecated
+                console.print(f"[dim]Incremental mode: Using advanced change detection[/dim]")
             
             # Apply smart prioritization if requested and codebase is large
             if smart and len(scanned_files) > 100 and mode in ['hybrid', 'deep']:
@@ -302,7 +296,8 @@ def scan(path: str, format: str, output: Optional[str], severity: Optional[str],
                     file_vulns = ai_detector.detect_vulnerabilities(
                         code,
                         str(file_path),
-                        language
+                        language,
+                        line_number=None  # Enhanced context will be provided by full code analysis
                     )
 
                     # Stage 2: 🚀 RAG-ENHANCED detection for additional vulnerabilities

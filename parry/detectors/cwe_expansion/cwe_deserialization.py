@@ -43,3 +43,4 @@ def get_deserialization_detectors():
         UnsafeDeserializationDetector(), InsecureDeserializationDetector(), DeserializationOfUntrustedDataDetector(),
     ]
 
+

@@ -1,0 +1,457 @@
+{
+  "real_world_test_1_web_app_flask": {
+    "files_scanned": 2,
+    "vulnerabilities_found": 5,
+    "vulnerabilities": [
+      {
+        "cwe": "CWE-327",
+        "severity": "HIGH",
+        "title": "ML: Weak Crypto",
+        "description": "Machine learning detected weak_crypto with 98.0% confidence",
+        "file_path": "real_world_test_1_web_app_flask/src/auth.py",
+        "line_number": 5,
+        "code_snippet": "return hashlib.md5(password.encode()).hexdigest()  # Weak hash",
+        "confidence": 0.9408,
+        "category": "security",
+        "language": "python"
+      },
+      {
+        "cwe": "CWE-327",
+        "severity": "medium",
+        "title": "Weak Cryptographic Algorithm",
+        "description": "Weak cryptographic algorithm detected: MD5. Use SHA-256 or stronger algorithms.",
+        "file_path": "real_world_test_1_web_app_flask/src/auth.py",
+        "line_number": 5,
+        "code_snippet": "return hashlib.md5(password.encode()).hexdigest()  # Weak hash",
+        "confidence": "high",
+        "category": "cryptography",
+        "language": "unknown"
+      },
+      {
+        "cwe": "CWE-327",
+        "severity": "medium",
+        "title": "Weak Cryptographic Algorithm",
+        "description": "Weak cryptographic algorithm detected: MD5. Use SHA-256 or stronger algorithms.",
+        "file_path": "real_world_test_1_web_app_flask/src/auth.py",
+        "line_number": 5,
+        "code_snippet": "return hashlib.md5(password.encode()).hexdigest()  # Weak hash",
+        "confidence": "high",
+        "category": "cryptography",
+        "language": "unknown"
+      },
+      {
+        "cwe": "CWE-89",
+        "severity": "HIGH",
+        "title": "ML: Sql Injection",
+        "description": "Machine learning detected sql_injection with 96.0% confidence",
+        "file_path": "real_world_test_1_web_app_flask/src/app.py",
+        "line_number": 13,
+        "code_snippet": "cursor.execute(query)  # SQL injection vulnerability",
+        "confidence": 0.9216000000000001,
+        "category": "security",
+        "language": "python"
+      },
+      {
+        "cwe": "CWE-79",
+        "severity": "HIGH",
+        "title": "ML: Xss Vulnerable",
+        "description": "Machine learning detected xss_vulnerable with 96.6% confidence",
+        "file_path": "real_world_test_1_web_app_flask/src/app.py",
+        "line_number": 20,
+        "code_snippet": "return f\"<h1>Search results for: {query}</h1>\"  # XSS vulnerability",
+        "confidence": 0.9273600000000001,
+        "category": "security",
+        "language": "python"
+      }
+    ]
+  },
+  "real_world_test_2_api_service": {
+    "files_scanned": 2,
+    "vulnerabilities_found": 3,
+    "vulnerabilities": [
+      {
+        "cwe": "CWE-798",
+        "severity": "HIGH",
+        "title": "ML: Hardcoded Secrets",
+        "description": "Machine learning detected hardcoded_secrets with 98.0% confidence",
+        "file_path": "real_world_test_2_api_service/src/api.py",
+        "line_number": 25,
+        "code_snippet": "secret = 'my-secret-key-12345'  # Hardcoded",
+        "confidence": 0.9408,
+        "category": "security",
+        "language": "python"
+      },
+      {
+        "cwe": "CWE-502",
+        "severity": "HIGH",
+        "title": "ML: Insecure Deserialization",
+        "description": "Machine learning detected insecure_deserialization with 98.0% confidence",
+        "file_path": "real_world_test_2_api_service/src/api.py",
+        "line_number": 12,
+        "code_snippet": "obj = pickle.loads(data)  # Deserialization vulnerability",
+        "confidence": 0.9408,
+        "category": "security",
+        "language": "python"
+      },
+      {
+        "cwe": "CWE-502",
+        "severity": "high",
+        "title": "Unsafe Deserialization",
+        "description": "Unsafe deserialization detected. Deserializing untrusted data can lead to remote code execution.",
+        "file_path": "real_world_test_2_api_service/src/api.py",
+        "line_number": 12,
+        "code_snippet": "obj = pickle.loads(data)  # Deserialization vulnerability",
+        "confidence": "medium",
+        "category": "deserialization",
+        "language": "unknown"
+      }
+    ]
+  },
+  "real_world_test_3_data_processor": {
+    "files_scanned": 2,
+    "vulnerabilities_found": 7,
+    "vulnerabilities": [
+      {
+        "cwe": "CWE-327",
+        "severity": "HIGH",
+        "title": "ML: Weak Crypto",
+        "description": "Machine learning detected weak_crypto with 98.0% confidence",
+        "file_path": "real_world_test_3_data_processor/src/encryption.py",
+        "line_number": 10,
+        "code_snippet": "return hashlib.sha1(data.encode()).hexdigest()  # Weak hash",
+        "confidence": 0.9408,
+        "category": "security",
+        "language": "python"
+      },
+      {
+        "cwe": "CWE-327",
+        "severity": "medium",
+        "title": "Weak Cryptographic Algorithm",
+        "description": "Weak cryptographic algorithm detected: SHA-1. Use SHA-256 or stronger algorithms.",
+        "file_path": "real_world_test_3_data_processor/src/encryption.py",
+        "line_number": 10,
+        "code_snippet": "return hashlib.sha1(data.encode()).hexdigest()  # Weak hash",
+        "confidence": "high",
+        "category": "cryptography",
+        "language": "unknown"
+      },
+      {
+        "cwe": "CWE-327",
+        "severity": "medium",
+        "title": "Weak Cryptographic Algorithm",
+        "description": "Weak cryptographic algorithm detected: SHA-1. Use SHA-256 or stronger algorithms.",
+        "file_path": "real_world_test_3_data_processor/src/encryption.py",
+        "line_number": 10,
+        "code_snippet": "return hashlib.sha1(data.encode()).hexdigest()  # Weak hash",
+        "confidence": "high",
+        "category": "cryptography",
+        "language": "unknown"
+      },
+      {
+        "cwe": "CWE-89",
+        "severity": "HIGH",
+        "title": "ML: Sql Injection",
+        "description": "Machine learning detected sql_injection with 98.0% confidence",
+        "file_path": "real_world_test_3_data_processor/src/processor.py",
+        "line_number": 9,
+        "code_snippet": "cursor.execute(f\"INSERT INTO logs VALUES ('{user_input}')\")  # SQL injection",
+        "confidence": 0.9408,
+        "category": "security",
+        "language": "python"
+      },
+      {
+        "cwe": "CWE-89",
+        "severity": "HIGH",
+        "title": "ML: Sql Injection",
+        "description": "Machine learning detected sql_injection with 96.0% confidence",
+        "file_path": "real_world_test_3_data_processor/src/processor.py",
+        "line_number": 28,
+        "code_snippet": "cursor.execute(full_query)",
+        "confidence": 0.9216000000000001,
+        "category": "security",
+        "language": "python"
+      },
+      {
+        "cwe": "CWE-502",
+        "severity": "HIGH",
+        "title": "ML: Insecure Deserialization",
+        "description": "Machine learning detected insecure_deserialization with 98.0% confidence",
+        "file_path": "real_world_test_3_data_processor/src/processor.py",
+        "line_number": 15,
+        "code_snippet": "config = yaml.load(f, Loader=yaml.FullLoader)  # Safe YAML loading actually",
+        "confidence": 0.9408,
+        "category": "security",
+        "language": "python"
+      },
+      {
+        "cwe": "CWE-89",
+        "severity": "high",
+        "title": "SQL Injection",
+        "description": "Potential SQL injection vulnerability detected. User input appears to be concatenated directly into SQL query.",
+        "file_path": "real_world_test_3_data_processor/src/processor.py",
+        "line_number": 9,
+        "code_snippet": "cursor.execute(f\"INSERT INTO logs VALUES ('{user_input}')\")  # SQL injection",
+        "confidence": "medium",
+        "category": "injection",
+        "language": "unknown"
+      }
+    ]
+  },
+  "real_world_test_4_file_manager": {
+    "files_scanned": 2,
+    "vulnerabilities_found": 0,
+    "vulnerabilities": []
+  },
+  "real_world_test_5_crypto_utils": {
+    "files_scanned": 2,
+    "vulnerabilities_found": 7,
+    "vulnerabilities": [
+      {
+        "cwe": "CWE-502",
+        "severity": "high",
+        "title": "Unsafe Deserialization",
+        "description": "Unsafe deserialization detected. Deserializing untrusted data can lead to remote code execution.",
+        "file_path": "real_world_test_5_crypto_utils/src/security.py",
+        "line_number": 11,
+        "code_snippet": "return pickle.load(f)  # Unsafe unpickle",
+        "confidence": "medium",
+        "category": "deserialization",
+        "language": "unknown"
+      },
+      {
+        "cwe": "CWE-327",
+        "severity": "HIGH",
+        "title": "ML: Weak Crypto",
+        "description": "Machine learning detected weak_crypto with 98.0% confidence",
+        "file_path": "real_world_test_5_crypto_utils/src/crypto.py",
+        "line_number": 7,
+        "code_snippet": "return hashlib.md5(password.encode()).hexdigest()",
+        "confidence": 0.9408,
+        "category": "security",
+        "language": "python"
+      },
+      {
+        "cwe": "CWE-327",
+        "severity": "HIGH",
+        "title": "ML: Weak Crypto",
+        "description": "Machine learning detected weak_crypto with 98.0% confidence",
+        "file_path": "real_world_test_5_crypto_utils/src/crypto.py",
+        "line_number": 22,
+        "code_snippet": "expected = hashlib.md5(data.encode()).hexdigest()",
+        "confidence": 0.9408,
+        "category": "security",
+        "language": "python"
+      },
+      {
+        "cwe": "CWE-327",
+        "severity": "medium",
+        "title": "Weak Cryptographic Algorithm",
+        "description": "Weak cryptographic algorithm detected: MD5. Use SHA-256 or stronger algorithms.",
+        "file_path": "real_world_test_5_crypto_utils/src/crypto.py",
+        "line_number": 7,
+        "code_snippet": "return hashlib.md5(password.encode()).hexdigest()",
+        "confidence": "high",
+        "category": "cryptography",
+        "language": "unknown"
+      },
+      {
+        "cwe": "CWE-327",
+        "severity": "medium",
+        "title": "Weak Cryptographic Algorithm",
+        "description": "Weak cryptographic algorithm detected: MD5. Use SHA-256 or stronger algorithms.",
+        "file_path": "real_world_test_5_crypto_utils/src/crypto.py",
+        "line_number": 7,
+        "code_snippet": "return hashlib.md5(password.encode()).hexdigest()",
+        "confidence": "high",
+        "category": "cryptography",
+        "language": "unknown"
+      },
+      {
+        "cwe": "CWE-327",
+        "severity": "medium",
+        "title": "Weak Cryptographic Algorithm",
+        "description": "Weak cryptographic algorithm detected: MD5. Use SHA-256 or stronger algorithms.",
+        "file_path": "real_world_test_5_crypto_utils/src/crypto.py",
+        "line_number": 22,
+        "code_snippet": "expected = hashlib.md5(data.encode()).hexdigest()",
+        "confidence": "high",
+        "category": "cryptography",
+        "language": "unknown"
+      },
+      {
+        "cwe": "CWE-327",
+        "severity": "medium",
+        "title": "Weak Cryptographic Algorithm",
+        "description": "Weak cryptographic algorithm detected: MD5. Use SHA-256 or stronger algorithms.",
+        "file_path": "real_world_test_5_crypto_utils/src/crypto.py",
+        "line_number": 22,
+        "code_snippet": "expected = hashlib.md5(data.encode()).hexdigest()",
+        "confidence": "high",
+        "category": "cryptography",
+        "language": "unknown"
+      }
+    ]
+  },
+  "real_world_test_6_user_auth": {
+    "files_scanned": 1,
+    "vulnerabilities_found": 3,
+    "vulnerabilities": [
+      {
+        "cwe": "CWE-327",
+        "severity": "HIGH",
+        "title": "ML: Weak Crypto",
+        "description": "Machine learning detected weak_crypto with 98.0% confidence",
+        "file_path": "real_world_test_6_user_auth/src/auth.py",
+        "line_number": 15,
+        "code_snippet": "return hashlib.md5(password.encode()).hexdigest()",
+        "confidence": 0.9408,
+        "category": "security",
+        "language": "python"
+      },
+      {
+        "cwe": "CWE-327",
+        "severity": "medium",
+        "title": "Weak Cryptographic Algorithm",
+        "description": "Weak cryptographic algorithm detected: MD5. Use SHA-256 or stronger algorithms.",
+        "file_path": "real_world_test_6_user_auth/src/auth.py",
+        "line_number": 15,
+        "code_snippet": "return hashlib.md5(password.encode()).hexdigest()",
+        "confidence": "high",
+        "category": "cryptography",
+        "language": "unknown"
+      },
+      {
+        "cwe": "CWE-327",
+        "severity": "medium",
+        "title": "Weak Cryptographic Algorithm",
+        "description": "Weak cryptographic algorithm detected: MD5. Use SHA-256 or stronger algorithms.",
+        "file_path": "real_world_test_6_user_auth/src/auth.py",
+        "line_number": 15,
+        "code_snippet": "return hashlib.md5(password.encode()).hexdigest()",
+        "confidence": "high",
+        "category": "cryptography",
+        "language": "unknown"
+      }
+    ]
+  },
+  "real_world_test_7_database_layer": {
+    "files_scanned": 1,
+    "vulnerabilities_found": 7,
+    "vulnerabilities": [
+      {
+        "cwe": "CWE-89",
+        "severity": "HIGH",
+        "title": "ML: Sql Injection",
+        "description": "Machine learning detected sql_injection with 96.0% confidence",
+        "file_path": "real_world_test_7_database_layer/src/db.py",
+        "line_number": 8,
+        "code_snippet": "cursor.execute(query, params)  # Safe",
+        "confidence": 0.9216000000000001,
+        "category": "security",
+        "language": "python"
+      },
+      {
+        "cwe": "CWE-89",
+        "severity": "HIGH",
+        "title": "ML: Sql Injection",
+        "description": "Machine learning detected sql_injection with 98.0% confidence",
+        "file_path": "real_world_test_7_database_layer/src/db.py",
+        "line_number": 10,
+        "code_snippet": "cursor.execute(query)  # Unsafe if query contains user input",
+        "confidence": 0.9408,
+        "category": "security",
+        "language": "python"
+      },
+      {
+        "cwe": "CWE-89",
+        "severity": "HIGH",
+        "title": "ML: Sql Injection",
+        "description": "Machine learning detected sql_injection with 96.0% confidence",
+        "file_path": "real_world_test_7_database_layer/src/db.py",
+        "line_number": 18,
+        "code_snippet": "cursor.execute(query)  # SQL injection",
+        "confidence": 0.9216000000000001,
+        "category": "security",
+        "language": "python"
+      },
+      {
+        "cwe": "CWE-89",
+        "severity": "HIGH",
+        "title": "ML: Sql Injection",
+        "description": "Machine learning detected sql_injection with 98.0% confidence",
+        "file_path": "real_world_test_7_database_layer/src/db.py",
+        "line_number": 25,
+        "code_snippet": "cursor.execute(f'SELECT * FROM users WHERE id = {user_id}')  # Injection",
+        "confidence": 0.9408,
+        "category": "security",
+        "language": "python"
+      },
+      {
+        "cwe": "CWE-89",
+        "severity": "HIGH",
+        "title": "ML: Sql Injection",
+        "description": "Machine learning detected sql_injection with 98.0% confidence",
+        "file_path": "real_world_test_7_database_layer/src/db.py",
+        "line_number": 32,
+        "code_snippet": "cursor.execute(f\"INSERT INTO logs VALUES ('{message}')\")  # Injection",
+        "confidence": 0.9408,
+        "category": "security",
+        "language": "python"
+      },
+      {
+        "cwe": "CWE-89",
+        "severity": "high",
+        "title": "SQL Injection",
+        "description": "Potential SQL injection vulnerability detected. User input appears to be concatenated directly into SQL query.",
+        "file_path": "real_world_test_7_database_layer/src/db.py",
+        "line_number": 25,
+        "code_snippet": "cursor.execute(f'SELECT * FROM users WHERE id = {user_id}')  # Injection",
+        "confidence": "medium",
+        "category": "injection",
+        "language": "unknown"
+      },
+      {
+        "cwe": "CWE-89",
+        "severity": "high",
+        "title": "SQL Injection",
+        "description": "Potential SQL injection vulnerability detected. User input appears to be concatenated directly into SQL query.",
+        "file_path": "real_world_test_7_database_layer/src/db.py",
+        "line_number": 32,
+        "code_snippet": "cursor.execute(f\"INSERT INTO logs VALUES ('{message}')\")  # Injection",
+        "confidence": "medium",
+        "category": "injection",
+        "language": "unknown"
+      }
+    ]
+  },
+  "real_world_test_8_config_manager": {
+    "files_scanned": 2,
+    "vulnerabilities_found": 2,
+    "vulnerabilities": [
+      {
+        "cwe": "CWE-798",
+        "severity": "HIGH",
+        "title": "ML: Hardcoded Secrets",
+        "description": "Machine learning detected hardcoded_secrets with 98.0% confidence",
+        "file_path": "real_world_test_8_config_manager/src/secrets.py",
+        "line_number": 2,
+        "code_snippet": "API_KEY = 'hardcoded-api-key-abcdef123456'",
+        "confidence": 0.9408,
+        "category": "security",
+        "language": "python"
+      },
+      {
+        "cwe": "CWE-798",
+        "severity": "critical",
+        "title": "Hardcoded Credentials",
+        "description": "Hardcoded API key detected. Credentials should be stored in environment variables or secure vaults.",
+        "file_path": "real_world_test_8_config_manager/src/secrets.py",
+        "line_number": 2,
+        "code_snippet": "API_KEY = \"***REDACTED***\"",
+        "confidence": "high",
+        "category": "secrets",
+        "language": "unknown"
+      }
+    ]
+  }
+}

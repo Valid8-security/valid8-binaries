@@ -1,0 +1,3 @@
+# Config for go application
+# Vulnerabilities: ['xxe', 'deserialization', 'auth_bypass', 'ssrf', 'file_upload', 'xss', 'path_traversal']
+# Languages: ['rust', 'php', 'javascript', 'go']

@@ -1,0 +1,3 @@
+# Config for csharp application
+# Vulnerabilities: ['auth_bypass', 'sql_injection', 'file_upload', 'hardcoded_credentials', 'command_injection', 'deserialization', 'xss', 'info_disclosure']
+# Languages: ['typescript', 'csharp', 'php']

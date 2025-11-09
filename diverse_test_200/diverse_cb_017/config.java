@@ -1,0 +1,3 @@
+# Config for java application
+# Vulnerabilities: ['xss', 'csrf', 'info_disclosure', 'file_upload', 'weak_crypto']
+# Languages: ['typescript', 'java', 'rust']

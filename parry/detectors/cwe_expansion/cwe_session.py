@@ -68,3 +68,4 @@ def get_session_detectors():
         SessionInsecureStorageDetector(), MissingSessionTimeoutDetector(),
     ]
 
+

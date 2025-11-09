@@ -1,0 +1,3 @@
+# Config for go application
+# Vulnerabilities: ['csrf', 'sql_injection', 'path_traversal', 'hardcoded_credentials', 'file_upload', 'info_disclosure', 'xxe', 'auth_bypass']
+# Languages: ['typescript', 'go', 'php']

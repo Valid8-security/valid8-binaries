@@ -883,3 +883,4 @@ class InformationExposureNetworkInterfacesDetector(VulnerabilityDetector):
                         confidence="medium", category="information-disclosure"
                     ))
         return vulnerabilities
+    return [InformationExposureEnvDetector(), InformationExposureCommentsDetector(), SensitiveDataInGETDetector(), InformationExposureLogDetector()]

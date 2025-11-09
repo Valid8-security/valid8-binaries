@@ -94,7 +94,7 @@ class IncrementalScanner:
         current_commit = self._get_current_commit(workspace_path)
         if not current_commit:
             logger.warning("No git repository found, falling back to full scan")
-            return self.scanner.scan_workspace(str(workspace_path), scan_mode)
+            return self.scanner.scan(workspace_path)
 
         # Load or create baseline
         baseline = self._load_baseline()
@@ -128,7 +128,18 @@ class IncrementalScanner:
         self._update_snapshots(impacted_files, scan_results, workspace_path)
 
         scan_time = time.time() - start_time
-        final_results['metadata'] = {
+
+        # Format result to match regular scanner format
+        formatted_result = {
+            'scan_id': f"incr_{int(time.time())}",
+            'target': str(workspace_path),
+            'files_scanned': final_results['summary']['files_scanned'],
+            'vulnerabilities_found': final_results['summary']['vulnerabilities_found'],
+            'vulnerabilities': final_results['vulnerabilities']
+        }
+
+        # Add metadata separately (not in main result structure)
+        formatted_result['_metadata'] = {
             'scan_type': 'incremental',
             'changed_files': len(changed_files),
             'impacted_files': len(impacted_files),
@@ -139,7 +150,7 @@ class IncrementalScanner:
         }
 
         logger.info(".1f")
-        return final_results
+        return formatted_result
 
     def _get_current_commit(self, workspace_path: Path) -> Optional[str]:
         """Get current git commit hash"""
@@ -214,7 +225,7 @@ class IncrementalScanner:
         """Create initial baseline scan"""
 
         logger.info("Performing baseline scan...")
-        baseline_results = self.scanner.scan_workspace(str(workspace_path), scan_mode)
+        baseline_results = self.scanner.scan(workspace_path)
 
         # Create file snapshots
         file_snapshots = {}
@@ -473,14 +484,14 @@ class IncrementalScanner:
             if snapshot.vulnerabilities:
                 all_vulnerabilities.extend(snapshot.vulnerabilities)
 
+        # Format result to match regular scanner format
         return {
-            'summary': {
-                'files_scanned': baseline.total_files,
-                'vulnerabilities_found': len(all_vulnerabilities),
-                'scan_time_seconds': 0
-            },
+            'scan_id': f"cached_{baseline.commit_hash[:8]}",
+            'target': '.',  # Will be overridden by caller
+            'files_scanned': baseline.total_files,
+            'vulnerabilities_found': len(all_vulnerabilities),
             'vulnerabilities': all_vulnerabilities,
-            'metadata': {
+            '_metadata': {
                 'scan_type': 'cached',
                 'baseline_commit': baseline.commit_hash
             }
@@ -498,3 +509,13 @@ class IncrementalScanner:
         if self.cache_dir.exists():
             shutil.rmtree(self.cache_dir)
         self.cache_dir.mkdir(parents=True)
+
+
+
+
+
+
+
+
+
+

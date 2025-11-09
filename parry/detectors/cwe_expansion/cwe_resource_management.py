@@ -642,3 +642,4 @@ class ResourceCleanupFailureDetector(VulnerabilityDetector):
                         confidence="medium", category="resource-management"
                     ))
         return vulnerabilities
+    return [UncontrolledResourceConsumptionDetector(), MissingFileCloseDetector(), UncontrolledRecursionDetector()]

@@ -258,3 +258,10 @@ Deep Mode:    52.3s  (9.5 files/sec)
 ---
 
 🛡️ **Bringing enterprise-grade security scanning directly into your development workflow**
+- Initial release
+- Real-time vulnerability scanning
+- Inline diagnostics with quick fixes
+- Security panel dashboard
+- Pro/Enterprise license support
+- 200+ security detectors
+- AI-powered fix generation

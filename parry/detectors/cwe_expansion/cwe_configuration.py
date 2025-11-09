@@ -527,3 +527,4 @@ def get_configuration_detectors():
         MissingDataBackupConfigurationDetector(),
         InsecureFileUploadConfigurationDetector(),
     ]
+    return [SecurityMisconfigurationDetector(), IncorrectPermissionDetector()]

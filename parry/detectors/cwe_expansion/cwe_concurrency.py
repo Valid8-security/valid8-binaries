@@ -411,3 +411,4 @@ def get_concurrency_detectors():
         FutureTaskLeakDetector(),
         ThreadLocalVariableLeakDetector(),
     ]
+    return [RaceConditionDetector(), DeadlockDetector()]

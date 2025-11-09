@@ -1,28 +1,28 @@
 {
-  "assessment_timestamp": "2025-11-07T06:27:26.621139",
-  "assessment_duration": 17.584328174591064,
-  "overall_score": 64.0,
+  "assessment_timestamp": "2025-11-07T17:21:19.595970",
+  "assessment_duration": 34.06999921798706,
+  "overall_score": 84.0,
   "beta_readiness": false,
   "scores": {
-    "core_functionality": 50.0,
+    "core_functionality": 100.0,
     "security_compliance": 66.7,
     "feature_completeness": 80.0
   },
   "detailed_results": {
     "core_functionality": {
       "cli_basic_scan": true,
-      "hybrid_mode": false,
-      "deep_mode": false,
+      "hybrid_mode": true,
+      "deep_mode": true,
       "custom_rules": true,
-      "multiple_formats": false,
+      "multiple_formats": true,
       "sca_integration": true,
-      "incremental_scan": false,
+      "incremental_scan": true,
       "auto_fix_generation": true
     },
     "performance_metrics": {
-      "scan_speed_small": 0.727294921875,
-      "scan_speed_medium": 1.5433158874511719,
-      "scan_speed_large": 5.237147808074951,
+      "scan_speed_small": 1.7392587661743164,
+      "scan_speed_medium": 4.642379999160767,
+      "scan_speed_large": 18.207422018051147,
       "memory_usage": 120,
       "cpu_usage": 0,
       "cache_effectiveness": 0,
@@ -93,8 +93,8 @@
     }
   },
   "recommendations": [
-    "\u274c Not ready for beta - significant improvements needed",
-    "Focus on core functionality and security first",
+    "\u26a0\ufe0f Acceptable for beta with focused improvements",
+    "Prioritize security fixes and core functionality",
     "Implement compliance reporting (SOC 2, GDPR, etc.)",
     "Add team management and RBAC features"
   ],

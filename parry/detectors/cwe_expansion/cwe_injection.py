@@ -456,7 +456,6 @@ def get_injection_detectors():
         ExpressionLanguageInjectionDetector(),
     ]
 
-
 class DataQueryLogicInjectionDetector(VulnerabilityDetector):
     """CWE-943: Improper Neutralization of Special Elements in Data Query Logic"""
     def detect(self, file_path: Path, content: str, lines: List[str]) -> List[Vulnerability]:

@@ -1,0 +1,3 @@
+# Config for csharp application
+# Vulnerabilities: ['sql_injection', 'weak_crypto', 'deserialization', 'xss']
+# Languages: ['javascript', 'csharp', 'python', 'typescript']

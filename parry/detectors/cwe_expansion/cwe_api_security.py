@@ -455,3 +455,4 @@ def get_api_security_detectors():
         APISensitiveDataExposureDetector(), MissingAPICORSHeadersDetector(), APIRaceConditionDetector(),
         MissingAPIInputSanitizationDetector(), APIOverpostingDetector(),
     ]
+    return [MissingRateLimitDetector(), SSRFDetector()]

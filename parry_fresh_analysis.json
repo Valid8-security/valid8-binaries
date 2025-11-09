@@ -1,0 +1,218 @@
+{
+  "scan_time": 0.005443096160888672,
+  "files_scanned": 32,
+  "vulnerabilities_found": 23,
+  "cwe_breakdown": {
+    "CWE-327": 1,
+    "CWE-287": 6,
+    "CWE-78": 2,
+    "CWE-330": 1,
+    "CWE-502": 1,
+    "CWE-22": 2,
+    "CWE-259": 2,
+    "CWE-311": 3,
+    "CWE-798": 2,
+    "CWE-434": 1,
+    "CWE-352": 1,
+    "CWE-89": 1
+  },
+  "file_breakdown": {
+    "weak_crypto.py": 1,
+    "xss_vuln.py": 2,
+    "code_injection.py": 1,
+    "unsafe_random.py": 1,
+    "deserialization.py": 1,
+    "command_injection.py": 1,
+    "path_traversal.py": 2,
+    "weak_auth.py": 3,
+    "hardcoded_secret.py": 8,
+    "insecure_temp.py": 2,
+    "sql_injection.py": 1
+  },
+  "detailed_vulnerabilities": [
+    {
+      "title": "Weak Cryptographic Algorithm",
+      "cwe": "CWE-327",
+      "file_path": "fresh_test_codebase/weak_crypto.py",
+      "line_number": 4,
+      "description": "Use of weak cryptographic algorithm MD5. Use SHA-256 or stronger.",
+      "severity": "medium"
+    },
+    {
+      "title": "Improper Authentication",
+      "cwe": "CWE-287",
+      "file_path": "fresh_test_codebase/xss_vuln.py",
+      "line_number": 3,
+      "description": "Endpoint without authentication. Implement proper authentication mechanisms.",
+      "severity": "high"
+    },
+    {
+      "title": "Improper Authentication",
+      "cwe": "CWE-287",
+      "file_path": "fresh_test_codebase/xss_vuln.py",
+      "line_number": 7,
+      "description": "Endpoint without authentication. Implement proper authentication mechanisms.",
+      "severity": "high"
+    },
+    {
+      "title": "OS Command Injection",
+      "cwe": "CWE-78",
+      "file_path": "fresh_test_codebase/code_injection.py",
+      "line_number": 3,
+      "description": "Potential command injection using exec. User input should never be passed directly to system commands.",
+      "severity": "critical"
+    },
+    {
+      "title": "Insufficient Random Values",
+      "cwe": "CWE-330",
+      "file_path": "fresh_test_codebase/unsafe_random.py",
+      "line_number": 4,
+      "description": "Use random.choice()/randint() for cryptographic operations. Use secrets module instead.",
+      "severity": "medium"
+    },
+    {
+      "title": "Unsafe Deserialization",
+      "cwe": "CWE-502",
+      "file_path": "fresh_test_codebase/deserialization.py",
+      "line_number": 4,
+      "description": "Unsafe deserialization of untrusted data. Use safe alternatives like JSON.",
+      "severity": "high"
+    },
+    {
+      "title": "OS Command Injection",
+      "cwe": "CWE-78",
+      "file_path": "fresh_test_codebase/command_injection.py",
+      "line_number": 4,
+      "description": "Potential command injection using subprocess.run. User input should never be passed directly to system commands.",
+      "severity": "critical"
+    },
+    {
+      "title": "Path Traversal",
+      "cwe": "CWE-22",
+      "file_path": "fresh_test_codebase/path_traversal.py",
+      "line_number": 3,
+      "description": "Potential path traversal vulnerability. File paths should be validated.",
+      "severity": "high"
+    },
+    {
+      "title": "Path Traversal",
+      "cwe": "CWE-22",
+      "file_path": "fresh_test_codebase/path_traversal.py",
+      "line_number": 3,
+      "description": "Potential path traversal vulnerability. File paths should be validated.",
+      "severity": "high"
+    },
+    {
+      "title": "Hard-coded Password",
+      "cwe": "CWE-259",
+      "file_path": "fresh_test_codebase/weak_auth.py",
+      "line_number": 4,
+      "description": "Direct password comparison. Store passwords securely, never hard-code them.",
+      "severity": "critical"
+    },
+    {
+      "title": "Missing Encryption of Sensitive Data",
+      "cwe": "CWE-311",
+      "file_path": "fresh_test_codebase/weak_auth.py",
+      "line_number": 4,
+      "description": "Sensitive data stored without encryption. Encrypt at rest and in transit.",
+      "severity": "high"
+    },
+    {
+      "title": "Improper Authentication",
+      "cwe": "CWE-287",
+      "file_path": "fresh_test_codebase/weak_auth.py",
+      "line_number": 4,
+      "description": "Hard-coded password comparison. Implement proper authentication mechanisms.",
+      "severity": "high"
+    },
+    {
+      "title": "Hardcoded Credentials",
+      "cwe": "CWE-798",
+      "file_path": "fresh_test_codebase/hardcoded_secret.py",
+      "line_number": 2,
+      "description": "Hardcoded API key detected. Store credentials in environment variables.",
+      "severity": "critical"
+    },
+    {
+      "title": "Hardcoded Credentials",
+      "cwe": "CWE-798",
+      "file_path": "fresh_test_codebase/hardcoded_secret.py",
+      "line_number": 3,
+      "description": "Hardcoded password detected. Store credentials in environment variables.",
+      "severity": "critical"
+    },
+    {
+      "title": "Hard-coded Password",
+      "cwe": "CWE-259",
+      "file_path": "fresh_test_codebase/hardcoded_secret.py",
+      "line_number": 3,
+      "description": "Environment password. Store passwords securely, never hard-code them.",
+      "severity": "critical"
+    },
+    {
+      "title": "Missing Encryption of Sensitive Data",
+      "cwe": "CWE-311",
+      "file_path": "fresh_test_codebase/hardcoded_secret.py",
+      "line_number": 2,
+      "description": "Sensitive data stored without encryption. Encrypt at rest and in transit.",
+      "severity": "high"
+    },
+    {
+      "title": "Missing Encryption of Sensitive Data",
+      "cwe": "CWE-311",
+      "file_path": "fresh_test_codebase/hardcoded_secret.py",
+      "line_number": 3,
+      "description": "Sensitive data stored without encryption. Encrypt at rest and in transit.",
+      "severity": "high"
+    },
+    {
+      "title": "Improper Authentication",
+      "cwe": "CWE-287",
+      "file_path": "fresh_test_codebase/hardcoded_secret.py",
+      "line_number": 2,
+      "description": "Endpoint without authentication. Implement proper authentication mechanisms.",
+      "severity": "high"
+    },
+    {
+      "title": "Improper Authentication",
+      "cwe": "CWE-287",
+      "file_path": "fresh_test_codebase/hardcoded_secret.py",
+      "line_number": 4,
+      "description": "Endpoint without authentication. Implement proper authentication mechanisms.",
+      "severity": "high"
+    },
+    {
+      "title": "Improper Authentication",
+      "cwe": "CWE-287",
+      "file_path": "fresh_test_codebase/hardcoded_secret.py",
+      "line_number": 5,
+      "description": "Endpoint without authentication. Implement proper authentication mechanisms.",
+      "severity": "high"
+    },
+    {
+      "title": "Unrestricted File Upload",
+      "cwe": "CWE-434",
+      "file_path": "fresh_test_codebase/insecure_temp.py",
+      "line_number": 5,
+      "description": "File upload without type validation. Restrict file types to whitelist only.",
+      "severity": "high"
+    },
+    {
+      "title": "Cross-Site Request Forgery (CSRF)",
+      "cwe": "CWE-352",
+      "file_path": "fresh_test_codebase/insecure_temp.py",
+      "line_number": 2,
+      "description": "State-changing operation without CSRF protection. Implement CSRF tokens for state-changing operations.",
+      "severity": "high"
+    },
+    {
+      "title": "SQL Injection",
+      "cwe": "CWE-89",
+      "file_path": "fresh_test_codebase/sql_injection.py",
+      "line_number": 7,
+      "description": "Potential SQL injection detected near execute() call with f-string.",
+      "severity": "high"
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+# Config for csharp application
+# Vulnerabilities: ['ssrf', 'command_injection', 'xxe']
+# Languages: ['csharp', 'javascript', 'python']

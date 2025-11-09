@@ -1,0 +1,3 @@
+# Config for java application
+# Vulnerabilities: ['xss', 'weak_crypto', 'sql_injection', 'xxe', 'command_injection']
+# Languages: ['csharp', 'java', 'rust']

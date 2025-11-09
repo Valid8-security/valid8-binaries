@@ -1,0 +1,3 @@
+# Config for csharp application
+# Vulnerabilities: ['ssrf', 'command_injection', 'hardcoded_credentials', 'xss', 'weak_crypto', 'idor', 'deserialization', 'auth_bypass']
+# Languages: ['csharp', 'typescript']

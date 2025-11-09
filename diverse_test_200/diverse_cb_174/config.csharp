@@ -1,0 +1,3 @@
+# Config for csharp application
+# Vulnerabilities: ['xss', 'command_injection', 'ssrf', 'sql_injection', 'weak_crypto']
+# Languages: ['csharp', 'rust', 'java']

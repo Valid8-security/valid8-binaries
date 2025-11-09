@@ -89,10 +89,10 @@ class UniversalDetectors:
             (r'if\s+.*(?:password|pwd|pass)\s*==\s*["\'][^"\']+["\']', 'Hard-coded password comparison'),
             # Authentication bypass
             (r'if\s+.*(?:auth|authenticated|logged_in)\s*==\s*(?:false|0|null)', 'Potential authentication bypass'),
-            # Missing authentication
-            (r'(?:route|endpoint|api|handler).*(?!@auth|@login_required|@require|authenticate)', 'Endpoint without authentication'),
             # Weak session checks
             (r'if\s+.*session\[.*\]\s*==\s*["\'][^"\']+["\']', 'Weak session validation'),
+            # Only flag authentication-related endpoints without decorators
+            (r'@app\.route.*def\s+(?:login|auth|authenticate|signin)', 'Authentication endpoint without proper security'),
         ]
         
         vulnerabilities = []

@@ -43,14 +43,43 @@ class ImproperNeutralizationDetector(VulnerabilityDetector):
 
 class CSRFDetector(VulnerabilityDetector):
     """CWE-352: Cross-Site Request Forgery"""
+
+    ROUTE_PATTERNS = [
+        re.compile(r'@app\.route\([^)]*methods?\s*=\s*\[[^\]]*(POST|PUT|DELETE)[^\]]*\]', re.IGNORECASE),
+        re.compile(r'@bp\.route\([^)]*methods?\s*=\s*\[[^\]]*(POST|PUT|DELETE)[^\]]*\]', re.IGNORECASE),
+        re.compile(r'(?:router|app|server)\.(post|put|delete)\s*\(', re.IGNORECASE),
+        re.compile(r'Form\(request\.(POST|form)\)', re.IGNORECASE),
+    ]
+
+    PROTECTION_KEYWORDS = (
+        'csrf_token', 'csrf_token()', 'csrf_exempt', 'csrf_protect', 'CsrfViewMiddleware',
+        'validateCsrfToken', 'req.csrfToken', 'antiForgery', 'DoubleSubmitCookie',
+    )
+
     def detect(self, file_path: Path, content: str, lines: List[str]) -> List[Vulnerability]:
-        vulnerabilities = []
-        patterns = [(r'@app\.(route|post|put|delete)\([^)]*\)\s*\n(?!.*@(csrf|csrf_exempt))', "CWE-352", "high"), (r'csrf\.enabled\s*=\s*False', "CWE-352", "high")]
-        for i, line in enumerate(lines, 1):
-            context = '\n'.join(lines[max(0, i-3):min(len(lines), i+3)])
-            for pattern, cwe, severity in patterns:
-                if re.search(pattern, context, re.IGNORECASE | re.MULTILINE):
-                    vulnerabilities.append(Vulnerability(cwe="CWE-352", severity=severity, title="Cross-Site Request Forgery", description="CSRF protection missing or disabled.", file_path=str(file_path), line_number=i, code_snippet=line.strip(), confidence="medium", category="csrf"))
+        vulnerabilities: List[Vulnerability] = []
+
+        for index, raw_line in enumerate(lines, start=1):
+            context_window = '\n'.join(lines[max(0, index - 3): min(len(lines), index + 8)])
+            if not any(pattern.search(context_window) for pattern in self.ROUTE_PATTERNS):
+                continue
+
+            lowered_context = context_window.lower()
+            if any(keyword.lower() in lowered_context for keyword in self.PROTECTION_KEYWORDS):
+                continue
+
+            vulnerabilities.append(Vulnerability(
+                cwe="CWE-352",
+                severity="high",
+                title="Cross-Site Request Forgery",
+                description="State-changing endpoint without visible CSRF protection.",
+                file_path=str(file_path),
+                line_number=index,
+                code_snippet=raw_line.strip(),
+                confidence="medium",
+                category="csrf"
+            ))
+
         return vulnerabilities
 
 class UnrestrictedUploadDetector(VulnerabilityDetector):

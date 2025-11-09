@@ -1,0 +1,3 @@
+# Config for go application
+# Vulnerabilities: ['xss', 'file_upload', 'command_injection', 'sql_injection', 'idor', 'weak_crypto', 'hardcoded_credentials', 'csrf']
+# Languages: ['go', 'rust', 'typescript', 'python']

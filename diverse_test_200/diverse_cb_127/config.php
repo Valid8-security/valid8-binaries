@@ -1,0 +1,3 @@
+# Config for php application
+# Vulnerabilities: ['sql_injection', 'weak_crypto', 'file_upload', 'hardcoded_credentials']
+# Languages: ['typescript', 'php']
