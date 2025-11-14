@@ -39,10 +39,21 @@ const DownloadModal: React.FC<DownloadModalProps> = ({ isOpen, onClose }) => {
   };
 
   const handleFreeTrial = () => {
-    // For free trial, we'll provide a simple installation command
-    const trialCommand = `curl -fsSL https://raw.githubusercontent.com/Valid8-security/parry-scanner/v1/install-trial.sh | bash`;
-    navigator.clipboard.writeText(trialCommand).then(() => {
-      alert('Free trial installation command copied to clipboard!\n\nRun this in your terminal:\n' + trialCommand);
+    // For free trial, provide installation commands directly
+    const trialCommands = `# Install Valid8 Free Trial
+pip3 install git+https://github.com/Valid8-security/parry-scanner.git
+
+# Activate free trial license
+python3 -c "
+from valid8.license import LicenseManager
+LicenseManager.install_beta_license('trial-user@valid8.com')
+"
+
+# Ready to scan!
+valid8 scan /path/to/your/code`;
+
+    navigator.clipboard.writeText(trialCommands).then(() => {
+      alert('Free trial installation commands copied to clipboard!\n\nRun these commands in your terminal:\n\n' + trialCommands);
     });
   };
 
@@ -88,17 +99,17 @@ const DownloadModal: React.FC<DownloadModalProps> = ({ isOpen, onClose }) => {
               <p className="text-green-800 mb-4">
                 Get started instantly with our limited free trial. Includes basic scanning for up to 100 files with AI assistance.
               </p>
-              <div className="bg-white rounded p-3 mb-4">
-                <code className="text-sm text-gray-800">
-                  curl -fsSL https://raw.githubusercontent.com/Valid8-security/parry-scanner/main/install-trial.sh | bash
-                </code>
+              <div className="bg-white rounded p-3 mb-4 font-mono text-xs text-gray-800">
+                <div>pip3 install git+https://github.com/Valid8-security/parry-scanner.git</div>
+                <div className="mt-1">python3 -c "from valid8.license import LicenseManager; LicenseManager.install_beta_license('trial-user@valid8.com')"</div>
+                <div className="mt-1">valid8 scan /path/to/your/code</div>
               </div>
               <button
                 onClick={handleFreeTrial}
                 className="w-full bg-green-600 text-white px-4 py-3 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center font-semibold"
               >
                 <Download className="mr-2 h-4 w-4" />
-                Copy Trial Command
+                Copy Installation Commands
               </button>
               <p className="text-green-700 text-sm mt-2 text-center">
                 ✨ No download required • 100 files limit • 7-day trial • Upgrade anytime
