@@ -40,7 +40,7 @@ const DownloadModal: React.FC<DownloadModalProps> = ({ isOpen, onClose }) => {
 
   const handleFreeTrial = () => {
     // For free trial, we'll provide a simple installation command
-    const trialCommand = `curl -fsSL https://raw.githubusercontent.com/Valid8-security/parry-scanner/main/install-trial.sh | bash`;
+    const trialCommand = `curl -fsSL https://raw.githubusercontent.com/Valid8-security/parry-scanner/v1/install-trial.sh | bash`;
     navigator.clipboard.writeText(trialCommand).then(() => {
       alert('Free trial installation command copied to clipboard!\n\nRun this in your terminal:\n' + trialCommand);
     });
