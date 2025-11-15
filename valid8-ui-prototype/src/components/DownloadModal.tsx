@@ -1,6 +1,5 @@
 import React from 'react';
 import { X, Download, Terminal, CheckCircle } from 'lucide-react';
-import { useAnalytics } from '../hooks/useAnalytics';
 
 interface DownloadModalProps {
   isOpen: boolean;
@@ -8,49 +7,26 @@ interface DownloadModalProps {
 }
 
 const DownloadModal: React.FC<DownloadModalProps> = ({ isOpen, onClose }) => {
-  const { trackTrialSignup } = useAnalytics();
-
   if (!isOpen) return null;
 
   // Detect user's platform
   const getPlatform = () => {
     const userAgent = navigator.userAgent.toLowerCase();
     if (userAgent.includes('win')) return 'windows';
-    if (userAgent.includes('mac')) {
-      // Check for Apple Silicon (ARM64)
-      const canvas = document.createElement('canvas');
-      const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-      const debugInfo = gl?.getExtension('WEBGL_debug_renderer_info');
-      const renderer = debugInfo ? gl?.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : '';
-      if (renderer && renderer.includes('Apple')) return 'macos-arm64';
-      return 'macos';
-    }
+    if (userAgent.includes('mac')) return 'macos';
     return 'linux';
   };
 
   const platform = getPlatform();
 
   const getDownloadUrl = (platform: string) => {
-    // Point to the official Valid8 binaries repository with specific version
-    const baseUrl = 'https://github.com/Valid8-security/valid8-binaries/releases/download/v0.7.0';
-
-    // Map platform names to actual release asset names
-    const assetMap: { [key: string]: string } = {
-      'windows': 'valid8-darwin.zip', // TODO: Update when Windows binary is available
-      'macos': 'valid8-darwin.zip',       // macOS Intel
-      'macos-arm64': 'valid8-macos-arm64.zip', // macOS ARM64
-      'linux': 'valid8-darwin.zip' // TODO: Update when Linux binary is available
-    };
-
-    // Direct URLs as provided by the user - only binaries, no source code
-    const directUrls: { [key: string]: string } = {
-      'windows': 'https://github.com/Valid8-security/valid8-binaries/releases/download/v0.7.0/valid8-darwin.zip', // TODO: Update when Windows binary becomes available
-      'macos': 'https://github.com/Valid8-security/valid8-binaries/releases/download/v0.7.0/valid8-darwin.zip',
-      'macos-arm64': 'https://github.com/Valid8-security/valid8-binaries/releases/download/v0.7.0/valid8-macos-arm64.zip',
-      'linux': 'https://github.com/Valid8-security/valid8-binaries/releases/download/v0.7.0/valid8-darwin.zip' // TODO: Update when Linux binary becomes available
-    };
-
-    return directUrls[platform] || 'https://github.com/Valid8-security/valid8-binaries/releases/download/v0.7.0/valid8-darwin.zip';
+    // Point to the official Valid8 binaries repository
+    const baseUrl = 'https://github.com/Valid8-security/valid8-binaries/releases/latest/download';
+    // Use the correct filenames from the existing release
+    if (platform === 'macos') {
+      return `${baseUrl}/valid8-macos-arm64.zip`;
+    }
+    return `${baseUrl}/valid8-${platform}.zip`;
   };
 
   const handleDownload = (platform: string) => {
@@ -59,13 +35,10 @@ const DownloadModal: React.FC<DownloadModalProps> = ({ isOpen, onClose }) => {
   };
 
   const handleFreeTrial = () => {
-    // Track trial signup
-    trackTrialSignup();
-
     // For free trial, we'll provide a simple installation command
     const trialCommand = `curl -fsSL https://raw.githubusercontent.com/Valid8-security/parry-scanner/main/install-trial.sh | bash`;
     navigator.clipboard.writeText(trialCommand).then(() => {
-      alert('Free trial installation command copied to clipboard!\n\nAfter installation, visit: https://valid8.dev/trial-success\n\nCommand: ' + trialCommand);
+      alert('Free trial installation command copied to clipboard!\n\nRun this in your terminal:\n' + trialCommand);
     });
   };
 
@@ -133,7 +106,7 @@ const DownloadModal: React.FC<DownloadModalProps> = ({ isOpen, onClose }) => {
               <h3 className="text-lg font-semibold mb-3 text-gray-900">Download Full Version</h3>
 
               {/* Platform-specific downloads */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 {/* Windows */}
                 <div className={`border rounded-lg p-4 ${platform === 'windows' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'}`}>
                   <div className="flex items-center justify-between mb-3">
@@ -203,26 +176,25 @@ const DownloadModal: React.FC<DownloadModalProps> = ({ isOpen, onClose }) => {
                   </p>
                 </div>
 
-
                 {/* All Platforms */}
                 <div className="border border-gray-200 rounded-lg p-4">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center">
                       <div className="w-8 h-8 bg-gray-200 rounded mr-3 flex items-center justify-center">📦</div>
-                      <span className="font-medium">All Releases</span>
+                      <span className="font-medium">All Platforms</span>
                     </div>
                   </div>
                   <a
-                    href="https://github.com/Valid8-security/valid8-binaries/releases/tag/v0.7.0"
+                    href="https://github.com/Valid8-security/valid8-binaries/releases"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-full bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors flex items-center justify-center"
                   >
                     <Download className="mr-2 h-4 w-4" />
-                    View Release v0.7.0
+                    View All Downloads
                   </a>
                   <p className="text-gray-600 text-xs mt-2">
-                    All binaries • Checksums • Release notes
+                    Valid8-security/valid8-binaries • Checksums included
                   </p>
                 </div>
               </div>
