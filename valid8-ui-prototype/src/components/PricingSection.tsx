@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Check, Star, Download } from 'lucide-react';
 import DownloadModal from './DownloadModal';
-import StripeCheckout from './StripeCheckout';
 
 const PricingSection = () => {
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
@@ -11,27 +10,26 @@ const PricingSection = () => {
       name: "Free Trial",
       price: 0,
       originalPrice: null,
-      scansPerUser: "100 scans",
+      scansPerUser: "100 scans/month",
       seats: "1 seat",
       description: "Automatic 7-day free trial",
       features: [
-        "100 scans (7-day trial)",
+        "100 scans per month",
         "All languages supported",
         "AI-powered analysis",
         "Basic fix suggestions",
         "Community support"
       ],
       popular: false,
-      cta: "Start Free Trial",
-      stripePriceId: null // Free trial
+      cta: "Start Free Trial"
     },
     {
       name: "Starter",
       price: 15,
       originalPrice: null,
-      scansPerUser: "200 scans/user/month",
+      scansPerUser: "200 scans/user",
       seats: "1-10 seats",
-      description: "Perfect for individual developers",
+      description: "Ideal for small teams",
       features: [
         "200 scans per user/month",
         "All languages supported",
@@ -40,14 +38,13 @@ const PricingSection = () => {
         "Basic fix suggestions"
       ],
       popular: false,
-      cta: "Subscribe Now",
-      stripePriceId: import.meta.env.VITE_STRIPE_STARTER_PRICE_ID || "price_starter_plan"
+      cta: "Start Free Trial"
     },
     {
       name: "Professional",
       price: 12,
       originalPrice: 15,
-      scansPerUser: "300 scans/user/month",
+      scansPerUser: "300 scans/user",
       seats: "11-50 seats",
       description: "For growing development teams",
       features: [
@@ -59,14 +56,13 @@ const PricingSection = () => {
         "Basic reporting"
       ],
       popular: true,
-      cta: "Subscribe Now",
-      stripePriceId: import.meta.env.VITE_STRIPE_PROFESSIONAL_PRICE_ID || "price_professional_plan"
+      cta: "Start Free Trial"
     },
     {
       name: "Business",
       price: 10,
       originalPrice: 15,
-      scansPerUser: "500 scans/user/month",
+      scansPerUser: "500 scans/user",
       seats: "51-200 seats",
       description: "Enterprise-grade security",
       features: [
@@ -78,8 +74,7 @@ const PricingSection = () => {
         "Compliance reporting"
       ],
       popular: false,
-      cta: "Subscribe Now",
-      stripePriceId: import.meta.env.VITE_STRIPE_BUSINESS_PRICE_ID || "price_business_plan"
+      cta: "Contact Sales"
     },
     {
       name: "Enterprise",
@@ -97,8 +92,7 @@ const PricingSection = () => {
         "24/7 premium support"
       ],
       popular: false,
-      cta: "Contact Sales",
-      stripePriceId: null // Enterprise requires custom pricing
+      cta: "Contact Sales"
     }
   ];
 
@@ -163,29 +157,23 @@ const PricingSection = () => {
                   ))}
                 </ul>
 
-                {/* Render different buttons based on tier */}
-                {tier.name === 'Free Trial' ? (
-                  <button
-                    onClick={() => setIsDownloadModalOpen(true)}
-                    className="w-full py-3 px-4 rounded-lg font-semibold transition-colors flex items-center justify-center bg-green-600 text-white hover:bg-green-700"
-                  >
-                    <Download className="mr-2 h-4 w-4" />
-                    {tier.cta}
-                  </button>
-                ) : tier.name === 'Enterprise' ? (
-                  <a
-                    href="mailto:sales@valid8.dev?subject=Enterprise%20Inquiry"
-                    className="w-full py-3 px-4 rounded-lg font-semibold transition-colors flex items-center justify-center bg-purple-600 text-white hover:bg-purple-700"
-                  >
-                    {tier.cta}
-                  </a>
-                ) : (
-                  <StripeCheckout
-                    priceId={tier.stripePriceId || ''}
-                    tierName={tier.name}
-                    amount={tier.price}
-                  />
-                )}
+                <button
+                  onClick={() => {
+                    if (tier.price === 0 || tier.name === 'Free Trial' || tier.name === 'Starter') {
+                      setIsDownloadModalOpen(true);
+                    }
+                  }}
+                  className={`w-full py-3 px-4 rounded-lg font-semibold transition-colors flex items-center justify-center ${
+                    tier.price === 0 || tier.name === 'Free Trial'
+                      ? 'bg-green-600 text-white hover:bg-green-700'
+                      : tier.popular
+                      ? 'bg-blue-600 text-white hover:bg-blue-700'
+                      : 'bg-gray-800 text-white hover:bg-gray-900'
+                  }`}
+                >
+                  {(tier.price === 0 || tier.name === 'Free Trial' || tier.name === 'Starter') && <Download className="mr-2 h-4 w-4" />}
+                  {tier.cta}
+                </button>
               </div>
             </div>
           ))}
@@ -205,7 +193,7 @@ const PricingSection = () => {
 
         <div className="mt-12 text-center">
           <p className="text-gray-600 mb-4">
-            All plans include 7-day free trial. No credit card required.
+            All plans include 14-day free trial. No credit card required.
           </p>
           <p className="text-sm text-gray-500">
             Questions about pricing? <a href="mailto:sales@valid8.com" className="text-blue-600 hover:underline">Contact our sales team</a>
