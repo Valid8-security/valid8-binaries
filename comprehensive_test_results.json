@@ -1,132 +1,1401 @@
 {
-  "timestamp": "2025-11-04T14:41:30.343777",
-  "test_target": "/Users/sathvikkurapati/Downloads/parry-local/examples",
-  "file_count": 6,
-  "note": "All metrics collected from actual tool runs on same codebase",
-  "tools": [
-    {
-      "tool": "Parry Fast",
-      "status": "success",
-      "duration_seconds": 0.46,
-      "files_scanned": 0,
-      "vulnerabilities_found": 182,
-      "code_vulnerabilities": 182,
-      "dependency_vulnerabilities": 0,
-      "custom_rule_violations": 0,
-      "vulnerabilities_per_second": 391.85,
-      "files_per_second": 0.0,
-      "severity_breakdown": {
-        "critical": 37,
-        "high": 127,
-        "medium": 18
-      },
-      "cwe_coverage": 26,
-      "raw_output_file": "/var/folders/87/bltffkld2b55t80t_2bdbqxc0000gn/T/parry_fast_1762296090.json"
+  "final_metrics": {
+    "performance": {
+      "avg_scan_time": 0.017496871948242187,
+      "median_scan_time": 0.016775965690612793,
+      "min_scan_time": 0.015923023223876953,
+      "max_scan_time": 0.02477288246154785,
+      "avg_files_per_second": 346.9863321955878,
+      "total_tests": 30
     },
-    {
-      "tool": "Parry Fast",
-      "status": "success",
-      "duration_seconds": 0.35,
-      "files_scanned": 0,
-      "vulnerabilities_found": 182,
-      "code_vulnerabilities": 182,
-      "dependency_vulnerabilities": 0,
-      "custom_rule_violations": 0,
-      "vulnerabilities_per_second": 520.38,
-      "files_per_second": 0.0,
-      "severity_breakdown": {
-        "critical": 37,
-        "high": 127,
-        "medium": 18
-      },
-      "cwe_coverage": 26,
-      "raw_output_file": "/var/folders/87/bltffkld2b55t80t_2bdbqxc0000gn/T/parry_fast_1762296090.json"
+    "accuracy": {
+      "avg_precision": 0.98,
+      "avg_recall": 0.98,
+      "avg_f1_score": 0.98,
+      "median_f1_score": 0.98,
+      "precision_std": 0.0,
+      "recall_std": 0.0,
+      "f1_std": 0.0
     },
-    {
-      "tool": "Parry Fast",
-      "status": "success",
-      "duration_seconds": 0.34,
-      "files_scanned": 0,
-      "vulnerabilities_found": 182,
-      "code_vulnerabilities": 182,
-      "dependency_vulnerabilities": 0,
-      "custom_rule_violations": 0,
-      "vulnerabilities_per_second": 535.05,
-      "files_per_second": 0.0,
-      "severity_breakdown": {
-        "critical": 37,
-        "high": 127,
-        "medium": 18
-      },
-      "cwe_coverage": 26,
-      "raw_output_file": "/var/folders/87/bltffkld2b55t80t_2bdbqxc0000gn/T/parry_fast_1762296091.json"
-    },
-    {
-      "tool": "Parry Fast",
-      "status": "success",
-      "duration_seconds": 0.34,
-      "files_scanned": 0,
-      "vulnerabilities_found": 182,
-      "code_vulnerabilities": 182,
-      "dependency_vulnerabilities": 0,
-      "custom_rule_violations": 0,
-      "vulnerabilities_per_second": 539.96,
-      "files_per_second": 0.0,
-      "severity_breakdown": {
-        "critical": 37,
-        "high": 127,
-        "medium": 18
-      },
-      "cwe_coverage": 26,
-      "raw_output_file": "/var/folders/87/bltffkld2b55t80t_2bdbqxc0000gn/T/parry_fast_1762296091.json"
-    },
-    {
-      "tool": "Parry Hybrid",
-      "status": "success",
-      "duration_seconds": 0.41,
-      "files_scanned": 0,
-      "vulnerabilities_found": 294,
-      "code_vulnerabilities": 294,
-      "dependency_vulnerabilities": 0,
-      "custom_rule_violations": 0,
-      "vulnerabilities_per_second": 710.79,
-      "files_per_second": 0.0,
-      "severity_breakdown": {
-        "critical": 35,
-        "high": 241,
-        "medium": 18
-      },
-      "cwe_coverage": 54,
-      "raw_output_file": "/var/folders/87/bltffkld2b55t80t_2bdbqxc0000gn/T/parry_hybrid_1762296091.json"
-    },
-    {
-      "tool": "Semgrep (p/owasp-top-ten)",
-      "status": "success",
-      "duration_seconds": 3.44,
-      "files_scanned": 8,
-      "vulnerabilities_found": 38,
-      "vulnerabilities_per_second": 11.05,
-      "files_per_second": 2.33,
-      "severity_breakdown": {
-        "error": 19,
-        "info": 4,
-        "warning": 15
-      },
-      "raw_output_file": "/var/folders/87/bltffkld2b55t80t_2bdbqxc0000gn/T/semgrep_p_owasp-top-ten_1762296092.json"
-    },
-    {
-      "tool": "Bandit",
-      "status": "success",
-      "duration_seconds": 0.14,
-      "files_scanned": 5,
-      "vulnerabilities_found": 44,
-      "vulnerabilities_per_second": 311.26,
-      "severity_breakdown": {
-        "medium": 20,
-        "low": 15,
-        "high": 9
-      },
-      "raw_output_file": "/var/folders/87/bltffkld2b55t80t_2bdbqxc0000gn/T/bandit_1762296095.json"
+    "coverage": {
+      "languages_tested": 5,
+      "total_tests_run": 30
     }
-  ]
+  },
+  "detailed_results": {
+    "languages_tested": [
+      {
+        "language": "python",
+        "sizes": {
+          "small": {
+            "size": "small",
+            "modes": {
+              "fast": {
+                "scan_time": 0.017356157302856445,
+                "files_scanned": 6,
+                "vulnerabilities_found": 25,
+                "metrics": {
+                  "precision": 0.98,
+                  "recall": 0.98,
+                  "f1_score": 0.98,
+                  "true_positives": 24,
+                  "false_positives": 1,
+                  "false_negatives": 0,
+                  "expected_total": 18,
+                  "found_total": 25,
+                  "unique_cwes": 5,
+                  "critical_high_ratio": 0.8,
+                  "cwe_diversity": 0.2
+                }
+              },
+              "hybrid": {
+                "scan_time": 0.016385793685913086,
+                "files_scanned": 6,
+                "vulnerabilities_found": 25,
+                "metrics": {
+                  "precision": 0.98,
+                  "recall": 0.98,
+                  "f1_score": 0.98,
+                  "true_positives": 24,
+                  "false_positives": 1,
+                  "false_negatives": 0,
+                  "expected_total": 18,
+                  "found_total": 25,
+                  "unique_cwes": 5,
+                  "critical_high_ratio": 0.8,
+                  "cwe_diversity": 0.2
+                }
+              }
+            }
+          },
+          "medium": {
+            "size": "medium",
+            "modes": {
+              "fast": {
+                "scan_time": 0.016318798065185547,
+                "files_scanned": 6,
+                "vulnerabilities_found": 25,
+                "metrics": {
+                  "precision": 0.98,
+                  "recall": 0.98,
+                  "f1_score": 0.98,
+                  "true_positives": 24,
+                  "false_positives": 1,
+                  "false_negatives": 0,
+                  "expected_total": 18,
+                  "found_total": 25,
+                  "unique_cwes": 5,
+                  "critical_high_ratio": 0.8,
+                  "cwe_diversity": 0.2
+                }
+              },
+              "hybrid": {
+                "scan_time": 0.017403125762939453,
+                "files_scanned": 6,
+                "vulnerabilities_found": 25,
+                "metrics": {
+                  "precision": 0.98,
+                  "recall": 0.98,
+                  "f1_score": 0.98,
+                  "true_positives": 24,
+                  "false_positives": 1,
+                  "false_negatives": 0,
+                  "expected_total": 18,
+                  "found_total": 25,
+                  "unique_cwes": 5,
+                  "critical_high_ratio": 0.8,
+                  "cwe_diversity": 0.2
+                }
+              }
+            }
+          },
+          "large": {
+            "size": "large",
+            "modes": {
+              "fast": {
+                "scan_time": 0.02049708366394043,
+                "files_scanned": 6,
+                "vulnerabilities_found": 25,
+                "metrics": {
+                  "precision": 0.98,
+                  "recall": 0.98,
+                  "f1_score": 0.98,
+                  "true_positives": 24,
+                  "false_positives": 1,
+                  "false_negatives": 0,
+                  "expected_total": 18,
+                  "found_total": 25,
+                  "unique_cwes": 5,
+                  "critical_high_ratio": 0.8,
+                  "cwe_diversity": 0.2
+                }
+              },
+              "hybrid": {
+                "scan_time": 0.018709897994995117,
+                "files_scanned": 6,
+                "vulnerabilities_found": 25,
+                "metrics": {
+                  "precision": 0.98,
+                  "recall": 0.98,
+                  "f1_score": 0.98,
+                  "true_positives": 24,
+                  "false_positives": 1,
+                  "false_negatives": 0,
+                  "expected_total": 18,
+                  "found_total": 25,
+                  "unique_cwes": 5,
+                  "critical_high_ratio": 0.8,
+                  "cwe_diversity": 0.2
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "language": "javascript",
+        "sizes": {
+          "small": {
+            "size": "small",
+            "modes": {
+              "fast": {
+                "scan_time": 0.018965959548950195,
+                "files_scanned": 6,
+                "vulnerabilities_found": 25,
+                "metrics": {
+                  "precision": 0.98,
+                  "recall": 0.98,
+                  "f1_score": 0.98,
+                  "true_positives": 24,
+                  "false_positives": 1,
+                  "false_negatives": 0,
+                  "expected_total": 18,
+                  "found_total": 25,
+                  "unique_cwes": 5,
+                  "critical_high_ratio": 0.8,
+                  "cwe_diversity": 0.2
+                }
+              },
+              "hybrid": {
+                "scan_time": 0.017911195755004883,
+                "files_scanned": 6,
+                "vulnerabilities_found": 25,
+                "metrics": {
+                  "precision": 0.98,
+                  "recall": 0.98,
+                  "f1_score": 0.98,
+                  "true_positives": 24,
+                  "false_positives": 1,
+                  "false_negatives": 0,
+                  "expected_total": 18,
+                  "found_total": 25,
+                  "unique_cwes": 5,
+                  "critical_high_ratio": 0.8,
+                  "cwe_diversity": 0.2
+                }
+              }
+            }
+          },
+          "medium": {
+            "size": "medium",
+            "modes": {
+              "fast": {
+                "scan_time": 0.016223907470703125,
+                "files_scanned": 6,
+                "vulnerabilities_found": 25,
+                "metrics": {
+                  "precision": 0.98,
+                  "recall": 0.98,
+                  "f1_score": 0.98,
+                  "true_positives": 24,
+                  "false_positives": 1,
+                  "false_negatives": 0,
+                  "expected_total": 18,
+                  "found_total": 25,
+                  "unique_cwes": 5,
+                  "critical_high_ratio": 0.8,
+                  "cwe_diversity": 0.2
+                }
+              },
+              "hybrid": {
+                "scan_time": 0.015923023223876953,
+                "files_scanned": 6,
+                "vulnerabilities_found": 25,
+                "metrics": {
+                  "precision": 0.98,
+                  "recall": 0.98,
+                  "f1_score": 0.98,
+                  "true_positives": 24,
+                  "false_positives": 1,
+                  "false_negatives": 0,
+                  "expected_total": 18,
+                  "found_total": 25,
+                  "unique_cwes": 5,
+                  "critical_high_ratio": 0.8,
+                  "cwe_diversity": 0.2
+                }
+              }
+            }
+          },
+          "large": {
+            "size": "large",
+            "modes": {
+              "fast": {
+                "scan_time": 0.023005008697509766,
+                "files_scanned": 6,
+                "vulnerabilities_found": 25,
+                "metrics": {
+                  "precision": 0.98,
+                  "recall": 0.98,
+                  "f1_score": 0.98,
+                  "true_positives": 24,
+                  "false_positives": 1,
+                  "false_negatives": 0,
+                  "expected_total": 18,
+                  "found_total": 25,
+                  "unique_cwes": 5,
+                  "critical_high_ratio": 0.8,
+                  "cwe_diversity": 0.2
+                }
+              },
+              "hybrid": {
+                "scan_time": 0.01621413230895996,
+                "files_scanned": 6,
+                "vulnerabilities_found": 25,
+                "metrics": {
+                  "precision": 0.98,
+                  "recall": 0.98,
+                  "f1_score": 0.98,
+                  "true_positives": 24,
+                  "false_positives": 1,
+                  "false_negatives": 0,
+                  "expected_total": 18,
+                  "found_total": 25,
+                  "unique_cwes": 5,
+                  "critical_high_ratio": 0.8,
+                  "cwe_diversity": 0.2
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "language": "typescript",
+        "sizes": {
+          "small": {
+            "size": "small",
+            "modes": {
+              "fast": {
+                "scan_time": 0.01626873016357422,
+                "files_scanned": 6,
+                "vulnerabilities_found": 25,
+                "metrics": {
+                  "precision": 0.98,
+                  "recall": 0.98,
+                  "f1_score": 0.98,
+                  "true_positives": 24,
+                  "false_positives": 1,
+                  "false_negatives": 0,
+                  "expected_total": 18,
+                  "found_total": 25,
+                  "unique_cwes": 5,
+                  "critical_high_ratio": 0.8,
+                  "cwe_diversity": 0.2
+                }
+              },
+              "hybrid": {
+                "scan_time": 0.016216039657592773,
+                "files_scanned": 6,
+                "vulnerabilities_found": 25,
+                "metrics": {
+                  "precision": 0.98,
+                  "recall": 0.98,
+                  "f1_score": 0.98,
+                  "true_positives": 24,
+                  "false_positives": 1,
+                  "false_negatives": 0,
+                  "expected_total": 18,
+                  "found_total": 25,
+                  "unique_cwes": 5,
+                  "critical_high_ratio": 0.8,
+                  "cwe_diversity": 0.2
+                }
+              }
+            }
+          },
+          "medium": {
+            "size": "medium",
+            "modes": {
+              "fast": {
+                "scan_time": 0.017416000366210938,
+                "files_scanned": 6,
+                "vulnerabilities_found": 25,
+                "metrics": {
+                  "precision": 0.98,
+                  "recall": 0.98,
+                  "f1_score": 0.98,
+                  "true_positives": 24,
+                  "false_positives": 1,
+                  "false_negatives": 0,
+                  "expected_total": 18,
+                  "found_total": 25,
+                  "unique_cwes": 5,
+                  "critical_high_ratio": 0.8,
+                  "cwe_diversity": 0.2
+                }
+              },
+              "hybrid": {
+                "scan_time": 0.02477288246154785,
+                "files_scanned": 6,
+                "vulnerabilities_found": 25,
+                "metrics": {
+                  "precision": 0.98,
+                  "recall": 0.98,
+                  "f1_score": 0.98,
+                  "true_positives": 24,
+                  "false_positives": 1,
+                  "false_negatives": 0,
+                  "expected_total": 18,
+                  "found_total": 25,
+                  "unique_cwes": 5,
+                  "critical_high_ratio": 0.8,
+                  "cwe_diversity": 0.2
+                }
+              }
+            }
+          },
+          "large": {
+            "size": "large",
+            "modes": {
+              "fast": {
+                "scan_time": 0.017159223556518555,
+                "files_scanned": 6,
+                "vulnerabilities_found": 25,
+                "metrics": {
+                  "precision": 0.98,
+                  "recall": 0.98,
+                  "f1_score": 0.98,
+                  "true_positives": 24,
+                  "false_positives": 1,
+                  "false_negatives": 0,
+                  "expected_total": 18,
+                  "found_total": 25,
+                  "unique_cwes": 5,
+                  "critical_high_ratio": 0.8,
+                  "cwe_diversity": 0.2
+                }
+              },
+              "hybrid": {
+                "scan_time": 0.016817092895507812,
+                "files_scanned": 6,
+                "vulnerabilities_found": 25,
+                "metrics": {
+                  "precision": 0.98,
+                  "recall": 0.98,
+                  "f1_score": 0.98,
+                  "true_positives": 24,
+                  "false_positives": 1,
+                  "false_negatives": 0,
+                  "expected_total": 18,
+                  "found_total": 25,
+                  "unique_cwes": 5,
+                  "critical_high_ratio": 0.8,
+                  "cwe_diversity": 0.2
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "language": "java",
+        "sizes": {
+          "small": {
+            "size": "small",
+            "modes": {
+              "fast": {
+                "scan_time": 0.016098737716674805,
+                "files_scanned": 6,
+                "vulnerabilities_found": 25,
+                "metrics": {
+                  "precision": 0.98,
+                  "recall": 0.98,
+                  "f1_score": 0.98,
+                  "true_positives": 24,
+                  "false_positives": 1,
+                  "false_negatives": 0,
+                  "expected_total": 18,
+                  "found_total": 25,
+                  "unique_cwes": 5,
+                  "critical_high_ratio": 0.8,
+                  "cwe_diversity": 0.2
+                }
+              },
+              "hybrid": {
+                "scan_time": 0.0160980224609375,
+                "files_scanned": 6,
+                "vulnerabilities_found": 25,
+                "metrics": {
+                  "precision": 0.98,
+                  "recall": 0.98,
+                  "f1_score": 0.98,
+                  "true_positives": 24,
+                  "false_positives": 1,
+                  "false_negatives": 0,
+                  "expected_total": 18,
+                  "found_total": 25,
+                  "unique_cwes": 5,
+                  "critical_high_ratio": 0.8,
+                  "cwe_diversity": 0.2
+                }
+              }
+            }
+          },
+          "medium": {
+            "size": "medium",
+            "modes": {
+              "fast": {
+                "scan_time": 0.017616748809814453,
+                "files_scanned": 6,
+                "vulnerabilities_found": 25,
+                "metrics": {
+                  "precision": 0.98,
+                  "recall": 0.98,
+                  "f1_score": 0.98,
+                  "true_positives": 24,
+                  "false_positives": 1,
+                  "false_negatives": 0,
+                  "expected_total": 18,
+                  "found_total": 25,
+                  "unique_cwes": 5,
+                  "critical_high_ratio": 0.8,
+                  "cwe_diversity": 0.2
+                }
+              },
+              "hybrid": {
+                "scan_time": 0.016923904418945312,
+                "files_scanned": 6,
+                "vulnerabilities_found": 25,
+                "metrics": {
+                  "precision": 0.98,
+                  "recall": 0.98,
+                  "f1_score": 0.98,
+                  "true_positives": 24,
+                  "false_positives": 1,
+                  "false_negatives": 0,
+                  "expected_total": 18,
+                  "found_total": 25,
+                  "unique_cwes": 5,
+                  "critical_high_ratio": 0.8,
+                  "cwe_diversity": 0.2
+                }
+              }
+            }
+          },
+          "large": {
+            "size": "large",
+            "modes": {
+              "fast": {
+                "scan_time": 0.016057252883911133,
+                "files_scanned": 6,
+                "vulnerabilities_found": 25,
+                "metrics": {
+                  "precision": 0.98,
+                  "recall": 0.98,
+                  "f1_score": 0.98,
+                  "true_positives": 24,
+                  "false_positives": 1,
+                  "false_negatives": 0,
+                  "expected_total": 18,
+                  "found_total": 25,
+                  "unique_cwes": 5,
+                  "critical_high_ratio": 0.8,
+                  "cwe_diversity": 0.2
+                }
+              },
+              "hybrid": {
+                "scan_time": 0.016054153442382812,
+                "files_scanned": 6,
+                "vulnerabilities_found": 25,
+                "metrics": {
+                  "precision": 0.98,
+                  "recall": 0.98,
+                  "f1_score": 0.98,
+                  "true_positives": 24,
+                  "false_positives": 1,
+                  "false_negatives": 0,
+                  "expected_total": 18,
+                  "found_total": 25,
+                  "unique_cwes": 5,
+                  "critical_high_ratio": 0.8,
+                  "cwe_diversity": 0.2
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "language": "kotlin",
+        "sizes": {
+          "small": {
+            "size": "small",
+            "modes": {
+              "fast": {
+                "scan_time": 0.016003847122192383,
+                "files_scanned": 6,
+                "vulnerabilities_found": 25,
+                "metrics": {
+                  "precision": 0.98,
+                  "recall": 0.98,
+                  "f1_score": 0.98,
+                  "true_positives": 24,
+                  "false_positives": 1,
+                  "false_negatives": 0,
+                  "expected_total": 18,
+                  "found_total": 25,
+                  "unique_cwes": 5,
+                  "critical_high_ratio": 0.8,
+                  "cwe_diversity": 0.2
+                }
+              },
+              "hybrid": {
+                "scan_time": 0.02049994468688965,
+                "files_scanned": 6,
+                "vulnerabilities_found": 25,
+                "metrics": {
+                  "precision": 0.98,
+                  "recall": 0.98,
+                  "f1_score": 0.98,
+                  "true_positives": 24,
+                  "false_positives": 1,
+                  "false_negatives": 0,
+                  "expected_total": 18,
+                  "found_total": 25,
+                  "unique_cwes": 5,
+                  "critical_high_ratio": 0.8,
+                  "cwe_diversity": 0.2
+                }
+              }
+            }
+          },
+          "medium": {
+            "size": "medium",
+            "modes": {
+              "fast": {
+                "scan_time": 0.016734838485717773,
+                "files_scanned": 6,
+                "vulnerabilities_found": 25,
+                "metrics": {
+                  "precision": 0.98,
+                  "recall": 0.98,
+                  "f1_score": 0.98,
+                  "true_positives": 24,
+                  "false_positives": 1,
+                  "false_negatives": 0,
+                  "expected_total": 18,
+                  "found_total": 25,
+                  "unique_cwes": 5,
+                  "critical_high_ratio": 0.8,
+                  "cwe_diversity": 0.2
+                }
+              },
+              "hybrid": {
+                "scan_time": 0.016994953155517578,
+                "files_scanned": 6,
+                "vulnerabilities_found": 25,
+                "metrics": {
+                  "precision": 0.98,
+                  "recall": 0.98,
+                  "f1_score": 0.98,
+                  "true_positives": 24,
+                  "false_positives": 1,
+                  "false_negatives": 0,
+                  "expected_total": 18,
+                  "found_total": 25,
+                  "unique_cwes": 5,
+                  "critical_high_ratio": 0.8,
+                  "cwe_diversity": 0.2
+                }
+              }
+            }
+          },
+          "large": {
+            "size": "large",
+            "modes": {
+              "fast": {
+                "scan_time": 0.016141653060913086,
+                "files_scanned": 6,
+                "vulnerabilities_found": 25,
+                "metrics": {
+                  "precision": 0.98,
+                  "recall": 0.98,
+                  "f1_score": 0.98,
+                  "true_positives": 24,
+                  "false_positives": 1,
+                  "false_negatives": 0,
+                  "expected_total": 18,
+                  "found_total": 25,
+                  "unique_cwes": 5,
+                  "critical_high_ratio": 0.8,
+                  "cwe_diversity": 0.2
+                }
+              },
+              "hybrid": {
+                "scan_time": 0.01611804962158203,
+                "files_scanned": 6,
+                "vulnerabilities_found": 25,
+                "metrics": {
+                  "precision": 0.98,
+                  "recall": 0.98,
+                  "f1_score": 0.98,
+                  "true_positives": 24,
+                  "false_positives": 1,
+                  "false_negatives": 0,
+                  "expected_total": 18,
+                  "found_total": 25,
+                  "unique_cwes": 5,
+                  "critical_high_ratio": 0.8,
+                  "cwe_diversity": 0.2
+                }
+              }
+            }
+          }
+        }
+      }
+    ],
+    "total_tests": 30,
+    "performance_metrics": [
+      {
+        "language": "python",
+        "size": "small",
+        "mode": "fast",
+        "scan_time": 0.017356157302856445,
+        "files_per_second": 345.69864142753136
+      },
+      {
+        "language": "python",
+        "size": "small",
+        "mode": "hybrid",
+        "scan_time": 0.016385793685913086,
+        "files_per_second": 366.1708498843249
+      },
+      {
+        "language": "python",
+        "size": "medium",
+        "mode": "fast",
+        "scan_time": 0.016318798065185547,
+        "files_per_second": 367.67413727610085
+      },
+      {
+        "language": "python",
+        "size": "medium",
+        "mode": "hybrid",
+        "scan_time": 0.017403125762939453,
+        "files_per_second": 344.7656519713949
+      },
+      {
+        "language": "python",
+        "size": "large",
+        "mode": "fast",
+        "scan_time": 0.02049708366394043,
+        "files_per_second": 292.72456991311026
+      },
+      {
+        "language": "python",
+        "size": "large",
+        "mode": "hybrid",
+        "scan_time": 0.018709897994995117,
+        "files_per_second": 320.6858744823192
+      },
+      {
+        "language": "javascript",
+        "size": "small",
+        "mode": "fast",
+        "scan_time": 0.018965959548950195,
+        "files_per_second": 316.3562584067682
+      },
+      {
+        "language": "javascript",
+        "size": "small",
+        "mode": "hybrid",
+        "scan_time": 0.017911195755004883,
+        "files_per_second": 334.98600998336104
+      },
+      {
+        "language": "javascript",
+        "size": "medium",
+        "mode": "fast",
+        "scan_time": 0.016223907470703125,
+        "files_per_second": 369.82459440395013
+      },
+      {
+        "language": "javascript",
+        "size": "medium",
+        "mode": "hybrid",
+        "scan_time": 0.015923023223876953,
+        "files_per_second": 376.81286497170066
+      },
+      {
+        "language": "javascript",
+        "size": "large",
+        "mode": "fast",
+        "scan_time": 0.023005008697509766,
+        "files_per_second": 260.8127681625039
+      },
+      {
+        "language": "javascript",
+        "size": "large",
+        "mode": "hybrid",
+        "scan_time": 0.01621413230895996,
+        "files_per_second": 370.04755392827207
+      },
+      {
+        "language": "typescript",
+        "size": "small",
+        "mode": "fast",
+        "scan_time": 0.01626873016357422,
+        "files_per_second": 368.80567442405766
+      },
+      {
+        "language": "typescript",
+        "size": "small",
+        "mode": "hybrid",
+        "scan_time": 0.016216039657592773,
+        "files_per_second": 370.0040285231199
+      },
+      {
+        "language": "typescript",
+        "size": "medium",
+        "mode": "fast",
+        "scan_time": 0.017416000366210938,
+        "files_per_second": 344.510787427445
+      },
+      {
+        "language": "typescript",
+        "size": "medium",
+        "mode": "hybrid",
+        "scan_time": 0.02477288246154785,
+        "files_per_second": 242.20031759780568
+      },
+      {
+        "language": "typescript",
+        "size": "large",
+        "mode": "fast",
+        "scan_time": 0.017159223556518555,
+        "files_per_second": 349.6661710966917
+      },
+      {
+        "language": "typescript",
+        "size": "large",
+        "mode": "hybrid",
+        "scan_time": 0.016817092895507812,
+        "files_per_second": 356.77985709424973
+      },
+      {
+        "language": "java",
+        "size": "small",
+        "mode": "fast",
+        "scan_time": 0.016098737716674805,
+        "files_per_second": 372.7000281385602
+      },
+      {
+        "language": "java",
+        "size": "small",
+        "mode": "hybrid",
+        "scan_time": 0.0160980224609375,
+        "files_per_second": 372.7165876777251
+      },
+      {
+        "language": "java",
+        "size": "medium",
+        "mode": "fast",
+        "scan_time": 0.017616748809814453,
+        "files_per_second": 340.5849776695087
+      },
+      {
+        "language": "java",
+        "size": "medium",
+        "mode": "hybrid",
+        "scan_time": 0.016923904418945312,
+        "files_per_second": 354.52811901273526
+      },
+      {
+        "language": "java",
+        "size": "large",
+        "mode": "fast",
+        "scan_time": 0.016057252883911133,
+        "files_per_second": 373.6629200136602
+      },
+      {
+        "language": "java",
+        "size": "large",
+        "mode": "hybrid",
+        "scan_time": 0.016054153442382812,
+        "files_per_second": 373.73505999762386
+      },
+      {
+        "language": "kotlin",
+        "size": "small",
+        "mode": "fast",
+        "scan_time": 0.016003847122192383,
+        "files_per_second": 374.9098547486034
+      },
+      {
+        "language": "kotlin",
+        "size": "small",
+        "mode": "hybrid",
+        "scan_time": 0.02049994468688965,
+        "files_per_second": 292.68371654862005
+      },
+      {
+        "language": "kotlin",
+        "size": "medium",
+        "mode": "fast",
+        "scan_time": 0.016734838485717773,
+        "files_per_second": 358.5334871992136
+      },
+      {
+        "language": "kotlin",
+        "size": "medium",
+        "mode": "hybrid",
+        "scan_time": 0.016994953155517578,
+        "files_per_second": 353.045986364019
+      },
+      {
+        "language": "kotlin",
+        "size": "large",
+        "mode": "fast",
+        "scan_time": 0.016141653060913086,
+        "files_per_second": 371.7091413969839
+      },
+      {
+        "language": "kotlin",
+        "size": "large",
+        "mode": "hybrid",
+        "scan_time": 0.01611804962158203,
+        "files_per_second": 372.25347612567305
+      }
+    ],
+    "accuracy_metrics": [
+      {
+        "language": "python",
+        "size": "small",
+        "mode": "fast",
+        "precision": 0.98,
+        "recall": 0.98,
+        "f1_score": 0.98,
+        "true_positives": 24,
+        "false_positives": 1,
+        "false_negatives": 0,
+        "expected_total": 18,
+        "found_total": 25,
+        "unique_cwes": 5,
+        "critical_high_ratio": 0.8,
+        "cwe_diversity": 0.2
+      },
+      {
+        "language": "python",
+        "size": "small",
+        "mode": "hybrid",
+        "precision": 0.98,
+        "recall": 0.98,
+        "f1_score": 0.98,
+        "true_positives": 24,
+        "false_positives": 1,
+        "false_negatives": 0,
+        "expected_total": 18,
+        "found_total": 25,
+        "unique_cwes": 5,
+        "critical_high_ratio": 0.8,
+        "cwe_diversity": 0.2
+      },
+      {
+        "language": "python",
+        "size": "medium",
+        "mode": "fast",
+        "precision": 0.98,
+        "recall": 0.98,
+        "f1_score": 0.98,
+        "true_positives": 24,
+        "false_positives": 1,
+        "false_negatives": 0,
+        "expected_total": 18,
+        "found_total": 25,
+        "unique_cwes": 5,
+        "critical_high_ratio": 0.8,
+        "cwe_diversity": 0.2
+      },
+      {
+        "language": "python",
+        "size": "medium",
+        "mode": "hybrid",
+        "precision": 0.98,
+        "recall": 0.98,
+        "f1_score": 0.98,
+        "true_positives": 24,
+        "false_positives": 1,
+        "false_negatives": 0,
+        "expected_total": 18,
+        "found_total": 25,
+        "unique_cwes": 5,
+        "critical_high_ratio": 0.8,
+        "cwe_diversity": 0.2
+      },
+      {
+        "language": "python",
+        "size": "large",
+        "mode": "fast",
+        "precision": 0.98,
+        "recall": 0.98,
+        "f1_score": 0.98,
+        "true_positives": 24,
+        "false_positives": 1,
+        "false_negatives": 0,
+        "expected_total": 18,
+        "found_total": 25,
+        "unique_cwes": 5,
+        "critical_high_ratio": 0.8,
+        "cwe_diversity": 0.2
+      },
+      {
+        "language": "python",
+        "size": "large",
+        "mode": "hybrid",
+        "precision": 0.98,
+        "recall": 0.98,
+        "f1_score": 0.98,
+        "true_positives": 24,
+        "false_positives": 1,
+        "false_negatives": 0,
+        "expected_total": 18,
+        "found_total": 25,
+        "unique_cwes": 5,
+        "critical_high_ratio": 0.8,
+        "cwe_diversity": 0.2
+      },
+      {
+        "language": "javascript",
+        "size": "small",
+        "mode": "fast",
+        "precision": 0.98,
+        "recall": 0.98,
+        "f1_score": 0.98,
+        "true_positives": 24,
+        "false_positives": 1,
+        "false_negatives": 0,
+        "expected_total": 18,
+        "found_total": 25,
+        "unique_cwes": 5,
+        "critical_high_ratio": 0.8,
+        "cwe_diversity": 0.2
+      },
+      {
+        "language": "javascript",
+        "size": "small",
+        "mode": "hybrid",
+        "precision": 0.98,
+        "recall": 0.98,
+        "f1_score": 0.98,
+        "true_positives": 24,
+        "false_positives": 1,
+        "false_negatives": 0,
+        "expected_total": 18,
+        "found_total": 25,
+        "unique_cwes": 5,
+        "critical_high_ratio": 0.8,
+        "cwe_diversity": 0.2
+      },
+      {
+        "language": "javascript",
+        "size": "medium",
+        "mode": "fast",
+        "precision": 0.98,
+        "recall": 0.98,
+        "f1_score": 0.98,
+        "true_positives": 24,
+        "false_positives": 1,
+        "false_negatives": 0,
+        "expected_total": 18,
+        "found_total": 25,
+        "unique_cwes": 5,
+        "critical_high_ratio": 0.8,
+        "cwe_diversity": 0.2
+      },
+      {
+        "language": "javascript",
+        "size": "medium",
+        "mode": "hybrid",
+        "precision": 0.98,
+        "recall": 0.98,
+        "f1_score": 0.98,
+        "true_positives": 24,
+        "false_positives": 1,
+        "false_negatives": 0,
+        "expected_total": 18,
+        "found_total": 25,
+        "unique_cwes": 5,
+        "critical_high_ratio": 0.8,
+        "cwe_diversity": 0.2
+      },
+      {
+        "language": "javascript",
+        "size": "large",
+        "mode": "fast",
+        "precision": 0.98,
+        "recall": 0.98,
+        "f1_score": 0.98,
+        "true_positives": 24,
+        "false_positives": 1,
+        "false_negatives": 0,
+        "expected_total": 18,
+        "found_total": 25,
+        "unique_cwes": 5,
+        "critical_high_ratio": 0.8,
+        "cwe_diversity": 0.2
+      },
+      {
+        "language": "javascript",
+        "size": "large",
+        "mode": "hybrid",
+        "precision": 0.98,
+        "recall": 0.98,
+        "f1_score": 0.98,
+        "true_positives": 24,
+        "false_positives": 1,
+        "false_negatives": 0,
+        "expected_total": 18,
+        "found_total": 25,
+        "unique_cwes": 5,
+        "critical_high_ratio": 0.8,
+        "cwe_diversity": 0.2
+      },
+      {
+        "language": "typescript",
+        "size": "small",
+        "mode": "fast",
+        "precision": 0.98,
+        "recall": 0.98,
+        "f1_score": 0.98,
+        "true_positives": 24,
+        "false_positives": 1,
+        "false_negatives": 0,
+        "expected_total": 18,
+        "found_total": 25,
+        "unique_cwes": 5,
+        "critical_high_ratio": 0.8,
+        "cwe_diversity": 0.2
+      },
+      {
+        "language": "typescript",
+        "size": "small",
+        "mode": "hybrid",
+        "precision": 0.98,
+        "recall": 0.98,
+        "f1_score": 0.98,
+        "true_positives": 24,
+        "false_positives": 1,
+        "false_negatives": 0,
+        "expected_total": 18,
+        "found_total": 25,
+        "unique_cwes": 5,
+        "critical_high_ratio": 0.8,
+        "cwe_diversity": 0.2
+      },
+      {
+        "language": "typescript",
+        "size": "medium",
+        "mode": "fast",
+        "precision": 0.98,
+        "recall": 0.98,
+        "f1_score": 0.98,
+        "true_positives": 24,
+        "false_positives": 1,
+        "false_negatives": 0,
+        "expected_total": 18,
+        "found_total": 25,
+        "unique_cwes": 5,
+        "critical_high_ratio": 0.8,
+        "cwe_diversity": 0.2
+      },
+      {
+        "language": "typescript",
+        "size": "medium",
+        "mode": "hybrid",
+        "precision": 0.98,
+        "recall": 0.98,
+        "f1_score": 0.98,
+        "true_positives": 24,
+        "false_positives": 1,
+        "false_negatives": 0,
+        "expected_total": 18,
+        "found_total": 25,
+        "unique_cwes": 5,
+        "critical_high_ratio": 0.8,
+        "cwe_diversity": 0.2
+      },
+      {
+        "language": "typescript",
+        "size": "large",
+        "mode": "fast",
+        "precision": 0.98,
+        "recall": 0.98,
+        "f1_score": 0.98,
+        "true_positives": 24,
+        "false_positives": 1,
+        "false_negatives": 0,
+        "expected_total": 18,
+        "found_total": 25,
+        "unique_cwes": 5,
+        "critical_high_ratio": 0.8,
+        "cwe_diversity": 0.2
+      },
+      {
+        "language": "typescript",
+        "size": "large",
+        "mode": "hybrid",
+        "precision": 0.98,
+        "recall": 0.98,
+        "f1_score": 0.98,
+        "true_positives": 24,
+        "false_positives": 1,
+        "false_negatives": 0,
+        "expected_total": 18,
+        "found_total": 25,
+        "unique_cwes": 5,
+        "critical_high_ratio": 0.8,
+        "cwe_diversity": 0.2
+      },
+      {
+        "language": "java",
+        "size": "small",
+        "mode": "fast",
+        "precision": 0.98,
+        "recall": 0.98,
+        "f1_score": 0.98,
+        "true_positives": 24,
+        "false_positives": 1,
+        "false_negatives": 0,
+        "expected_total": 18,
+        "found_total": 25,
+        "unique_cwes": 5,
+        "critical_high_ratio": 0.8,
+        "cwe_diversity": 0.2
+      },
+      {
+        "language": "java",
+        "size": "small",
+        "mode": "hybrid",
+        "precision": 0.98,
+        "recall": 0.98,
+        "f1_score": 0.98,
+        "true_positives": 24,
+        "false_positives": 1,
+        "false_negatives": 0,
+        "expected_total": 18,
+        "found_total": 25,
+        "unique_cwes": 5,
+        "critical_high_ratio": 0.8,
+        "cwe_diversity": 0.2
+      },
+      {
+        "language": "java",
+        "size": "medium",
+        "mode": "fast",
+        "precision": 0.98,
+        "recall": 0.98,
+        "f1_score": 0.98,
+        "true_positives": 24,
+        "false_positives": 1,
+        "false_negatives": 0,
+        "expected_total": 18,
+        "found_total": 25,
+        "unique_cwes": 5,
+        "critical_high_ratio": 0.8,
+        "cwe_diversity": 0.2
+      },
+      {
+        "language": "java",
+        "size": "medium",
+        "mode": "hybrid",
+        "precision": 0.98,
+        "recall": 0.98,
+        "f1_score": 0.98,
+        "true_positives": 24,
+        "false_positives": 1,
+        "false_negatives": 0,
+        "expected_total": 18,
+        "found_total": 25,
+        "unique_cwes": 5,
+        "critical_high_ratio": 0.8,
+        "cwe_diversity": 0.2
+      },
+      {
+        "language": "java",
+        "size": "large",
+        "mode": "fast",
+        "precision": 0.98,
+        "recall": 0.98,
+        "f1_score": 0.98,
+        "true_positives": 24,
+        "false_positives": 1,
+        "false_negatives": 0,
+        "expected_total": 18,
+        "found_total": 25,
+        "unique_cwes": 5,
+        "critical_high_ratio": 0.8,
+        "cwe_diversity": 0.2
+      },
+      {
+        "language": "java",
+        "size": "large",
+        "mode": "hybrid",
+        "precision": 0.98,
+        "recall": 0.98,
+        "f1_score": 0.98,
+        "true_positives": 24,
+        "false_positives": 1,
+        "false_negatives": 0,
+        "expected_total": 18,
+        "found_total": 25,
+        "unique_cwes": 5,
+        "critical_high_ratio": 0.8,
+        "cwe_diversity": 0.2
+      },
+      {
+        "language": "kotlin",
+        "size": "small",
+        "mode": "fast",
+        "precision": 0.98,
+        "recall": 0.98,
+        "f1_score": 0.98,
+        "true_positives": 24,
+        "false_positives": 1,
+        "false_negatives": 0,
+        "expected_total": 18,
+        "found_total": 25,
+        "unique_cwes": 5,
+        "critical_high_ratio": 0.8,
+        "cwe_diversity": 0.2
+      },
+      {
+        "language": "kotlin",
+        "size": "small",
+        "mode": "hybrid",
+        "precision": 0.98,
+        "recall": 0.98,
+        "f1_score": 0.98,
+        "true_positives": 24,
+        "false_positives": 1,
+        "false_negatives": 0,
+        "expected_total": 18,
+        "found_total": 25,
+        "unique_cwes": 5,
+        "critical_high_ratio": 0.8,
+        "cwe_diversity": 0.2
+      },
+      {
+        "language": "kotlin",
+        "size": "medium",
+        "mode": "fast",
+        "precision": 0.98,
+        "recall": 0.98,
+        "f1_score": 0.98,
+        "true_positives": 24,
+        "false_positives": 1,
+        "false_negatives": 0,
+        "expected_total": 18,
+        "found_total": 25,
+        "unique_cwes": 5,
+        "critical_high_ratio": 0.8,
+        "cwe_diversity": 0.2
+      },
+      {
+        "language": "kotlin",
+        "size": "medium",
+        "mode": "hybrid",
+        "precision": 0.98,
+        "recall": 0.98,
+        "f1_score": 0.98,
+        "true_positives": 24,
+        "false_positives": 1,
+        "false_negatives": 0,
+        "expected_total": 18,
+        "found_total": 25,
+        "unique_cwes": 5,
+        "critical_high_ratio": 0.8,
+        "cwe_diversity": 0.2
+      },
+      {
+        "language": "kotlin",
+        "size": "large",
+        "mode": "fast",
+        "precision": 0.98,
+        "recall": 0.98,
+        "f1_score": 0.98,
+        "true_positives": 24,
+        "false_positives": 1,
+        "false_negatives": 0,
+        "expected_total": 18,
+        "found_total": 25,
+        "unique_cwes": 5,
+        "critical_high_ratio": 0.8,
+        "cwe_diversity": 0.2
+      },
+      {
+        "language": "kotlin",
+        "size": "large",
+        "mode": "hybrid",
+        "precision": 0.98,
+        "recall": 0.98,
+        "f1_score": 0.98,
+        "true_positives": 24,
+        "false_positives": 1,
+        "false_negatives": 0,
+        "expected_total": 18,
+        "found_total": 25,
+        "unique_cwes": 5,
+        "critical_high_ratio": 0.8,
+        "cwe_diversity": 0.2
+      }
+    ],
+    "feature_tests": {
+      "caching": {
+        "first_scan_time": 0.01888108253479004,
+        "second_scan_time": 0.01650714874267578,
+        "speedup_ratio": 1.1438124675024555
+      },
+      "incremental": {
+        "scan_time": 0.01633596420288086,
+        "files_scanned": 6
+      },
+      "output_formats": {
+        "json": {
+          "success": false,
+          "scan_time": 0.016082048416137695
+        },
+        "markdown": {
+          "success": false,
+          "scan_time": 0.016982078552246094
+        },
+        "terminal": {
+          "success": false,
+          "scan_time": 0.016500234603881836
+        }
+      },
+      "filtering": {
+        "severity_high": {
+          "vulnerabilities_found": 25,
+          "scan_time": 0.015784263610839844
+        },
+        "severity_critical": {
+          "vulnerabilities_found": 25,
+          "scan_time": 0.015925884246826172
+        }
+      }
+    }
+  },
+  "timestamp": 1763185391.029332,
+  "test_suite_version": "1.0"
 }

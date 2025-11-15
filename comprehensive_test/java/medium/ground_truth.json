@@ -1,0 +1,531 @@
+{
+  "vulnerabilities": [
+    {
+      "file": "file_0.java",
+      "line": 5,
+      "cwe": "CWE-78",
+      "severity": "critical",
+      "title": "Command Injection"
+    },
+    {
+      "file": "file_0.java",
+      "line": 10,
+      "cwe": "CWE-79",
+      "severity": "high",
+      "title": "XSS"
+    },
+    {
+      "file": "file_0.java",
+      "line": 15,
+      "cwe": "CWE-89",
+      "severity": "medium",
+      "title": "SQL Injection"
+    },
+    {
+      "file": "file_1.java",
+      "line": 5,
+      "cwe": "CWE-78",
+      "severity": "critical",
+      "title": "Command Injection"
+    },
+    {
+      "file": "file_1.java",
+      "line": 10,
+      "cwe": "CWE-79",
+      "severity": "high",
+      "title": "XSS"
+    },
+    {
+      "file": "file_1.java",
+      "line": 15,
+      "cwe": "CWE-89",
+      "severity": "medium",
+      "title": "SQL Injection"
+    },
+    {
+      "file": "file_2.java",
+      "line": 5,
+      "cwe": "CWE-78",
+      "severity": "critical",
+      "title": "Command Injection"
+    },
+    {
+      "file": "file_2.java",
+      "line": 10,
+      "cwe": "CWE-79",
+      "severity": "high",
+      "title": "XSS"
+    },
+    {
+      "file": "file_2.java",
+      "line": 15,
+      "cwe": "CWE-89",
+      "severity": "medium",
+      "title": "SQL Injection"
+    },
+    {
+      "file": "file_3.java",
+      "line": 5,
+      "cwe": "CWE-78",
+      "severity": "critical",
+      "title": "Command Injection"
+    },
+    {
+      "file": "file_3.java",
+      "line": 10,
+      "cwe": "CWE-79",
+      "severity": "high",
+      "title": "XSS"
+    },
+    {
+      "file": "file_3.java",
+      "line": 15,
+      "cwe": "CWE-89",
+      "severity": "medium",
+      "title": "SQL Injection"
+    },
+    {
+      "file": "file_4.java",
+      "line": 5,
+      "cwe": "CWE-78",
+      "severity": "critical",
+      "title": "Command Injection"
+    },
+    {
+      "file": "file_4.java",
+      "line": 10,
+      "cwe": "CWE-79",
+      "severity": "high",
+      "title": "XSS"
+    },
+    {
+      "file": "file_4.java",
+      "line": 15,
+      "cwe": "CWE-89",
+      "severity": "medium",
+      "title": "SQL Injection"
+    },
+    {
+      "file": "file_5.java",
+      "line": 5,
+      "cwe": "CWE-78",
+      "severity": "critical",
+      "title": "Command Injection"
+    },
+    {
+      "file": "file_5.java",
+      "line": 10,
+      "cwe": "CWE-79",
+      "severity": "high",
+      "title": "XSS"
+    },
+    {
+      "file": "file_5.java",
+      "line": 15,
+      "cwe": "CWE-89",
+      "severity": "medium",
+      "title": "SQL Injection"
+    },
+    {
+      "file": "file_6.java",
+      "line": 5,
+      "cwe": "CWE-78",
+      "severity": "critical",
+      "title": "Command Injection"
+    },
+    {
+      "file": "file_6.java",
+      "line": 10,
+      "cwe": "CWE-79",
+      "severity": "high",
+      "title": "XSS"
+    },
+    {
+      "file": "file_6.java",
+      "line": 15,
+      "cwe": "CWE-89",
+      "severity": "medium",
+      "title": "SQL Injection"
+    },
+    {
+      "file": "file_7.java",
+      "line": 5,
+      "cwe": "CWE-78",
+      "severity": "critical",
+      "title": "Command Injection"
+    },
+    {
+      "file": "file_7.java",
+      "line": 10,
+      "cwe": "CWE-79",
+      "severity": "high",
+      "title": "XSS"
+    },
+    {
+      "file": "file_7.java",
+      "line": 15,
+      "cwe": "CWE-89",
+      "severity": "medium",
+      "title": "SQL Injection"
+    },
+    {
+      "file": "file_8.java",
+      "line": 5,
+      "cwe": "CWE-78",
+      "severity": "critical",
+      "title": "Command Injection"
+    },
+    {
+      "file": "file_8.java",
+      "line": 10,
+      "cwe": "CWE-79",
+      "severity": "high",
+      "title": "XSS"
+    },
+    {
+      "file": "file_8.java",
+      "line": 15,
+      "cwe": "CWE-89",
+      "severity": "medium",
+      "title": "SQL Injection"
+    },
+    {
+      "file": "file_9.java",
+      "line": 5,
+      "cwe": "CWE-78",
+      "severity": "critical",
+      "title": "Command Injection"
+    },
+    {
+      "file": "file_9.java",
+      "line": 10,
+      "cwe": "CWE-79",
+      "severity": "high",
+      "title": "XSS"
+    },
+    {
+      "file": "file_9.java",
+      "line": 15,
+      "cwe": "CWE-89",
+      "severity": "medium",
+      "title": "SQL Injection"
+    },
+    {
+      "file": "file_10.java",
+      "line": 5,
+      "cwe": "CWE-78",
+      "severity": "critical",
+      "title": "Command Injection"
+    },
+    {
+      "file": "file_10.java",
+      "line": 10,
+      "cwe": "CWE-79",
+      "severity": "high",
+      "title": "XSS"
+    },
+    {
+      "file": "file_10.java",
+      "line": 15,
+      "cwe": "CWE-89",
+      "severity": "medium",
+      "title": "SQL Injection"
+    },
+    {
+      "file": "file_11.java",
+      "line": 5,
+      "cwe": "CWE-78",
+      "severity": "critical",
+      "title": "Command Injection"
+    },
+    {
+      "file": "file_11.java",
+      "line": 10,
+      "cwe": "CWE-79",
+      "severity": "high",
+      "title": "XSS"
+    },
+    {
+      "file": "file_11.java",
+      "line": 15,
+      "cwe": "CWE-89",
+      "severity": "medium",
+      "title": "SQL Injection"
+    },
+    {
+      "file": "file_12.java",
+      "line": 5,
+      "cwe": "CWE-78",
+      "severity": "critical",
+      "title": "Command Injection"
+    },
+    {
+      "file": "file_12.java",
+      "line": 10,
+      "cwe": "CWE-79",
+      "severity": "high",
+      "title": "XSS"
+    },
+    {
+      "file": "file_12.java",
+      "line": 15,
+      "cwe": "CWE-89",
+      "severity": "medium",
+      "title": "SQL Injection"
+    },
+    {
+      "file": "file_13.java",
+      "line": 5,
+      "cwe": "CWE-78",
+      "severity": "critical",
+      "title": "Command Injection"
+    },
+    {
+      "file": "file_13.java",
+      "line": 10,
+      "cwe": "CWE-79",
+      "severity": "high",
+      "title": "XSS"
+    },
+    {
+      "file": "file_13.java",
+      "line": 15,
+      "cwe": "CWE-89",
+      "severity": "medium",
+      "title": "SQL Injection"
+    },
+    {
+      "file": "file_14.java",
+      "line": 5,
+      "cwe": "CWE-78",
+      "severity": "critical",
+      "title": "Command Injection"
+    },
+    {
+      "file": "file_14.java",
+      "line": 10,
+      "cwe": "CWE-79",
+      "severity": "high",
+      "title": "XSS"
+    },
+    {
+      "file": "file_14.java",
+      "line": 15,
+      "cwe": "CWE-89",
+      "severity": "medium",
+      "title": "SQL Injection"
+    },
+    {
+      "file": "file_15.java",
+      "line": 5,
+      "cwe": "CWE-78",
+      "severity": "critical",
+      "title": "Command Injection"
+    },
+    {
+      "file": "file_15.java",
+      "line": 10,
+      "cwe": "CWE-79",
+      "severity": "high",
+      "title": "XSS"
+    },
+    {
+      "file": "file_15.java",
+      "line": 15,
+      "cwe": "CWE-89",
+      "severity": "medium",
+      "title": "SQL Injection"
+    },
+    {
+      "file": "file_16.java",
+      "line": 5,
+      "cwe": "CWE-78",
+      "severity": "critical",
+      "title": "Command Injection"
+    },
+    {
+      "file": "file_16.java",
+      "line": 10,
+      "cwe": "CWE-79",
+      "severity": "high",
+      "title": "XSS"
+    },
+    {
+      "file": "file_16.java",
+      "line": 15,
+      "cwe": "CWE-89",
+      "severity": "medium",
+      "title": "SQL Injection"
+    },
+    {
+      "file": "file_17.java",
+      "line": 5,
+      "cwe": "CWE-78",
+      "severity": "critical",
+      "title": "Command Injection"
+    },
+    {
+      "file": "file_17.java",
+      "line": 10,
+      "cwe": "CWE-79",
+      "severity": "high",
+      "title": "XSS"
+    },
+    {
+      "file": "file_17.java",
+      "line": 15,
+      "cwe": "CWE-89",
+      "severity": "medium",
+      "title": "SQL Injection"
+    },
+    {
+      "file": "file_18.java",
+      "line": 5,
+      "cwe": "CWE-78",
+      "severity": "critical",
+      "title": "Command Injection"
+    },
+    {
+      "file": "file_18.java",
+      "line": 10,
+      "cwe": "CWE-79",
+      "severity": "high",
+      "title": "XSS"
+    },
+    {
+      "file": "file_18.java",
+      "line": 15,
+      "cwe": "CWE-89",
+      "severity": "medium",
+      "title": "SQL Injection"
+    },
+    {
+      "file": "file_19.java",
+      "line": 5,
+      "cwe": "CWE-78",
+      "severity": "critical",
+      "title": "Command Injection"
+    },
+    {
+      "file": "file_19.java",
+      "line": 10,
+      "cwe": "CWE-79",
+      "severity": "high",
+      "title": "XSS"
+    },
+    {
+      "file": "file_19.java",
+      "line": 15,
+      "cwe": "CWE-89",
+      "severity": "medium",
+      "title": "SQL Injection"
+    },
+    {
+      "file": "file_20.java",
+      "line": 5,
+      "cwe": "CWE-78",
+      "severity": "critical",
+      "title": "Command Injection"
+    },
+    {
+      "file": "file_20.java",
+      "line": 10,
+      "cwe": "CWE-79",
+      "severity": "high",
+      "title": "XSS"
+    },
+    {
+      "file": "file_20.java",
+      "line": 15,
+      "cwe": "CWE-89",
+      "severity": "medium",
+      "title": "SQL Injection"
+    },
+    {
+      "file": "file_21.java",
+      "line": 5,
+      "cwe": "CWE-78",
+      "severity": "critical",
+      "title": "Command Injection"
+    },
+    {
+      "file": "file_21.java",
+      "line": 10,
+      "cwe": "CWE-79",
+      "severity": "high",
+      "title": "XSS"
+    },
+    {
+      "file": "file_21.java",
+      "line": 15,
+      "cwe": "CWE-89",
+      "severity": "medium",
+      "title": "SQL Injection"
+    },
+    {
+      "file": "file_22.java",
+      "line": 5,
+      "cwe": "CWE-78",
+      "severity": "critical",
+      "title": "Command Injection"
+    },
+    {
+      "file": "file_22.java",
+      "line": 10,
+      "cwe": "CWE-79",
+      "severity": "high",
+      "title": "XSS"
+    },
+    {
+      "file": "file_22.java",
+      "line": 15,
+      "cwe": "CWE-89",
+      "severity": "medium",
+      "title": "SQL Injection"
+    },
+    {
+      "file": "file_23.java",
+      "line": 5,
+      "cwe": "CWE-78",
+      "severity": "critical",
+      "title": "Command Injection"
+    },
+    {
+      "file": "file_23.java",
+      "line": 10,
+      "cwe": "CWE-79",
+      "severity": "high",
+      "title": "XSS"
+    },
+    {
+      "file": "file_23.java",
+      "line": 15,
+      "cwe": "CWE-89",
+      "severity": "medium",
+      "title": "SQL Injection"
+    },
+    {
+      "file": "file_24.java",
+      "line": 5,
+      "cwe": "CWE-78",
+      "severity": "critical",
+      "title": "Command Injection"
+    },
+    {
+      "file": "file_24.java",
+      "line": 10,
+      "cwe": "CWE-79",
+      "severity": "high",
+      "title": "XSS"
+    },
+    {
+      "file": "file_24.java",
+      "line": 15,
+      "cwe": "CWE-89",
+      "severity": "medium",
+      "title": "SQL Injection"
+    }
+  ],
+  "total_files": 25,
+  "expected_vulnerabilities": 75
+}

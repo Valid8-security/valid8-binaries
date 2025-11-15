@@ -1,4 +1,4 @@
-:::#!/usr/bin/env python3
+#!/usr/bin/env python3
 """
 🚀 PRECISION 90% VALIDATION TEST
 
@@ -20,13 +20,13 @@ def run_precision_test():
     print("=" * 60)
 
     # Step 1: Generate/verify test codebase exists
-    test_dir = Path("/Users/sathvikkurapati/Downloads/parry-local/complex_test_codebase")
+    test_dir = Path("/Users/sathvikkurapati/Downloads/valid8-local/complex_test_codebase")
     if not test_dir.exists():
         print("📁 Generating complex test codebase...")
         result = subprocess.run([
             sys.executable,
-            "/Users/sathvikkurapati/Downloads/parry-local/scripts/create_complex_test.py"
-        ], capture_output=True, text=True, cwd="/Users/sathvikkurapati/Downloads/parry-local")
+            "/Users/sathvikkurapati/Downloads/valid8-local/scripts/create_complex_test.py"
+        ], capture_output=True, text=True, cwd="/Users/sathvikkurapati/Downloads/valid8-local")
 
         if result.returncode != 0:
             print(f"❌ Failed to generate test codebase: {result.stderr}")
@@ -49,12 +49,12 @@ def run_precision_test():
         start_time = time.time()
 
         result = subprocess.run([
-            sys.executable, "-m", "parry.cli", "scan",
+            sys.executable, "-m", "valid8.cli", "scan",
             str(test_dir),
             "--mode", "hybrid",
             "--format", "json",
             "--output", output_file
-        ], capture_output=True, text=True, cwd="/Users/sathvikkurapati/Downloads/parry-local")
+        ], capture_output=True, text=True, cwd="/Users/sathvikkurapati/Downloads/valid8-local")
 
         end_time = time.time()
         scan_time = end_time - start_time

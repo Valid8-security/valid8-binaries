@@ -1,5 +1,0 @@
-"""
-Parry tests package
-"""
-
-

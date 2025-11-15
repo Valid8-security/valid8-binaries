@@ -1,2 +1,0 @@
-API_KEY = 'sk-123456789'
-PASSWORD = 'admin123' 

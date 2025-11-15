@@ -1,0 +1,83 @@
+{
+  "scan_id": "ea0b56652fdb",
+  "timestamp": "2025-11-15T04:48:35.167308",
+  "target": "comprehensive_test/python/small/file_0.py",
+  "summary": {
+    "files_scanned": 1,
+    "vulnerabilities_found": 5,
+    "by_severity": {
+      "high": 1,
+      "critical": 3,
+      "medium": 1
+    },
+    "by_cwe": {
+      "CWE-639": 1,
+      "CWE-78": 1,
+      "CWE-89": 1,
+      "CWE-489": 1,
+      "CWE-319": 1
+    }
+  },
+  "vulnerabilities": [
+    {
+      "cwe": "CWE-639",
+      "severity": "high",
+      "title": "Insecure Direct Object Reference",
+      "description": "Resource access determined solely by user-supplied identifiers.",
+      "file_path": "comprehensive_test/python/small/file_0.py",
+      "line_number": 31,
+      "code_snippet": "query = f\"SELECT * FROM users WHERE id = {user_id}\"  # VULNERABLE",
+      "confidence": "0.80",
+      "category": "security",
+      "language": "python"
+    },
+    {
+      "cwe": "CWE-78",
+      "severity": "critical",
+      "title": "Command Injection",
+      "description": "Tainted data from user input reaches dangerous sink without sanitization. Sanitize user input before command injection.",
+      "file_path": "comprehensive_test/python/small/file_0.py",
+      "line_number": 15,
+      "code_snippet": "def run_command():\n    cmd = request.args.get('cmd', 'ls')\n    result = subprocess.call(cmd, shell=True)  # VULNERABLE\n    return f\"Command executed: {cmd}\"\n",
+      "confidence": "high",
+      "category": "security",
+      "language": "python"
+    },
+    {
+      "cwe": "CWE-89",
+      "severity": "critical",
+      "title": "SQL Injection",
+      "description": "Tainted data from user input reaches dangerous sink without sanitization. Sanitize user input before sql injection.",
+      "file_path": "comprehensive_test/python/small/file_0.py",
+      "line_number": 32,
+      "code_snippet": "    cursor = conn.cursor()\n    query = f\"SELECT * FROM users WHERE id = {user_id}\"  # VULNERABLE\n    cursor.execute(query)\n    results = cursor.fetchall()\n    conn.close()",
+      "confidence": "high",
+      "category": "security",
+      "language": "python"
+    },
+    {
+      "cwe": "CWE-489",
+      "severity": "critical",
+      "title": "Debug Mode Enabled",
+      "description": "Flask debug mode enables the interactive debugger, allowing arbitrary code execution.",
+      "file_path": "comprehensive_test/python/small/file_0.py",
+      "line_number": 46,
+      "code_snippet": "app.run(debug=True)",
+      "confidence": "high",
+      "category": "security",
+      "language": "python"
+    },
+    {
+      "cwe": "CWE-319",
+      "severity": "medium",
+      "title": "Missing HTTPS Configuration",
+      "description": "Application runs without SSL/TLS configuration.",
+      "file_path": "comprehensive_test/python/small/file_0.py",
+      "line_number": 46,
+      "code_snippet": "app.run(debug=True)",
+      "confidence": "medium",
+      "category": "security",
+      "language": "python"
+    }
+  ]
+}

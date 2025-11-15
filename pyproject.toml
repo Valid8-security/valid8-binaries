@@ -3,14 +3,14 @@ requires = ["setuptools>=65.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "parry-scanner"
-version = "0.7.0"
-description = "Privacy-first AI-powered security scanner with 90.9% recall and local LLM"
+name = "valid8-scanner"
+version = "1.0.0"
+description = "Privacy-first AI-powered security scanner with enhanced detection across 25+ languages"
 readme = "README.md"
 requires-python = ">=3.8"
 license = {text = "MIT"}
 authors = [
-    {name = "Parry Security", email = "security@parry.dev"}
+    {name = "Valid8 Security", email = "security@valid8.dev"}
 ]
 keywords = ["security", "vulnerability", "scanner", "llm", "sast", "ai", "static-analysis"]
 classifiers = [
@@ -56,11 +56,11 @@ dev = [
 ]
 
 [project.scripts]
-parry = "parry.cli:main"
+valid8 = "valid8.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["parry*"]
+include = ["valid8*"]
 
 [tool.black]
 line-length = 100

@@ -1,0 +1,111 @@
+{
+  "vulnerabilities": [
+    {
+      "file": "file_0.kt",
+      "line": 5,
+      "cwe": "CWE-78",
+      "severity": "critical",
+      "title": "Command Injection"
+    },
+    {
+      "file": "file_0.kt",
+      "line": 10,
+      "cwe": "CWE-79",
+      "severity": "high",
+      "title": "XSS"
+    },
+    {
+      "file": "file_0.kt",
+      "line": 15,
+      "cwe": "CWE-89",
+      "severity": "medium",
+      "title": "SQL Injection"
+    },
+    {
+      "file": "file_1.kt",
+      "line": 5,
+      "cwe": "CWE-78",
+      "severity": "critical",
+      "title": "Command Injection"
+    },
+    {
+      "file": "file_1.kt",
+      "line": 10,
+      "cwe": "CWE-79",
+      "severity": "high",
+      "title": "XSS"
+    },
+    {
+      "file": "file_1.kt",
+      "line": 15,
+      "cwe": "CWE-89",
+      "severity": "medium",
+      "title": "SQL Injection"
+    },
+    {
+      "file": "file_2.kt",
+      "line": 5,
+      "cwe": "CWE-78",
+      "severity": "critical",
+      "title": "Command Injection"
+    },
+    {
+      "file": "file_2.kt",
+      "line": 10,
+      "cwe": "CWE-79",
+      "severity": "high",
+      "title": "XSS"
+    },
+    {
+      "file": "file_2.kt",
+      "line": 15,
+      "cwe": "CWE-89",
+      "severity": "medium",
+      "title": "SQL Injection"
+    },
+    {
+      "file": "file_3.kt",
+      "line": 5,
+      "cwe": "CWE-78",
+      "severity": "critical",
+      "title": "Command Injection"
+    },
+    {
+      "file": "file_3.kt",
+      "line": 10,
+      "cwe": "CWE-79",
+      "severity": "high",
+      "title": "XSS"
+    },
+    {
+      "file": "file_3.kt",
+      "line": 15,
+      "cwe": "CWE-89",
+      "severity": "medium",
+      "title": "SQL Injection"
+    },
+    {
+      "file": "file_4.kt",
+      "line": 5,
+      "cwe": "CWE-78",
+      "severity": "critical",
+      "title": "Command Injection"
+    },
+    {
+      "file": "file_4.kt",
+      "line": 10,
+      "cwe": "CWE-79",
+      "severity": "high",
+      "title": "XSS"
+    },
+    {
+      "file": "file_4.kt",
+      "line": 15,
+      "cwe": "CWE-89",
+      "severity": "medium",
+      "title": "SQL Injection"
+    }
+  ],
+  "total_files": 5,
+  "expected_vulnerabilities": 15
+}
