@@ -60,7 +60,7 @@ class PaymentConfig:
     LICENSE_SERVER = os.environ.get('PARRY_LICENSE_SERVER', 'https://api.valid8.dev')
     STRIPE_API_URL = 'https://api.stripe.com/v1'
     
-    # Subscription tiers
+    # Enterprise-focused subscription tiers (competitive pricing for new startup)
     TIERS = {
         'free': SubscriptionTier(
             name='Free',
@@ -70,44 +70,68 @@ class PaymentConfig:
                 'CLI tool with local Ollama',
                 'Basic security detectors (30+)',
                 'Fast mode scanning',
-                'JSON/Text output'
+                'JSON/Text output',
+                'Community support'
             ],
             file_limit=100,
             llm_mode='local'
         ),
         'pro': SubscriptionTier(
             name='Pro',
-            price_monthly=4900,  # $49.00
-            price_yearly=49900,  # $499.00 (save $89)
+            price_monthly=2900,  # $29.00 (competitive startup pricing)
+            price_yearly=24900,  # $249.00 (save $129)
             features=[
                 'Everything in Free',
-                'Hosted LLM (no Ollama setup needed)',
+                'Hosted LLM (GPT-4, Claude, Gemini)',
                 'AI-powered validation',
                 'IDE extensions (VS Code, JetBrains)',
                 'GitHub Actions integration',
                 'All security detectors (150+)',
                 'Deep + Hybrid modes',
                 'Compliance reports',
-                'Email support'
+                'Email support',
+                'Team collaboration (5 seats)',
+                'Basic API access (1000 scans/month)'
             ],
             file_limit=None,  # Unlimited
             llm_mode='hosted'
         ),
         'enterprise': SubscriptionTier(
             name='Enterprise',
-            price_monthly=29900,  # $299.00
-            price_yearly=299900,  # $2,999.00 (save $590)
+            price_monthly=9900,  # $99.00/seat (volume discount)
+            price_yearly=89000,  # $890.00/seat (save $1,188)
             features=[
                 'Everything in Pro',
-                'REST API access',
+                'Advanced REST API (unlimited scans)',
+                'Custom security rules & policies',
+                'SSO integration (SAML, OAuth)',
+                'On-premise & air-gapped deployment',
+                'Container & IaC scanning',
+                'Supply chain security analysis',
+                'Federated learning capabilities',
+                'Priority support (4-hour SLA)',
+                'Advanced compliance (SOC2, HIPAA, GDPR)',
+                'Audit logs & compliance reports',
+                'Unlimited organizations & seats',
+                'Custom integrations',
+                'Dedicated success manager'
+            ],
+            file_limit=None,
+            llm_mode='hosted'
+        ),
+        'enterprise_custom': SubscriptionTier(
+            name='Enterprise Custom',
+            price_monthly=0,  # Custom pricing
+            price_yearly=0,   # Custom pricing
+            features=[
+                'All Enterprise features',
+                'Custom SLA terms',
+                'White-label options',
+                'Custom integrations',
+                'On-premise deployment support',
                 'Custom security rules',
-                'SSO integration',
-                'On-premise deployment',
-                'Container + IaC scanning',
-                'Priority support (SLA)',
-                'Advanced compliance (SOC2, HIPAA)',
-                'Audit logs',
-                'Unlimited organizations'
+                'Dedicated engineering support',
+                'Annual contract terms'
             ],
             file_limit=None,
             llm_mode='hosted'
@@ -119,7 +143,8 @@ class PaymentConfig:
         'pro_monthly': os.environ.get('STRIPE_PRODUCT_PRO_MONTHLY', 'prod_...'),
         'pro_yearly': os.environ.get('STRIPE_PRODUCT_PRO_YEARLY', 'prod_...'),
         'enterprise_monthly': os.environ.get('STRIPE_PRODUCT_ENT_MONTHLY', 'prod_...'),
-        'enterprise_yearly': os.environ.get('STRIPE_PRODUCT_ENT_YEARLY', 'prod_...')
+        'enterprise_yearly': os.environ.get('STRIPE_PRODUCT_ENT_YEARLY', 'prod_...'),
+        'enterprise_custom': os.environ.get('STRIPE_PRODUCT_ENT_CUSTOM', 'prod_...')  # For custom enterprise contracts
     }
 
 

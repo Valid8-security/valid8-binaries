@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Download, Terminal, CheckCircle } from 'lucide-react';
+import { X, Download, CheckCircle, Shield } from 'lucide-react';
 
 interface DownloadModalProps {
   isOpen: boolean;
@@ -8,6 +8,10 @@ interface DownloadModalProps {
 
 const DownloadModal: React.FC<DownloadModalProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
+
+  // Check if user is authenticated
+  const userData = localStorage.getItem('valid8_user');
+  const user = userData ? JSON.parse(userData) : null;
 
   // Detect user's platform
   const getPlatform = () => {
@@ -30,17 +34,57 @@ const DownloadModal: React.FC<DownloadModalProps> = ({ isOpen, onClose }) => {
   };
 
   const handleDownload = (platform: string) => {
+    if (!user) {
+      alert('Please create an account first to download Valid8.');
+      return;
+    }
     const url = getDownloadUrl(platform);
     window.open(url, '_blank');
   };
 
-  const handleFreeTrial = () => {
-    // For free trial, we'll provide a simple installation command
-    const trialCommand = `curl -fsSL https://raw.githubusercontent.com/Valid8-security/parry-scanner/main/install-trial.sh | bash`;
-    navigator.clipboard.writeText(trialCommand).then(() => {
-      alert('Free trial installation command copied to clipboard!\n\nRun this in your terminal:\n' + trialCommand);
-    });
-  };
+  // If user is not authenticated, show login prompt
+  if (!user) {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div className="bg-white rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto">
+          <div className="p-6">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-gray-900">Download Valid8</h2>
+              <button
+                onClick={onClose}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+
+            <div className="text-center py-8">
+              <Shield className="h-16 w-16 text-blue-600 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-gray-900 mb-2">Account Required</h3>
+              <p className="text-gray-600 mb-6">
+                To download Valid8, you need to create an account with a free trial license.
+              </p>
+              <div className="space-y-3">
+                <a
+                  href="/signup"
+                  className="w-full bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center font-semibold"
+                >
+                  <Shield className="mr-2 h-5 w-5" />
+                  Start Free Trial
+                </a>
+                <a
+                  href="/login"
+                  className="block text-blue-600 hover:text-blue-500 text-sm"
+                >
+                  Already have an account? Sign in
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
@@ -57,48 +101,41 @@ const DownloadModal: React.FC<DownloadModalProps> = ({ isOpen, onClose }) => {
           </div>
 
           <div className="space-y-6">
+            {/* License Status */}
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-semibold text-green-900">License Active ✅</h3>
+                  <p className="text-green-700 text-sm">
+                    {user.subscription === 'free_trial' ? 'Free Trial' : 'Pro Plan'} • {user.scans_remaining} scans remaining
+                  </p>
+                </div>
+                <div className="text-right">
+                  <p className="text-xs text-green-600">Machine-bound license</p>
+                  <p className="text-xs font-mono text-green-800">{user.machine_id.substring(0, 12)}...</p>
+                </div>
+              </div>
+            </div>
+
             {/* Prerequisites */}
             <div>
-              <h3 className="text-lg font-semibold mb-3 text-gray-900">Prerequisites</h3>
+              <h3 className="text-lg font-semibold mb-3 text-gray-900">System Requirements</h3>
               <div className="bg-blue-50 p-4 rounded-lg">
                 <div className="flex items-start">
                   <CheckCircle className="h-5 w-5 text-blue-600 mt-0.5 mr-3" />
                   <div>
-                    <p className="font-medium text-blue-900">Python 3.8+</p>
-                    <p className="text-blue-800 text-sm">Valid8 requires Python 3.8 or higher</p>
+                    <p className="font-medium text-blue-900">No Dependencies Required</p>
+                    <p className="text-blue-800 text-sm">Valid8 runs standalone - no Python or external dependencies needed</p>
                   </div>
                 </div>
                 <div className="flex items-start mt-3">
                   <CheckCircle className="h-5 w-5 text-blue-600 mt-0.5 mr-3" />
                   <div>
-                    <p className="font-medium text-blue-900">Local LLM (Optional but Recommended)</p>
-                    <p className="text-blue-800 text-sm">Install Ollama for best AI-powered accuracy</p>
+                    <p className="font-medium text-blue-900">100% Local Processing</p>
+                    <p className="text-blue-800 text-sm">All scanning and AI analysis happens on your machine</p>
                   </div>
                 </div>
               </div>
-            </div>
-
-            {/* Free Trial Option */}
-            <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-6">
-              <h3 className="text-lg font-semibold mb-3 text-green-900">🚀 Start Free Trial (Recommended)</h3>
-              <p className="text-green-800 mb-4">
-                Get started instantly with our limited free trial. Includes basic scanning for up to 100 files with AI assistance.
-              </p>
-              <div className="bg-white rounded p-3 mb-4">
-                <code className="text-sm text-gray-800">
-                  curl -fsSL https://raw.githubusercontent.com/Valid8-security/parry-scanner/main/install-trial.sh | bash
-                </code>
-              </div>
-              <button
-                onClick={handleFreeTrial}
-                className="w-full bg-green-600 text-white px-4 py-3 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center font-semibold"
-              >
-                <Download className="mr-2 h-4 w-4" />
-                Copy Trial Command
-              </button>
-              <p className="text-green-700 text-sm mt-2 text-center">
-                ✨ No download required • 100 files limit • 7-day trial • Upgrade anytime
-              </p>
             </div>
 
             {/* Download Options */}

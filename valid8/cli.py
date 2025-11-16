@@ -64,15 +64,353 @@ def _ai_analyze_single_file(content: str, file_path: str, language: str) -> List
         return []
 
 
+# Enterprise CLI Commands
+@main.group()
+def enterprise():
+    """
+    🏢 Enterprise organization and team management
+
+    Manage enterprise organizations, team seats, and advanced features.
+    Requires Enterprise license.
+    """
+    pass
+
+
+@enterprise.command()
+@click.option("--name", required=True, help="Organization name")
+@click.option("--domain", required=True, help="Organization domain")
+@click.option("--admin-email", required=True, help="Admin email address")
+@click.option("--seats", default=10, type=int, help="Number of seats to allocate")
+@click.option("--tier", default="enterprise", type=click.Choice(["pro", "enterprise"]),
+              help="Subscription tier")
+def create_org(name: str, domain: str, admin_email: str, seats: int, tier: str):
+    """
+    Create a new enterprise organization
+
+    Example: valid8 enterprise create-org --name "Acme Corp" --domain "acme.com"
+             --admin-email "admin@acme.com" --seats 50
+    """
+    try:
+        from valid8.enterprise_billing import EnterpriseBillingManager
+
+        billing_manager = EnterpriseBillingManager()
+
+        org = billing_manager.create_organization(
+            name=name,
+            domain=domain,
+            admin_email=admin_email,
+            tier=tier,
+            seats=seats
+        )
+
+        console.print(f"[green]✅ Enterprise organization created successfully![/green]")
+        console.print(f"[bold]Organization:[/bold] {org.name}")
+        console.print(f"[bold]Domain:[/bold] {org.domain}")
+        console.print(f"[bold]Admin:[/bold] {org.admin_email}")
+        console.print(f"[bold]Tier:[/bold] {org.subscription_tier}")
+        console.print(f"[bold]Seats:[/bold] {org.seats_allocated}")
+        console.print(f"[bold]ID:[/bold] {org.id}")
+
+    except Exception as e:
+        console.print(f"[red]❌ Failed to create organization: {e}[/red]")
+
+
+@enterprise.command()
+@click.argument("org_id")
+@click.option("--email", required=True, help="User email to add")
+@click.option("--name", required=True, help="User display name")
+@click.option("--role", default="developer", type=click.Choice(["admin", "developer", "auditor", "readonly"]),
+              help="User role")
+def add_seat(org_id: str, email: str, name: str, role: str):
+    """
+    Add a team member to an enterprise organization
+
+    Example: valid8 enterprise add-seat ORG123 --email "john@acme.com"
+             --name "John Developer" --role developer
+    """
+    try:
+        from valid8.enterprise_billing import EnterpriseBillingManager
+
+        billing_manager = EnterpriseBillingManager()
+
+        seat = billing_manager.assign_seat(
+            organization_id=org_id,
+            user_email=email,
+            user_name=name,
+            role=role
+        )
+
+        console.print(f"[green]✅ Team member added successfully![/green]")
+        console.print(f"[bold]Name:[/bold] {seat.user_name}")
+        console.print(f"[bold]Email:[/bold] {seat.user_email}")
+        console.print(f"[bold]Role:[/bold] {seat.role}")
+        console.print(f"[bold]License:[/bold] {seat.license_key}")
+
+    except Exception as e:
+        console.print(f"[red]❌ Failed to add team member: {e}[/red]")
+
+
+@enterprise.command()
+@click.argument("org_id")
+@click.option("--email", required=True, help="User email to remove")
+def remove_seat(org_id: str, email: str):
+    """
+    Remove a team member from an enterprise organization
+
+    Example: valid8 enterprise remove-seat ORG123 --email "john@acme.com"
+    """
+    try:
+        from valid8.enterprise_billing import EnterpriseBillingManager
+
+        billing_manager = EnterpriseBillingManager()
+
+        if billing_manager.revoke_seat(org_id, email):
+            console.print(f"[green]✅ Team member removed successfully![/green]")
+        else:
+            console.print(f"[red]❌ Team member not found[/red]")
+
+    except Exception as e:
+        console.print(f"[red]❌ Failed to remove team member: {e}[/red]")
+
+
+@enterprise.command()
+@click.argument("org_id")
+def list_seats(org_id: str):
+    """
+    List all team members in an enterprise organization
+
+    Example: valid8 enterprise list-seats ORG123
+    """
+    try:
+        from valid8.enterprise_billing import EnterpriseBillingManager
+
+        billing_manager = EnterpriseBillingManager()
+        seats = billing_manager.get_organization_seats(org_id)
+
+        if not seats:
+            console.print(f"[yellow]No team members found for organization {org_id}[/yellow]")
+            return
+
+        table = Table(title=f"Team Members - Organization {org_id}")
+        table.add_column("Name", style="cyan")
+        table.add_column("Email", style="blue")
+        table.add_column("Role", style="green")
+        table.add_column("Joined", style="yellow")
+        table.add_column("Last Active", style="magenta")
+
+        for seat in seats:
+            joined = seat.assigned_at.strftime("%Y-%m-%d") if seat.assigned_at else "N/A"
+            last_active = seat.last_active.strftime("%Y-%m-%d") if seat.last_active else "Never"
+            table.add_row(seat.user_name, seat.user_email, seat.role, joined, last_active)
+
+        console.print(table)
+
+    except Exception as e:
+        console.print(f"[red]❌ Failed to list team members: {e}[/red]")
+
+
+@enterprise.command()
+@click.argument("org_id")
+@click.option("--scans", type=int, help="Number of scans performed")
+@click.option("--api-calls", type=int, help="Number of API calls made")
+@click.option("--detector", help="Specific detector used")
+@click.option("--endpoint", help="API endpoint called")
+def record_usage(org_id: str, scans: int = 0, api_calls: int = 0, detector: str = None, endpoint: str = None):
+    """
+    Record usage for enterprise billing
+
+    Example: valid8 enterprise record-usage ORG123 --scans 100 --detector sql_injection
+    """
+    try:
+        from valid8.enterprise_billing import EnterpriseBillingManager
+
+        billing_manager = EnterpriseBillingManager()
+        billing_manager.record_usage(
+            organization_id=org_id,
+            scans=scans,
+            api_calls=api_calls,
+            detector_type=detector,
+            endpoint=endpoint
+        )
+
+        console.print(f"[green]✅ Usage recorded successfully![/green]")
+        console.print(f"[bold]Scans:[/bold] {scans}")
+        console.print(f"[bold]API Calls:[/bold] {api_calls}")
+
+    except Exception as e:
+        console.print(f"[red]❌ Failed to record usage: {e}[/red]")
+
+
+@enterprise.command()
+@click.argument("org_id")
+@click.option("--months", default=1, type=int, help="Number of months to show")
+def usage_report(org_id: str, months: int = 1):
+    """
+    Show enterprise usage report
+
+    Example: valid8 enterprise usage-report ORG123 --months 3
+    """
+    try:
+        from valid8.enterprise_billing import EnterpriseBillingManager
+
+        billing_manager = EnterpriseBillingManager()
+        usage = billing_manager.get_usage_report(org_id, months=months)
+
+        if not usage:
+            console.print(f"[yellow]No usage data found for organization {org_id}[/yellow]")
+            return
+
+        table = Table(title=f"Usage Report - Organization {org_id}")
+        table.add_column("Period", style="cyan")
+        table.add_column("Scans", style="green", justify="right")
+        table.add_column("API Calls", style="blue", justify="right")
+        table.add_column("Active Users", style="yellow", justify="right")
+
+        for report in usage:
+            period = f"{report.period_start[:7]}"
+            table.add_row(
+                period,
+                str(report.scans_total),
+                str(report.api_calls_total),
+                str(report.active_users)
+            )
+
+        console.print(table)
+
+        # Summary
+        total_scans = sum(r.scans_total for r in usage)
+        total_api = sum(r.api_calls_total for r in usage)
+        console.print(f"\n[bold]Summary ({months} months):[/bold]")
+        console.print(f"Total Scans: {total_scans}")
+        console.print(f"Total API Calls: {total_api}")
+
+    except Exception as e:
+        console.print(f"[red]❌ Failed to get usage report: {e}[/red]")
+
+
+@enterprise.command()
+@click.argument("org_id")
+def limits(org_id: str):
+    """
+    Check organization limits and usage
+
+    Example: valid8 enterprise limits ORG123
+    """
+    try:
+        from valid8.enterprise_billing import EnterpriseBillingManager
+
+        billing_manager = EnterpriseBillingManager()
+        limits = billing_manager.check_limits(org_id)
+
+        console.print(f"[bold]Organization Limits - {org_id}[/bold]\n")
+
+        for category, data in limits.items():
+            status_emoji = "✅" if data["status"] == "ok" else "⚠️" if data["status"] == "warning" else "❌"
+            console.print(f"{status_emoji} {category.title()}: {data['used']}/{data.get('limit', 'Unlimited')} ({data['status']})")
+
+    except Exception as e:
+        console.print(f"[red]❌ Failed to check limits: {e}[/red]")
+
+
+@enterprise.command()
+@click.option("--host", default="0.0.0.0", help="API server host")
+@click.option("--port", default=8443, type=int, help="API server port")
+def api_server(host: str, port: int):
+    """
+    Start the enterprise API server
+
+    Example: valid8 enterprise api-server --host 0.0.0.0 --port 8443
+    """
+    try:
+        from valid8.enterprise_api import EnterpriseAPI
+
+        console.print(f"[green]Starting Valid8 Enterprise API on {host}:{port}[/green]")
+        console.print(f"API Documentation: http://{host}:{port}/api/v1/health")
+
+        api = EnterpriseAPI(host=host, port=port)
+        api.start()
+
+    except Exception as e:
+        console.print(f"[red]❌ Failed to start API server: {e}[/red]")
+
+
 @click.group()
 @click.version_option(version="0.7.0")
 def main():
     """
     🔒 Valid8 Security Scanner - Privacy-first AI-powered security scanner
-    
+
     All scanning and inference happens locally on your machine.
     """
     pass
+
+
+@main.command()
+@click.option('--host', default='0.0.0.0', help='Host to bind GUI to')
+@click.option('--port', type=int, default=3000, help='Port to bind GUI to')
+@click.option('--no-browser', is_flag=True, help='Do not open browser automatically')
+def gui(host, port, no_browser):
+    """
+    🚀 Launch Valid8 Web GUI
+
+    Start the web-based interface for interactive scanning, results visualization,
+    and enterprise management.
+
+    Examples:
+        valid8 gui                    # Start GUI on default port 3000
+        valid8 gui --port 8080        # Start GUI on custom port
+        valid8 gui --no-browser       # Start GUI without opening browser
+    """
+    console.print(Panel.fit(
+        "[bold blue]🚀 Valid8 Web GUI[/bold blue]\n"
+        "[dim]Interactive security scanning and enterprise management[/dim]",
+        border_style="blue"
+    ))
+
+    try:
+        # Import and start GUI
+        from gui import Valid8GUI
+
+        console.print(f"[cyan]Starting GUI server on {host}:{port}...[/cyan]")
+
+        # Start GUI in a separate process to avoid blocking
+        import multiprocessing
+        import time
+
+        def start_gui():
+            gui = Valid8GUI(host=host, port=port, debug=False)
+            gui.start()
+
+        gui_process = multiprocessing.Process(target=start_gui, daemon=True)
+        gui_process.start()
+
+        # Wait a moment for server to start
+        time.sleep(2)
+
+        gui_url = f"http://{host}:{port}"
+        console.print(f"[green]✓ GUI server started successfully![/green]")
+        console.print(f"[bold cyan]🌐 Open your browser to: {gui_url}[/bold cyan]")
+        console.print(f"[dim]Press Ctrl+C to stop the GUI server[/dim]")
+
+        if not no_browser:
+            console.print(f"[cyan]Opening browser...[/cyan]")
+            import webbrowser
+            webbrowser.open(gui_url)
+
+        # Keep the main process alive
+        try:
+            gui_process.join()
+        except KeyboardInterrupt:
+            console.print(f"\n[yellow]Stopping GUI server...[/yellow]")
+            gui_process.terminate()
+            gui_process.join(timeout=5)
+            console.print(f"[green]GUI server stopped[/green]")
+
+    except ImportError as e:
+        console.print(f"[red]❌ GUI not available: {e}[/red]")
+        console.print(f"[yellow]Install required packages: pip install flask flask-cors[/yellow]")
+    except Exception as e:
+        console.print(f"[red]❌ Error starting GUI: {e}[/red]")
 
 
 @main.command()
@@ -1445,8 +1783,53 @@ def config():
 
 
 @main.command()
-@click.option("--install", help="Install a license (beta/pro/enterprise)")
-@click.option("--email", help="Email for free trial (deprecated, use --token)")
+@click.option("--email", required=True, help="Email for secure trial installation")
+def trial(email: str):
+    """
+    Install secure trial license with maximum protection.
+
+    MAXIMUM SECURITY FEATURES:
+    - Trial can only be used ONCE per machine EVER (survives uninstall/reinstall)
+    - Hardware fingerprint binding prevents sharing
+    - Tamper detection blocks modified environments
+    - 7-day trial duration with strict enforcement
+    - Permanent usage tracking in secure storage
+
+    Examples:
+        valid8 trial --email user@example.com
+
+    Security Notes:
+    - Trial usage is permanently recorded and cannot be reset
+    - Hardware binding prevents installation on other machines
+    - Tamper detection blocks virtual machines and debuggers
+    - License files are integrity-protected
+    """
+    from valid8.license import LicenseManager
+
+    console.print("[cyan]🔒 Installing Secure Trial License...[/cyan]")
+    console.print("[dim]Performing security checks...[/dim]")
+
+    # Install secure trial license
+    success, message = LicenseManager.install_trial_license(email)
+
+    if success:
+        console.print("[green]✅ Trial license installed successfully![/green]")
+        console.print(f"[dim]{message}[/dim]")
+        console.print("\n[bold cyan]🎉 Welcome to Valid8![/bold cyan]")
+        console.print("[dim]Run 'valid8 scan /path/to/code' to start scanning.[/dim]")
+        console.print("\n[yellow]⚠️  SECURITY NOTICE:[/yellow]")
+        console.print("[yellow]This trial can only be used once per machine.[/yellow]")
+        console.print("[yellow]Uninstalling and reinstalling will not reset the trial.[/yellow]")
+        console.print("[yellow]Contact sales@valid8.dev for enterprise licensing.[/yellow]")
+    else:
+        console.print(f"[red]❌ Trial installation failed[/red]")
+        console.print(f"[dim]{message}[/dim]")
+        console.print("\n[dim]If you believe this is an error, contact support@valid8.dev[/dim]")
+
+
+@main.command()
+@click.option("--install", help="Install a license (trial/beta/pro/enterprise)")
+@click.option("--email", help="Email for trial installation")
 @click.option("--token", help="Beta token for secure installation")
 def license(install, email, token):
     """
@@ -1461,43 +1844,53 @@ def license(install, email, token):
         valid8 license --install beta --email user@example.com
     """
     if install:
-        if install == 'beta':
-            # New secure method (preferred)
+        if install == 'trial':
+            # Use new secure trial installation
+            if not email:
+                console.print("[red]❌ Email required for trial installation[/red]")
+                console.print("[dim]Usage: valid8 license --install trial --email user@example.com[/dim]")
+                return
+
+            console.print("[cyan]🔒 Installing Secure Trial License...[/cyan]")
+            success, message = LicenseManager.install_trial_license(email)
+
+            if success:
+                console.print("[green]✅ Trial license installed successfully![/green]")
+                console.print(f"[dim]{message}[/dim]")
+                console.print("\n[yellow]⚠️  SECURITY NOTICE:[/yellow]")
+                console.print("[yellow]This trial can only be used once per machine.[/yellow]")
+                console.print("[yellow]Contact sales@valid8.dev for enterprise licensing.[/yellow]")
+            else:
+                console.print(f"[red]❌ Trial installation failed[/red]")
+                console.print(f"[dim]{message}[/dim]")
+            return
+
+        elif install == 'beta':
+            # Legacy beta installation (deprecated)
+            console.print("[yellow]⚠️  WARNING: Beta installation is deprecated[/yellow]")
+            console.print("[dim]Use 'valid8 trial --email user@example.com' for secure trials[/dim]")
+
             if token:
                 if LicenseManager.install_beta_license_with_token(token):
-                    console.print("[green]✓[/green] free trial installed successfully!")
-                    console.print("[dim]Beta access expires in 90 days[/dim]")
-                    console.print("\n[bold cyan]Thank you for free trial Valid8![/bold cyan]")
+                    console.print("[green]✓[/green] beta license installed successfully!")
+                    console.print("[dim]Beta access expires in 60 days[/dim]")
                 else:
-                    console.print("[red]✗ Failed to install free trial[/red]")
-                    console.print("[yellow]Token may be invalid, expired, or already used[/yellow]")
-                return
-            
-            # Old insecure method (deprecated)
-            if email:
-                console.print("[yellow]⚠️  WARNING: Insecure beta installation[/yellow]")
-                console.print("[dim]This method is deprecated. Use --token instead.[/dim]")
-                console.print("[dim]Get a beta token from: https://valid8.dev/beta[/dim]\n")
-                
-                if LicenseManager.install_beta_license(email):
-                    console.print("[green]✓[/green] free trial installed (insecure mode)")
-                    console.print("[dim]Beta access expires in 90 days[/dim]")
-                else:
-                    console.print("[red]✗ Failed to install free trial[/red]")
-                return
-            
-            # Neither token nor email provided
-            console.print("[red]Error: Beta token required for secure installation[/red]")
-            console.print("\n[yellow]Get a beta token:[/yellow]")
-            console.print("[cyan]  1. Visit https://valid8.dev/beta[/cyan]")
-            console.print("[cyan]  2. Request beta access[/cyan]")
-            console.print("[cyan]  3. Install with: valid8 license --install beta --token YOUR_TOKEN[/cyan]")
+                    console.print("[red]✗ Failed to install beta license[/red]")
+            else:
+                console.print("[red]❌ Beta token required[/red]")
+                console.print("[dim]Legacy beta installation requires a valid token[/dim]")
             return
-        
+
         else:
+            console.print(f"[red]❌ Unknown license type: {install}[/red]")
+            console.print("[dim]Supported types: trial, beta[/dim]")
+            return
+
+        # If no install type provided, require license key
+        if not license_key:
             console.print(f"[red]License type '{install}' requires a license key[/red]")
             console.print("Visit https://valid8.dev to purchase a license")
-        return
+            return
     
     info = LicenseManager.get_license_info()
     

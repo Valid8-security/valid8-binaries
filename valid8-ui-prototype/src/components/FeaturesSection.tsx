@@ -1,4 +1,3 @@
-import React from 'react';
 import { Brain, Shield, Zap, CheckCircle, Target, Lock } from 'lucide-react';
 
 const FeaturesSection = () => {

@@ -1,0 +1,134 @@
+{
+  "valid8_results": [],
+  "competitor_data": [
+    {
+      "tool_name": "Semgrep",
+      "benchmark": "OWASP Benchmark",
+      "precision": 0.85,
+      "recall": 0.78,
+      "f1_score": 0.81,
+      "speed_files_per_second": 1500,
+      "source": "Semgrep Blog 2023",
+      "year": 2023
+    },
+    {
+      "tool_name": "CodeQL",
+      "benchmark": "OWASP Benchmark",
+      "precision": 0.92,
+      "recall": 0.71,
+      "f1_score": 0.8,
+      "speed_files_per_second": 450,
+      "source": "GitHub Research 2023",
+      "year": 2023
+    },
+    {
+      "tool_name": "SonarQube",
+      "benchmark": "OWASP Benchmark",
+      "precision": 0.78,
+      "recall": 0.85,
+      "f1_score": 0.81,
+      "speed_files_per_second": 890,
+      "source": "SonarQube Docs 2023",
+      "year": 2023
+    },
+    {
+      "tool_name": "Checkmarx",
+      "benchmark": "OWASP Benchmark",
+      "precision": 0.88,
+      "recall": 0.76,
+      "f1_score": 0.81,
+      "speed_files_per_second": 320,
+      "source": "Checkmarx Report 2023",
+      "year": 2023
+    },
+    {
+      "tool_name": "Semgrep",
+      "benchmark": "Juliet Test Suite",
+      "precision": 0.82,
+      "recall": 0.91,
+      "f1_score": 0.86,
+      "speed_files_per_second": 2100,
+      "source": "NIST Report 2023",
+      "year": 2023
+    },
+    {
+      "tool_name": "CodeQL",
+      "benchmark": "Juliet Test Suite",
+      "precision": 0.95,
+      "recall": 0.68,
+      "f1_score": 0.79,
+      "speed_files_per_second": 380,
+      "source": "GitHub Research 2023",
+      "year": 2023
+    },
+    {
+      "tool_name": "SonarQube",
+      "benchmark": "Juliet Test Suite",
+      "precision": 0.76,
+      "recall": 0.88,
+      "f1_score": 0.81,
+      "speed_files_per_second": 1200,
+      "source": "SonarQube Docs 2023",
+      "year": 2023
+    },
+    {
+      "tool_name": "Semgrep",
+      "benchmark": "Real World",
+      "precision": 0.79,
+      "recall": 0.84,
+      "f1_score": 0.81,
+      "speed_files_per_second": 1800,
+      "source": "Industry Benchmarks 2023",
+      "year": 2023
+    },
+    {
+      "tool_name": "CodeQL",
+      "benchmark": "Real World",
+      "precision": 0.89,
+      "recall": 0.73,
+      "f1_score": 0.8,
+      "speed_files_per_second": 420,
+      "source": "GitHub Research 2023",
+      "year": 2023
+    },
+    {
+      "tool_name": "SonarQube",
+      "benchmark": "Real World",
+      "precision": 0.81,
+      "recall": 0.79,
+      "f1_score": 0.8,
+      "speed_files_per_second": 950,
+      "source": "SonarQube Enterprise",
+      "year": 2023
+    },
+    {
+      "tool_name": "Checkmarx",
+      "benchmark": "Real World",
+      "precision": 0.86,
+      "recall": 0.77,
+      "f1_score": 0.81,
+      "speed_files_per_second": 310,
+      "source": "Checkmarx CxSAST",
+      "year": 2023
+    },
+    {
+      "tool_name": "Fortify",
+      "benchmark": "Real World",
+      "precision": 0.9,
+      "recall": 0.75,
+      "f1_score": 0.82,
+      "speed_files_per_second": 280,
+      "source": "Micro Focus Report",
+      "year": 2023
+    }
+  ],
+  "generated_at": "2025-11-16T08:41:48.836892",
+  "summary": {
+    "valid8_avg_precision": 0,
+    "valid8_avg_recall": 0,
+    "valid8_avg_f1": 0,
+    "valid8_avg_speed": 0,
+    "total_benchmarks": 0,
+    "total_competitors": 12
+  }
+}

@@ -1,0 +1,320 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Header -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h3 mb-1">Security Dashboard</h1>
+        <p class="text-muted">Monitor your security posture and scan results</p>
+    </div>
+    <div>
+        <a href="/scan" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-2"></i>Start New Scan
+        </a>
+    </div>
+</div>
+
+<!-- Stats Cards -->
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="card stat-card h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <i class="bi bi-file-earmark-code text-primary" style="font-size: 2rem;"></i>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h5 class="card-title mb-1">Files Scanned</h5>
+                        <h3 class="mb-0 text-primary" id="total-files">1,247</h3>
+                        <small class="text-muted">+12% from last week</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card stat-card h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <i class="bi bi-exclamation-triangle text-danger" style="font-size: 2rem;"></i>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h5 class="card-title mb-1">Vulnerabilities</h5>
+                        <h3 class="mb-0 text-danger" id="total-vulns">23</h3>
+                        <small class="text-muted">-5% from last week</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card stat-card h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <i class="bi bi-shield-check text-success" style="font-size: 2rem;"></i>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h5 class="card-title mb-1">Security Score</h5>
+                        <h3 class="mb-0 text-success" id="security-score">87%</h3>
+                        <small class="text-muted">+3% from last week</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card stat-card h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <i class="bi bi-clock text-info" style="font-size: 2rem;"></i>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h5 class="card-title mb-1">Scan Time</h5>
+                        <h3 class="mb-0 text-info" id="avg-scan-time">2.3s</h3>
+                        <small class="text-muted">Average per scan</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Row -->
+<div class="row mb-4">
+    <div class="col-md-8 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Vulnerability Trends</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="vulnerabilityChart" height="300"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Severity Distribution</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="severityChart" height="300"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Scans & Critical Issues -->
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Recent Scans</h5>
+                <a href="/scan" class="btn btn-sm btn-outline-primary">View All</a>
+            </div>
+            <div class="card-body p-0">
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1">Web Application Scan</h6>
+                                <small class="text-muted">/home/user/projects/web-app</small>
+                            </div>
+                            <div class="text-end">
+                                <span class="badge bg-danger">3 vulns</span>
+                                <small class="d-block text-muted">2 hours ago</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1">API Security Scan</h6>
+                                <small class="text-muted">/home/user/projects/api</small>
+                            </div>
+                            <div class="text-end">
+                                <span class="badge bg-warning">1 vuln</span>
+                                <small class="d-block text-muted">5 hours ago</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1">Mobile App Scan</h6>
+                                <small class="text-muted">/home/user/projects/mobile</small>
+                            </div>
+                            <div class="text-end">
+                                <span class="badge bg-success">0 vulns</span>
+                                <small class="d-block text-muted">1 day ago</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Critical Issues</h5>
+                <a href="#results" class="btn btn-sm btn-outline-danger">View All</a>
+            </div>
+            <div class="card-body p-0">
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item">
+                        <div class="d-flex align-items-start">
+                            <div class="flex-shrink-0 me-3">
+                                <span class="badge bg-danger">CWE-89</span>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1">SQL Injection Vulnerability</h6>
+                                <p class="mb-1 text-muted small">User input concatenated directly in SQL query</p>
+                                <small class="text-muted">models/user.py:45</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="list-group-item">
+                        <div class="d-flex align-items-start">
+                            <div class="flex-shrink-0 me-3">
+                                <span class="badge bg-danger">CWE-798</span>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1">Hardcoded API Key</h6>
+                                <p class="mb-1 text-muted small">API credentials stored in source code</p>
+                                <small class="text-muted">config/settings.py:12</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="list-group-item">
+                        <div class="d-flex align-items-start">
+                            <div class="flex-shrink-0 me-3">
+                                <span class="badge bg-warning">CWE-79</span>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1">Cross-Site Scripting</h6>
+                                <p class="mb-1 text-muted small">User input rendered without sanitization</p>
+                                <small class="text-muted">templates/profile.html:23</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <a href="/scan" class="btn btn-outline-primary w-100 h-100 d-flex flex-column align-items-center p-4">
+                            <i class="bi bi-search mb-2" style="font-size: 2rem;"></i>
+                            <span>Start Scan</span>
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="#reports" class="btn btn-outline-success w-100 h-100 d-flex flex-column align-items-center p-4">
+                            <i class="bi bi-file-earmark-bar-graph mb-2" style="font-size: 2rem;"></i>
+                            <span>View Reports</span>
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="/enterprise" class="btn btn-outline-info w-100 h-100 d-flex flex-column align-items-center p-4">
+                            <i class="bi bi-building mb-2" style="font-size: 2rem;"></i>
+                            <span>Enterprise</span>
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="/compliance" class="btn btn-outline-warning w-100 h-100 d-flex flex-column align-items-center p-4">
+                            <i class="bi bi-shield-check mb-2" style="font-size: 2rem;"></i>
+                            <span>Compliance</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Vulnerability Trends Chart
+const vulnCtx = document.getElementById('vulnerabilityChart').getContext('2d');
+new Chart(vulnCtx, {
+    type: 'line',
+    data: {
+        labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+        datasets: [{
+            label: 'Total Vulnerabilities',
+            data: [45, 32, 28, 23],
+            borderColor: '#dc2626',
+            backgroundColor: 'rgba(220, 38, 38, 0.1)',
+            tension: 0.4
+        }, {
+            label: 'Critical Issues',
+            data: [8, 6, 4, 3],
+            borderColor: '#ea580c',
+            backgroundColor: 'rgba(234, 88, 12, 0.1)',
+            tension: 0.4
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'top',
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+// Severity Distribution Chart
+const severityCtx = document.getElementById('severityChart').getContext('2d');
+new Chart(severityCtx, {
+    type: 'doughnut',
+    data: {
+        labels: ['Critical', 'High', 'Medium', 'Low'],
+        datasets: [{
+            data: [3, 8, 9, 3],
+            backgroundColor: [
+                '#dc2626',
+                '#ea580c',
+                '#ca8a04',
+                '#16a34a'
+            ],
+            borderWidth: 0
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'bottom',
+            }
+        }
+    }
+});
+</script>
+{% endblock %}

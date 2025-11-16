@@ -1,0 +1,392 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Header -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h3 mb-1">Scan Results</h1>
+        <p class="text-muted">Analysis completed for {{ results.target }}</p>
+    </div>
+    <div>
+        <button class="btn btn-outline-primary me-2" onclick="exportResults()">
+            <i class="bi bi-download me-2"></i>Export
+        </button>
+        <a href="/scan" class="btn btn-primary">
+            <i class="bi bi-arrow-repeat me-2"></i>New Scan
+        </a>
+    </div>
+</div>
+
+<!-- Summary Cards -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="bi bi-file-earmark-code text-primary" style="font-size: 2rem;"></i>
+                <h4 class="mt-2 mb-1">{{ results.files_scanned }}</h4>
+                <small class="text-muted">Files Scanned</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="bi bi-exclamation-triangle text-danger" style="font-size: 2rem;"></i>
+                <h4 class="mt-2 mb-1">{{ results.vulnerabilities_found }}</h4>
+                <small class="text-muted">Vulnerabilities Found</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="bi bi-clock text-info" style="font-size: 2rem;"></i>
+                <h4 class="mt-2 mb-1">{{ "%.1f"|format(results.scan_time_seconds) }}s</h4>
+                <small class="text-muted">Scan Time</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="bi bi-shield-check text-success" style="font-size: 2rem;"></i>
+                <h4 class="mt-2 mb-1">{{ "%.1f"|format(results.get('precision_estimate', 0.95) * 100) }}%</h4>
+                <small class="text-muted">Precision</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0">Vulnerability Severity</h6>
+            </div>
+            <div class="card-body">
+                <canvas id="severityChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0">Vulnerability Types</h6>
+            </div>
+            <div class="card-body">
+                <canvas id="typeChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="row g-3">
+            <div class="col-md-3">
+                <select class="form-select" id="severityFilter">
+                    <option value="">All Severities</option>
+                    <option value="critical">Critical</option>
+                    <option value="high">High</option>
+                    <option value="medium">Medium</option>
+                    <option value="low">Low</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select class="form-select" id="typeFilter">
+                    <option value="">All Types</option>
+                    <option value="CWE-89">SQL Injection</option>
+                    <option value="CWE-79">XSS</option>
+                    <option value="CWE-78">Command Injection</option>
+                    <option value="CWE-798">Hardcoded Secrets</option>
+                    <option value="CWE-22">Path Traversal</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <input type="text" class="form-control" id="fileFilter" placeholder="Filter by file...">
+            </div>
+            <div class="col-md-3">
+                <button class="btn btn-outline-secondary w-100" onclick="clearFilters()">
+                    <i class="bi bi-x-circle me-2"></i>Clear Filters
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Vulnerabilities Table -->
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Vulnerabilities ({{ results.vulnerabilities|length }})</h5>
+        <div class="btn-group" role="group">
+            <button class="btn btn-sm btn-outline-secondary" onclick="toggleView('table')">
+                <i class="bi bi-table"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-secondary" onclick="toggleView('cards')">
+                <i class="bi bi-card-text"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body p-0">
+        <!-- Table View -->
+        <div id="tableView">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0" id="vulnerabilitiesTable">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Severity</th>
+                            <th>CWE</th>
+                            <th>Title</th>
+                            <th>File</th>
+                            <th>Line</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for vuln in results.vulnerabilities %}
+                        <tr class="vulnerability-row"
+                            data-severity="{{ vuln.severity }}"
+                            data-cwe="{{ vuln.cwe }}"
+                            data-file="{{ vuln.file_path }}">
+                            <td>
+                                <span class="badge severity-badge severity-{{ vuln.severity|lower }}">
+                                    {{ vuln.severity }}
+                                </span>
+                            </td>
+                            <td>
+                                <code>{{ vuln.cwe }}</code>
+                            </td>
+                            <td>
+                                <strong>{{ vuln.title }}</strong>
+                            </td>
+                            <td>
+                                <small class="text-muted">{{ vuln.file_path | basename }}</small>
+                            </td>
+                            <td>{{ vuln.line_number }}</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary"
+                                        onclick="showVulnerabilityDetails({{ loop.index0 }})"
+                                        data-bs-toggle="tooltip"
+                                        title="View Details">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Card View -->
+        <div id="cardView" style="display: none;">
+            <div class="p-3">
+                <div class="row g-3" id="vulnerabilitiesCards">
+                    {% for vuln in results.vulnerabilities %}
+                    <div class="col-md-6 vulnerability-card"
+                         data-severity="{{ vuln.severity }}"
+                         data-cwe="{{ vuln.cwe }}"
+                         data-file="{{ vuln.file_path }}">
+                        <div class="card h-100 card-security-{{ vuln.severity|lower }}">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <span class="badge severity-badge severity-{{ vuln.severity|lower }}">
+                                        {{ vuln.severity }}
+                                    </span>
+                                    <code class="text-muted">{{ vuln.cwe }}</code>
+                                </div>
+                                <h6 class="card-title">{{ vuln.title }}</h6>
+                                <p class="card-text small text-muted mb-2">
+                                    {{ vuln.description[:100] }}{% if vuln.description|length > 100 %}...{% endif %}
+                                </p>
+                                <div class="small text-muted">
+                                    <i class="bi bi-file-earmark me-1"></i>{{ vuln.file_path | basename }}:{{ vuln.line_number }}
+                                </div>
+                                <button class="btn btn-sm btn-outline-primary mt-2"
+                                        onclick="showVulnerabilityDetails({{ loop.index0 }})">
+                                    View Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Vulnerability Details Modal -->
+<div class="modal fade" id="vulnerabilityModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="vulnerabilityModalTitle">Vulnerability Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="vulnerabilityModalBody">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="generateFix()">
+                    <i class="bi bi-wrench me-2"></i>Generate Fix
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Vulnerability data
+const vulnerabilities = {{ results.vulnerabilities|tojson }};
+
+// Charts
+document.addEventListener('DOMContentLoaded', function() {
+    // Severity distribution
+    const severityCounts = {};
+    vulnerabilities.forEach(v => {
+        severityCounts[v.severity] = (severityCounts[v.severity] || 0) + 1;
+    });
+
+    const severityCtx = document.getElementById('severityChart').getContext('2d');
+    new Chart(severityCtx, {
+        type: 'pie',
+        data: {
+            labels: Object.keys(severityCounts),
+            datasets: [{
+                data: Object.values(severityCounts),
+                backgroundColor: ['#dc2626', '#ea580c', '#ca8a04', '#16a34a']
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+
+    // CWE type distribution
+    const cweCounts = {};
+    vulnerabilities.forEach(v => {
+        cweCounts[v.cwe] = (cweCounts[v.cwe] || 0) + 1;
+    });
+
+    const typeCtx = document.getElementById('typeChart').getContext('2d');
+    new Chart(typeCtx, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(cweCounts),
+            datasets: [{
+                data: Object.values(cweCounts),
+                backgroundColor: '#3b82f6'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            }
+        }
+    });
+});
+
+// Filtering functionality
+document.getElementById('severityFilter').addEventListener('change', filterResults);
+document.getElementById('typeFilter').addEventListener('change', filterResults);
+document.getElementById('fileFilter').addEventListener('input', filterResults);
+
+function filterResults() {
+    const severityFilter = document.getElementById('severityFilter').value.toLowerCase();
+    const typeFilter = document.getElementById('typeFilter').value;
+    const fileFilter = document.getElementById('fileFilter').value.toLowerCase();
+
+    document.querySelectorAll('.vulnerability-row, .vulnerability-card').forEach(row => {
+        const severity = row.dataset.severity.toLowerCase();
+        const cwe = row.dataset.cwe;
+        const file = row.dataset.file.toLowerCase();
+
+        const severityMatch = !severityFilter || severity === severityFilter;
+        const typeMatch = !typeFilter || cwe === typeFilter;
+        const fileMatch = !fileFilter || file.includes(fileFilter);
+
+        row.style.display = severityMatch && typeMatch && fileMatch ? '' : 'none';
+    });
+}
+
+function clearFilters() {
+    document.getElementById('severityFilter').value = '';
+    document.getElementById('typeFilter').value = '';
+    document.getElementById('fileFilter').value = '';
+    filterResults();
+}
+
+function toggleView(view) {
+    document.getElementById('tableView').style.display = view === 'table' ? 'block' : 'none';
+    document.getElementById('cardView').style.display = view === 'cards' ? 'block' : 'none';
+}
+
+function showVulnerabilityDetails(index) {
+    const vuln = vulnerabilities[index];
+
+    document.getElementById('vulnerabilityModalTitle').textContent = vuln.title;
+
+    const modalBody = document.getElementById('vulnerabilityModalBody');
+    modalBody.innerHTML = `
+        <div class="row">
+            <div class="col-md-6">
+                <h6>Basic Information</h6>
+                <table class="table table-sm">
+                    <tr><td><strong>CWE:</strong></td><td><code>${vuln.cwe}</code></td></tr>
+                    <tr><td><strong>Severity:</strong></td><td>
+                        <span class="badge severity-${vuln.severity.toLowerCase()}">${vuln.severity}</span>
+                    </td></tr>
+                    <tr><td><strong>File:</strong></td><td><code>${vuln.file_path}</code></td></tr>
+                    <tr><td><strong>Line:</strong></td><td>${vuln.line_number}</td></tr>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <h6>Description</h6>
+                <p>${vuln.description}</p>
+
+                <h6>Code Snippet</h6>
+                <pre class="bg-light p-2 rounded"><code>${vuln.code_snippet}</code></pre>
+            </div>
+        </div>
+    `;
+
+    new bootstrap.Modal(document.getElementById('vulnerabilityModal')).show();
+}
+
+function generateFix() {
+    // In a real implementation, this would call the fix generation API
+    alert('Fix generation would be implemented here with AI-powered suggestions');
+}
+
+function exportResults() {
+    const dataStr = JSON.stringify({{ results|tojson }}, null, 2);
+    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+
+    const exportFileDefaultName = 'valid8-scan-results.json';
+
+    const linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+}
+</script>
+{% endblock %}

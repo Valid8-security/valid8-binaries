@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Check, Star, Download } from 'lucide-react';
 import DownloadModal from './DownloadModal';
 
@@ -24,72 +24,47 @@ const PricingSection = () => {
       cta: "Start Free Trial"
     },
     {
-      name: "Starter",
-      price: 15,
+      name: "Pro",
+      price: 29,
       originalPrice: null,
-      scansPerUser: "200 scans/user",
-      seats: "1-10 seats",
-      description: "Ideal for small teams",
+      scansPerUser: "Unlimited scans",
+      seats: "5 seats included",
+      description: "Professional security scanning",
       features: [
-        "200 scans per user/month",
-        "All languages supported",
-        "Email support",
-        "Advanced AI analysis",
-        "Basic fix suggestions"
-      ],
-      popular: false,
-      cta: "Start Free Trial"
-    },
-    {
-      name: "Professional",
-      price: 12,
-      originalPrice: 15,
-      scansPerUser: "300 scans/user",
-      seats: "11-50 seats",
-      description: "For growing development teams",
-      features: [
-        "300 scans per user/month",
-        "Volume discount pricing",
-        "Priority email support",
-        "Advanced AI fix suggestions",
-        "CI/CD integration",
-        "Basic reporting"
+        "Unlimited file scanning",
+        "Hosted LLM (GPT-4, Claude, Gemini)",
+        "AI-powered validation",
+        "IDE extensions (VS Code, JetBrains)",
+        "GitHub Actions integration",
+        "150+ security detectors",
+        "Team collaboration (5 seats)",
+        "Basic API access (1000 scans/month)",
+        "Email support"
       ],
       popular: true,
       cta: "Start Free Trial"
     },
     {
-      name: "Business",
-      price: 10,
-      originalPrice: 15,
-      scansPerUser: "500 scans/user",
-      seats: "51-200 seats",
-      description: "Enterprise-grade security",
-      features: [
-        "500 scans per user/month",
-        "Maximum volume discount",
-        "Dedicated support",
-        "Advanced reporting & analytics",
-        "Custom integrations",
-        "Compliance reporting"
-      ],
-      popular: false,
-      cta: "Contact Sales"
-    },
-    {
       name: "Enterprise",
-      price: 8,
-      originalPrice: 15,
-      scansPerUser: "Unlimited scans/user",
-      seats: "200+ seats",
-      description: "Unlimited security automation",
+      price: 99,
+      originalPrice: null,
+      scansPerUser: "Unlimited scans",
+      seats: "Per seat pricing",
+      description: "Advanced enterprise security",
       features: [
-        "Unlimited scans per user",
-        "Ultimate volume discount",
-        "White-label options",
-        "Custom development",
-        "Strategic partnership",
-        "24/7 premium support"
+        "Everything in Pro",
+        "Advanced REST API (unlimited scans)",
+        "Custom security rules & policies",
+        "SSO integration (SAML, OAuth)",
+        "On-premise & air-gapped deployment",
+        "Container & IaC scanning",
+        "Supply chain security analysis",
+        "Federated learning capabilities",
+        "Priority support (4-hour SLA)",
+        "Advanced compliance (SOC2, HIPAA, GDPR)",
+        "Audit logs & compliance reports",
+        "Unlimited organizations & seats",
+        "Dedicated success manager"
       ],
       popular: false,
       cta: "Contact Sales"
@@ -101,14 +76,14 @@ const PricingSection = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Choose Your Plan
+            Enterprise-Grade Security Scanning
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Seat-based pricing that scales with your team. Volume discounts automatically apply as you grow.
+            From individual developers to Fortune 500 enterprises. Competitive pricing with advanced features for every team size.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           {pricingTiers.map((tier, index) => (
             <div
               key={index}
@@ -159,19 +134,23 @@ const PricingSection = () => {
 
                 <button
                   onClick={() => {
-                    if (tier.price === 0 || tier.name === 'Free Trial' || tier.name === 'Starter') {
-                      setIsDownloadModalOpen(true);
+                    if (tier.name === 'Free Trial' || tier.name === 'Pro') {
+                      window.location.href = '/signup';
+                    } else if (tier.name === 'Enterprise') {
+                      window.location.href = '/enterprise-signup';
                     }
                   }}
                   className={`w-full py-3 px-4 rounded-lg font-semibold transition-colors flex items-center justify-center ${
-                    tier.price === 0 || tier.name === 'Free Trial'
+                    tier.name === 'Free Trial'
                       ? 'bg-green-600 text-white hover:bg-green-700'
-                      : tier.popular
+                      : tier.name === 'Pro'
                       ? 'bg-blue-600 text-white hover:bg-blue-700'
+                      : tier.name === 'Enterprise'
+                      ? 'bg-purple-600 text-white hover:bg-purple-700'
                       : 'bg-gray-800 text-white hover:bg-gray-900'
                   }`}
                 >
-                  {(tier.price === 0 || tier.name === 'Free Trial' || tier.name === 'Starter') && <Download className="mr-2 h-4 w-4" />}
+                  {(tier.name === 'Free Trial' || tier.name === 'Pro') && <Download className="mr-2 h-4 w-4" />}
                   {tier.cta}
                 </button>
               </div>
@@ -179,24 +158,44 @@ const PricingSection = () => {
           ))}
         </div>
 
+        {/* Enterprise Features Highlight */}
         <div className="mt-16 text-center">
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 max-w-4xl mx-auto">
-            <h3 className="text-lg font-semibold text-blue-900 mb-2">
-              Volume Discounts Apply Automatically
+          <div className="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg p-8 max-w-5xl mx-auto">
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">
+              Enterprise-Ready Security Platform
             </h3>
-            <p className="text-blue-800">
-              Start with any number of seats. As your team grows, you'll automatically qualify for
-              volume discounts. No need to change plans or renegotiate contracts.
-            </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+              <div className="text-center">
+                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                  <Check className="h-6 w-6 text-blue-600" />
+                </div>
+                <h4 className="font-semibold text-gray-900 mb-2">On-Premise Ready</h4>
+                <p className="text-gray-600 text-sm">Deploy in air-gapped environments with full data control</p>
+              </div>
+              <div className="text-center">
+                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                  <Check className="h-6 w-6 text-purple-600" />
+                </div>
+                <h4 className="font-semibold text-gray-900 mb-2">Compliance Certified</h4>
+                <p className="text-gray-600 text-sm">SOC2, HIPAA, GDPR compliant with audit logs</p>
+              </div>
+              <div className="text-center">
+                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                  <Check className="h-6 w-6 text-green-600" />
+                </div>
+                <h4 className="font-semibold text-gray-900 mb-2">24/7 Enterprise Support</h4>
+                <p className="text-gray-600 text-sm">Dedicated success manager and priority SLA</p>
+              </div>
+            </div>
           </div>
         </div>
 
         <div className="mt-12 text-center">
           <p className="text-gray-600 mb-4">
-            All plans include 14-day free trial. No credit card required.
+            All plans include 7-day free trial. Enterprise plans available with custom contracts.
           </p>
           <p className="text-sm text-gray-500">
-            Questions about pricing? <a href="mailto:sales@valid8.com" className="text-blue-600 hover:underline">Contact our sales team</a>
+            Questions about enterprise pricing? <a href="mailto:sales@valid8.dev" className="text-blue-600 hover:underline">Contact our enterprise sales team</a>
           </p>
         </div>
       </div>

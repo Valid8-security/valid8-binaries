@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">
+                    <i class="bi bi-search me-2"></i>Start Security Scan
+                </h4>
+            </div>
+            <div class="card-body p-4">
+                <form id="scanForm" method="POST">
+                    <div class="mb-4">
+                        <label for="scan_path" class="form-label fw-bold">Scan Target</label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="bi bi-folder"></i>
+                            </span>
+                            <input type="text" class="form-control" id="scan_path" name="scan_path"
+                                   placeholder="/path/to/your/project" required>
+                            <button class="btn btn-outline-secondary" type="button" onclick="browseDirectory()">
+                                <i class="bi bi-folder2-open"></i> Browse
+                            </button>
+                        </div>
+                        <div class="form-text">
+                            Enter the full path to the directory or file you want to scan
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Scan Mode</label>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <div class="card h-100 border-primary">
+                                    <div class="card-body text-center p-3">
+                                        <input type="radio" class="btn-check" name="scan_mode" id="fast" value="fast" checked>
+                                        <label class="btn btn-outline-primary w-100 h-100 d-flex flex-column" for="fast">
+                                            <i class="bi bi-speedometer2 mb-2" style="font-size: 2rem;"></i>
+                                            <strong>Fast Mode</strong>
+                                            <small>Pattern-based detection<br>Quick results</small>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card h-100 border-success">
+                                    <div class="card-body text-center p-3">
+                                        <input type="radio" class="btn-check" name="scan_mode" id="hybrid" value="hybrid">
+                                        <label class="btn btn-outline-success w-100 h-100 d-flex flex-column" for="hybrid">
+                                            <i class="bi bi-cpu mb-2" style="font-size: 2rem;"></i>
+                                            <strong>Hybrid Mode</strong>
+                                            <small>AI + Pattern detection<br>Best accuracy</small>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card h-100 border-warning">
+                                    <div class="card-body text-center p-3">
+                                        <input type="radio" class="btn-check" name="scan_mode" id="deep" value="deep">
+                                        <label class="btn btn-outline-warning w-100 h-100 d-flex flex-column" for="deep">
+                                            <i class="bi bi-robot mb-2" style="font-size: 2rem;"></i>
+                                            <strong>Deep Mode</strong>
+                                            <small>AI comprehensive scan<br>Highest recall</small>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Advanced Options</label>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="sca" name="sca">
+                                    <label class="form-check-label" for="sca">
+                                        <strong>Software Composition Analysis</strong>
+                                        <br><small class="text-muted">Scan for vulnerable dependencies</small>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="incremental" name="incremental">
+                                    <label class="form-check-label" for="incremental">
+                                        <strong>Incremental Scanning</strong>
+                                        <br><small class="text-muted">Only scan changed files</small>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Filters</label>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <select class="form-select" name="severity">
+                                    <option value="">All Severities</option>
+                                    <option value="critical">Critical Only</option>
+                                    <option value="high">High & Above</option>
+                                    <option value="medium">Medium & Above</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" name="exclude"
+                                       placeholder="Exclude patterns (comma-separated)">
+                                <div class="form-text">
+                                    e.g., test/**,*.test.js,vendor/**
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg" id="startScanBtn">
+                            <i class="bi bi-play-circle me-2"></i>Start Security Scan
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Scan Progress (shown during scan) -->
+                <div id="scanProgress" class="mt-4" style="display: none;">
+                    <h5 class="mb-3">Scan in Progress...</h5>
+                    <div class="scan-progress mb-3">
+                        <div class="scan-progress-bar" id="scanProgressBar" style="width: 0%"></div>
+                    </div>
+                    <div class="d-flex justify-content-between text-muted small">
+                        <span id="scanStatus">Initializing scan...</span>
+                        <span id="scanTime">0s elapsed</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scan Tips -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <i class="bi bi-lightbulb me-2"></i>Scan Tips
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Best Practices:</h6>
+                        <ul class="small mb-0">
+                            <li>Scan your entire project root for comprehensive coverage</li>
+                            <li>Use Hybrid mode for best accuracy vs speed balance</li>
+                            <li>Enable SCA to catch dependency vulnerabilities</li>
+                            <li>Run scans after major code changes</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Performance:</h6>
+                        <ul class="small mb-0">
+                            <li>Fast mode: ~2-5 seconds for typical projects</li>
+                            <li>Hybrid mode: ~10-30 seconds with AI</li>
+                            <li>Deep mode: ~1-5 minutes for comprehensive analysis</li>
+                            <li>Use incremental scans for large codebases</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('scanForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const formData = new FormData(this);
+    const scanPath = formData.get('scan_path');
+
+    // Show progress
+    document.getElementById('scanProgress').style.display = 'block';
+    document.getElementById('startScanBtn').disabled = true;
+    document.getElementById('startScanBtn').innerHTML =
+        '<i class="bi bi-hourglass-split me-2"></i>Scanning...';
+
+    // Start scan
+    fetch('/scan', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'started') {
+            // Redirect to results page with scan ID
+            window.location.href = `/scan?scan_id=${data.scan_id}`;
+        } else {
+            throw new Error(data.error || 'Scan failed to start');
+        }
+    })
+    .catch(error => {
+        console.error('Scan error:', error);
+        alert('Error starting scan: ' + error.message);
+
+        // Reset form
+        document.getElementById('scanProgress').style.display = 'none';
+        document.getElementById('startScanBtn').disabled = false;
+        document.getElementById('startScanBtn').innerHTML =
+            '<i class="bi bi-play-circle me-2"></i>Start Security Scan';
+    });
+});
+
+function browseDirectory() {
+    // In a real implementation, this would open a file dialog
+    // For now, just focus the input
+    document.getElementById('scan_path').focus();
+}
+</script>
+{% endblock %}
