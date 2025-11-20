@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "cd valid8-ui-prototype && npm install && npm run build",
+  "buildCommand": "cd valid8-ui-prototype && rm -rf node_modules && npm install --legacy-peer-deps && npm run build",
   "outputDirectory": "valid8-ui-prototype/dist",
   "rewrites": [
     {
