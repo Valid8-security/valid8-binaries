@@ -4,25 +4,34 @@ on:
   workflow_dispatch:
   push:
     branches: [ main ]
+    paths:
+      - 'valid8/**'
+      - '.github/workflows/build-windows.yml'
 
 jobs:
-  build:
+  build-windows:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.11'
+        
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install pyinstaller click rich pyyaml requests jinja2 pygments aiohttp javalang esprima tree-sitter
+        
     - name: Build binary
       run: |
         pyinstaller --clean --noconfirm --onefile --name=valid8 --add-data="valid8;valid8" --hidden-import=valid8.scanner --hidden-import=valid8.cli --hidden-import=valid8.detectors valid8/__main__.py
-    - name: Upload binary
-      uses: actions/upload-artifact@v3
+        
+    - name: Upload binary artifact
+      uses: actions/upload-artifact@v4
       with:
         name: valid8-windows
         path: dist/valid8.exe
+        retention-days: 30
