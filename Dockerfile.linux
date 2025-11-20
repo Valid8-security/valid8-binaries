@@ -1,0 +1,32 @@
+FROM python:3.11-slim
+
+WORKDIR /workspace
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    binutils \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install PyInstaller
+RUN pip install --no-cache-dir pyinstaller
+
+# Copy project files
+COPY . .
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt 2>/dev/null || \
+    pip install --no-cache-dir click rich pyyaml requests jinja2 pygments aiohttp javalang esprima tree-sitter
+
+# Build binary
+RUN pyinstaller --onefile \
+    --name=valid8 \
+    --add-data="valid8:valid8" \
+    --hidden-import=valid8.scanner \
+    --hidden-import=valid8.cli \
+    --hidden-import=valid8.detectors \
+    --hidden-import=valid8.detectors.cwe_expansion \
+    valid8/__main__.py
+
+CMD ["/bin/bash"]

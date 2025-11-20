@@ -1,0 +1,33 @@
+FROM winehq/wine:latest
+
+WORKDIR /workspace
+
+# Install Python for Windows in Wine
+RUN apt-get update && apt-get install -y \
+    wget \
+    xvfb \
+    && rm -rf /var/lib/apt/lists/*
+
+# Download and install Python for Windows
+RUN wget https://www.python.org/ftp/python/3.11.0/python-3.11.0-amd64.exe -O /tmp/python.exe && \
+    xvfb-run wine /tmp/python.exe /quiet InstallAllUsers=1 PrependPath=1
+
+# Install PyInstaller
+RUN wine python -m pip install pyinstaller
+
+# Copy project files
+COPY . .
+
+# Install dependencies
+RUN wine python -m pip install click rich pyyaml requests jinja2 pygments aiohttp javalang esprima tree-sitter
+
+# Build binary
+RUN wine python -m PyInstaller --onefile \
+    --name=valid8 \
+    --add-data="valid8;valid8" \
+    --hidden-import=valid8.scanner \
+    --hidden-import=valid8.cli \
+    --hidden-import=valid8.detectors \
+    valid8/__main__.py
+
+CMD ["/bin/bash"]
