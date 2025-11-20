@@ -26,6 +26,20 @@
     {
       "src": "/api/(.*)",
       "dest": "api/index.py"
+    },
+    {
+      "src": "/assets/(.*)",
+      "dest": "/valid8-ui-prototype/dist/assets/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/valid8-ui-prototype/dist/$1"
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/valid8-ui-prototype/dist/index.html"
     }
   ]
 }
