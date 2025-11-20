@@ -254,11 +254,11 @@ const SignupPage = () => {
             <div className="ml-3 text-sm">
               <label htmlFor="agreeToTerms" className="text-gray-700">
                 I agree to the{' '}
-                <a href="#" className="text-blue-600 hover:text-blue-500">
+                <a href="https://github.com/Valid8-security/parry-scanner/blob/main/README.md" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-500">
                   Terms of Service
                 </a>{' '}
                 and{' '}
-                <a href="#" className="text-blue-600 hover:text-blue-500">
+                <a href="https://github.com/Valid8-security/parry-scanner/blob/main/README.md" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-500">
                   Privacy Policy
                 </a>
               </label>

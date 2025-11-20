@@ -116,7 +116,7 @@ const LoginPage = () => {
             </div>
 
             <div className="text-sm">
-              <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
+              <a href="https://github.com/Valid8-security/parry-scanner/blob/main/README.md" target="_blank" rel="noopener noreferrer" className="font-medium text-blue-600 hover:text-blue-500">
                 Forgot your password?
               </a>
             </div>
@@ -147,3 +147,4 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
+
