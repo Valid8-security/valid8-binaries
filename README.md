@@ -1,30 +1,22 @@
 # Valid8 Binaries
 
-Official binary releases for Valid8 - Privacy-first AI-powered security scanner.
+Pre-built binaries for Valid8 Security Scanner.
 
 ## Downloads
 
-Binary releases are available on the [Releases](https://github.com/Valid8-security/valid8-binaries/releases) page.
+### Latest Release
 
-## Security
-
-All binaries include:
-- SHA256 checksums for verification
-- Enterprise-grade licensing protection
-- Source code obfuscation and protection
-- Hardware fingerprinting for license validation
+- **macOS (ARM64)**: [valid8-macos-arm64.zip](https://github.com/Valid8-security/valid8-binaries/releases/latest/download/valid8-macos-arm64.zip)
+- **Windows (AMD64)**: [valid8-windows-amd64.zip](https://github.com/Valid8-security/valid8-binaries/releases/latest/download/valid8-windows-amd64.zip)
+- **Linux (AMD64)**: [valid8-linux-amd64.zip](https://github.com/Valid8-security/valid8-binaries/releases/latest/download/valid8-linux-amd64.zip)
 
 ## Installation
 
-1. Download the ZIP file for your platform from releases
-2. Extract: \`unzip valid8-{platform}.zip\`
-3. Make executable: \`chmod +x valid8\` (Linux/macOS)
-4. Run: \`./valid8 --version\`
+1. Download the binary for your platform
+2. Extract the ZIP file
+3. Make the binary executable (Linux/macOS): `chmod +x valid8`
+4. Run: `./valid8 scan /path/to/code`
 
-## Licensing
+## License
 
-- **Free Tier**: Basic scanning features
-- **Pro**: Advanced AI features (\$15/user/month)
-- **Enterprise**: Full platform (\$8/user/month)
-
-For more information, visit [valid8.dev](https://valid8.dev)
+See the main [Valid8 repository](https://github.com/Valid8-security/parry-scanner) for license information.
