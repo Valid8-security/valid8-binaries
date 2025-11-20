@@ -1,8 +1,7 @@
 {
   "version": 2,
-  "buildCommand": "npm run build",
+  "buildCommand": "cd valid8-ui-prototype && npm install && npm run build",
   "outputDirectory": "valid8-ui-prototype/dist",
-  "installCommand": "cd valid8-ui-prototype && npm install",
   "builds": [
     {
       "src": "api/index.py",
