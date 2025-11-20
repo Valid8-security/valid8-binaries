@@ -17,7 +17,6 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Load user data
     const userData = localStorage.getItem('valid8_user');
     if (!userData) {
       navigate('/login');
@@ -27,7 +26,6 @@ const Dashboard = () => {
     const parsedUser = JSON.parse(userData);
     setUser(parsedUser);
 
-    // Load mock scan history
     setScans([
       {
         id: 'scan-001',
@@ -62,6 +60,21 @@ const Dashboard = () => {
     navigate('/');
   };
 
+  const getDownloadUrl = (platform: string) => {
+    const baseUrl = 'https://github.com/Valid8-security/parry-scanner/releases/latest/download';
+    if (platform === 'macos') {
+      return `${baseUrl}/valid8-macos-arm64.zip`;
+    } else if (platform === 'windows') {
+      return `${baseUrl}/valid8-windows-amd64.zip`;
+    }
+    return `${baseUrl}/valid8-linux-amd64.zip`;
+  };
+
+  const handleDownload = (platform: string) => {
+    const url = getDownloadUrl(platform);
+    window.open(url, '_blank');
+  };
+
   const getSubscriptionStatus = () => {
     if (!user) return { status: 'unknown', color: 'gray' };
 
@@ -90,7 +103,6 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
       <div className="bg-white shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
@@ -121,7 +133,6 @@ const Dashboard = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Subscription Status */}
         <div className="mb-8">
           <div className={`rounded-lg p-6 ${
             subscriptionStatus.color === 'green' ? 'bg-green-50 border-green-200' :
@@ -159,14 +170,13 @@ const Dashboard = () => {
                 </div>
               </div>
               <div className="text-right">
-                <div className="text-2xl font-bold text-gray-900">{user.scans_remaining}</div>
+                <div className="text-2xl font-bold text-gray-900">{user.scans_remaining || 'Unlimited'}</div>
                 <div className="text-sm text-gray-600">scans remaining</div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <div className="bg-white overflow-hidden shadow rounded-lg">
             <div className="p-5">
@@ -235,16 +245,13 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Download & Setup */}
           <div className="bg-white shadow rounded-lg">
             <div className="px-6 py-4 border-b border-gray-200">
               <h3 className="text-lg font-medium text-gray-900">Download Valid8 Scanner</h3>
               <p className="text-sm text-gray-600 mt-1">License-bound installation for your machine</p>
             </div>
             <div className="p-6 space-y-4">
-              {/* License Status */}
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <div className="flex items-center justify-between">
                   <div>
@@ -257,12 +264,9 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              {/* Platform-specific Downloads */}
               <div className="space-y-3">
                 <h4 className="font-medium text-gray-900">Choose Your Platform</h4>
-
                 <div className="grid grid-cols-1 gap-3">
-                  {/* Windows */}
                   <div className="border border-gray-200 rounded-lg p-4 hover:border-blue-300 transition-colors">
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center">
@@ -274,13 +278,15 @@ const Dashboard = () => {
                       </div>
                       <span className="text-sm text-gray-500">~50MB</span>
                     </div>
-                    <button className="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center">
+                    <button 
+                      onClick={() => handleDownload('windows')}
+                      className="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center"
+                    >
                       <Download className="h-4 w-4 mr-2" />
                       Download for Windows
                     </button>
                   </div>
 
-                  {/* macOS */}
                   <div className="border border-gray-200 rounded-lg p-4 hover:border-blue-300 transition-colors">
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center">
@@ -292,13 +298,15 @@ const Dashboard = () => {
                       </div>
                       <span className="text-sm text-gray-500">~45MB</span>
                     </div>
-                    <button className="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center">
+                    <button 
+                      onClick={() => handleDownload('macos')}
+                      className="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center"
+                    >
                       <Download className="h-4 w-4 mr-2" />
                       Download for macOS
                     </button>
                   </div>
 
-                  {/* Linux */}
                   <div className="border border-gray-200 rounded-lg p-4 hover:border-blue-300 transition-colors">
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center">
@@ -310,7 +318,10 @@ const Dashboard = () => {
                       </div>
                       <span className="text-sm text-gray-500">~55MB</span>
                     </div>
-                    <button className="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center">
+                    <button 
+                      onClick={() => handleDownload('linux')}
+                      className="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center"
+                    >
                       <Download className="h-4 w-4 mr-2" />
                       Download for Linux
                     </button>
@@ -318,7 +329,6 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              {/* Setup Instructions */}
               <div className="border-t pt-4">
                 <h4 className="font-medium text-gray-900 mb-2">Quick Setup</h4>
                 <div className="bg-gray-50 p-3 rounded-lg">
@@ -333,7 +343,6 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* Recent Scans */}
           <div className="bg-white shadow rounded-lg">
             <div className="px-6 py-4 border-b border-gray-200">
               <h3 className="text-lg font-medium text-gray-900">Recent Scans</h3>
@@ -366,7 +375,6 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Performance Metrics */}
         <div className="mt-8 bg-white shadow rounded-lg">
           <div className="px-6 py-4 border-b border-gray-200">
             <h3 className="text-lg font-medium text-gray-900">Performance Metrics</h3>

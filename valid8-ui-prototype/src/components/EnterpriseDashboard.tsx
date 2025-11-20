@@ -47,6 +47,12 @@ interface UsageStats {
 }
 
 const EnterpriseDashboard = () => {
+  const handleDownload = () => {
+    const baseUrl = "https://github.com/Valid8-security/parry-scanner/releases/latest/download";
+    const platform = navigator.userAgent.toLowerCase().includes("win") ? "windows" : navigator.userAgent.toLowerCase().includes("mac") ? "macos" : "linux";
+    const url = platform === "macos" ? `${baseUrl}/valid8-macos-arm64.zip` : platform === "windows" ? `${baseUrl}/valid8-windows-amd64.zip` : `${baseUrl}/valid8-linux-amd64.zip`;
+    window.open(url, "_blank");
+  };
   const navigate = useNavigate();
   const [organization, setOrganization] = useState<Organization | null>(null);
   const [seats, setSeats] = useState<Seat[]>([]);
@@ -445,7 +451,7 @@ const EnterpriseDashboard = () => {
           </div>
           <div className="p-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <button className="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors">
+              <button onClick={handleDownload} className="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors">
                 <Download className="h-5 w-5 mr-2" />
                 Download Enterprise Scanner
               </button>
