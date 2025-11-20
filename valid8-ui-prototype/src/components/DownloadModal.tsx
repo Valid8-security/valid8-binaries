@@ -25,7 +25,7 @@ const DownloadModal: React.FC<DownloadModalProps> = ({ isOpen, onClose }) => {
   const platform = getPlatform();
 
   const getDownloadUrl = (platform: string) => {
-    const baseUrl = 'https://github.com/Valid8-security/parry-scanner/releases/latest/download';
+    const baseUrl = 'https://github.com/Valid8-security/valid8-binaries/releases/latest/download';
     if (platform === 'macos') {
       return `${baseUrl}/valid8-macos-arm64.zip`;
     } else if (platform === 'windows') {

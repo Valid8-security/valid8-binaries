@@ -16,7 +16,7 @@ const AccountPage = () => {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const handleDownload = () => {
-    const baseUrl = "https://github.com/Valid8-security/parry-scanner/releases/latest/download";
+    const baseUrl = "https://github.com/Valid8-security/valid8-binaries/releases/latest/download";
     const platform = navigator.userAgent.toLowerCase().includes("win") ? "windows" : navigator.userAgent.toLowerCase().includes("mac") ? "macos" : "linux";
     const url = platform === "macos" ? `${baseUrl}/valid8-macos-arm64.zip` : platform === "windows" ? `${baseUrl}/valid8-windows-amd64.zip` : `${baseUrl}/valid8-linux-amd64.zip`;
     window.open(url, "_blank");
