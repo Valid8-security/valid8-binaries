@@ -2,20 +2,6 @@
   "version": 2,
   "buildCommand": "cd valid8-ui-prototype && npm install && npm run build",
   "outputDirectory": "valid8-ui-prototype/dist",
-  "builds": [
-    {
-      "src": "api/index.py",
-      "use": "@vercel/python"
-    },
-    {
-      "src": "api/webhooks/stripe.py",
-      "use": "@vercel/python"
-    },
-    {
-      "src": "api/create-checkout-session.py",
-      "use": "@vercel/python"
-    }
-  ],
   "rewrites": [
     {
       "source": "/api/webhooks/stripe",

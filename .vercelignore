@@ -1,24 +1,5 @@
-# Ignore large directories to speed up deployment
+# Ignore submodules and large directories
+real_world_tests/
 valid8-bounty-hunting/
 archived_docs/
-real_world_tests/
-node_modules/
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
-*.so
-*.egg
-*.egg-info/
-dist/
-build/
-.venv/
-venv/
-*.log
-*.md
-!README.md
-!DEPLOYMENT.md
-!QUICK_DEPLOYMENT_GUIDE.md
-.git/
-.gitignore
+.gitmodules
