@@ -3,3 +3,30 @@ real_world_tests/
 valid8-bounty-hunting/
 archived_docs/
 .gitmodules
+valid8-binaries/
+
+# Ignore build artifacts
+node_modules/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+dist/
+build/
+.venv/
+venv/
+
+# Ignore documentation (not needed for deployment)
+*.md
+!README.md
+
+# Ignore test files
+test_*.py
+*_test.py
+tests/
+
+# Ignore development files
+.env
+.env.local
+*.log
+.DS_Store
