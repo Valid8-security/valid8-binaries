@@ -234,7 +234,7 @@ const DownloadModal: React.FC<DownloadModalProps> = ({ isOpen, onClose }) => {
 
             <div>
               <h3 className="text-lg font-semibold mb-3 text-gray-900">Quick Start</h3>
-              <div className="bg-gray-50 p-4 rounded-lg">
+              <div className="bg-gray-50 p-4 rounded-lg space-y-4">
                 <ol className="list-decimal list-inside space-y-2 text-gray-700">
                   <li>Download and extract the Valid8 binary for your platform</li>
                   <li>Make it executable: <code className="bg-gray-200 px-1 rounded">chmod +x valid8</code> (Linux/macOS only)</li>
@@ -242,6 +242,46 @@ const DownloadModal: React.FC<DownloadModalProps> = ({ isOpen, onClose }) => {
                   <li>Scan your project: <code className="bg-gray-200 px-1 rounded">./valid8 scan /path/to/your/project</code></li>
                   <li>View results and AI-generated fixes in the terminal output</li>
                 </ol>
+                
+                {platform === 'macos' && (
+                  <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded">
+                    <p className="font-medium text-yellow-800 mb-2 flex items-center">
+                      <Shield className="h-4 w-4 mr-2" />
+                      macOS Security Notice
+                    </p>
+                    <p className="text-yellow-700 text-xs mb-2">
+                      If you see "cannot be opened because it is from an unidentified developer":
+                    </p>
+                    <ol className="list-decimal list-inside text-yellow-700 text-xs space-y-1 ml-2">
+                      <li>Right-click the binary → Select "Open"</li>
+                      <li>Click "Open" in the security dialog</li>
+                      <li>Or run: <code className="bg-yellow-100 px-1 rounded">xattr -cr valid8 && chmod +x valid8</code></li>
+                    </ol>
+                    <p className="text-yellow-600 text-xs mt-2 italic">
+                      This warning appears because Valid8 is not code signed, not because it's unsafe.
+                    </p>
+                  </div>
+                )}
+                
+                {platform === 'windows' && (
+                  <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded">
+                    <p className="font-medium text-yellow-800 mb-2 flex items-center">
+                      <Shield className="h-4 w-4 mr-2" />
+                      Windows Security Notice
+                    </p>
+                    <p className="text-yellow-700 text-xs mb-2">
+                      If Windows Defender blocks the download:
+                    </p>
+                    <ol className="list-decimal list-inside text-yellow-700 text-xs space-y-1 ml-2">
+                      <li>Click "More info" on the warning</li>
+                      <li>Click "Run anyway"</li>
+                      <li>Or: Right-click → Properties → Unblock → OK</li>
+                    </ol>
+                    <p className="text-yellow-600 text-xs mt-2 italic">
+                      This warning appears because Valid8 is not code signed, not because it's unsafe.
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
 

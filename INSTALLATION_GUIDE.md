@@ -27,19 +27,19 @@
 
 ## Why Security Warnings?
 
-Valid8 binaries are **not code signed** (to avoid $99-400/year costs). This is common for open-source tools.
+Valid8 binaries are **not code signed** (to avoid $99-400/year costs). This is common for software tools distributed directly.
 
 **macOS:** Gatekeeper blocks unsigned apps by default
 **Windows:** SmartScreen flags unsigned executables
 
-Both are **safe to bypass** for Valid8 - it's open-source and you can review the code.
+Both are **safe to bypass** for Valid8 - it's a legitimate security scanning tool from Valid8 Security.
 
 ## Verification
 
-You can verify Valid8 is safe by:
-1. Reviewing the source code: https://github.com/Valid8-security/parry-scanner
-2. Building from source yourself
-3. Checking the binary hash matches our releases
+You can verify Valid8 is legitimate by:
+1. Downloading from our official website: https://valid8code.ai
+2. Checking the binary hash matches our releases
+3. Contacting support if you have concerns
 
 ## Future Plans
 

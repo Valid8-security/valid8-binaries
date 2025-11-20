@@ -92,5 +92,4 @@ If Windows Defender blocks the download:
 3. Or: Right-click → Properties → Unblock → OK
 ```
 
-### Add to Download Modal
-Update the download modal to show instructions after download.
+**Note:** Valid8 is a proprietary security scanning tool. The security warnings appear because binaries are not code signed, not because the software is unsafe.
