@@ -14,32 +14,26 @@
       "use": "@vercel/python"
     }
   ],
-  "routes": [
-    {
-      "src": "/api/webhooks/stripe",
-      "dest": "api/webhooks/stripe.py"
-    },
-    {
-      "src": "/api/create-checkout-session",
-      "dest": "api/create-checkout-session.py"
-    },
-    {
-      "src": "/api/(.*)",
-      "dest": "api/index.py"
-    },
-    {
-      "src": "/assets/(.*)",
-      "dest": "/valid8-ui-prototype/dist/assets/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/valid8-ui-prototype/dist/$1"
-    }
-  ],
   "rewrites": [
     {
+      "source": "/api/webhooks/stripe",
+      "destination": "/api/webhooks/stripe.py"
+    },
+    {
+      "source": "/api/create-checkout-session",
+      "destination": "/api/create-checkout-session.py"
+    },
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/assets/(.*)",
+      "destination": "/valid8-ui-prototype/dist/assets/$1"
+    },
+    {
       "source": "/(.*)",
-      "destination": "/valid8-ui-prototype/dist/index.html"
+      "destination": "/valid8-ui-prototype/dist/$1"
     }
   ]
 }
