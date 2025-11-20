@@ -1,0 +1,44 @@
+name: Build and Release Binaries
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-all:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyinstaller click rich pyyaml requests jinja2 pygments aiohttp javalang esprima tree-sitter
+        
+    - name: Build binary
+      shell: bash
+      run: |
+        if [ "$RUNNER_OS" == "Windows" ]; then
+          pyinstaller --clean --noconfirm --onefile --name=valid8 --add-data="valid8;valid8" --hidden-import=valid8.scanner --hidden-import=valid8.cli --hidden-import=valid8.detectors valid8/__main__.py
+          mv dist/valid8.exe dist/valid8-windows.exe
+        else
+          pyinstaller --clean --noconfirm --onefile --name=valid8 --add-data="valid8:valid8" --hidden-import=valid8.scanner --hidden-import=valid8.cli --hidden-import=valid8.detectors valid8/__main__.py
+          mv dist/valid8 dist/valid8-linux
+        fi
+        
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: valid8-${{ matrix.os == 'ubuntu-latest' && 'linux' || 'windows' }}
+        path: dist/valid8-${{ matrix.os == 'ubuntu-latest' && 'linux' || 'windows.exe' }}
