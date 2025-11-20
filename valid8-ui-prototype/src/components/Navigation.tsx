@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Shield, User, LogOut } from 'lucide-react';
 
 const Navigation = () => {
   const [user, setUser] = useState<any>(null);
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const userData = localStorage.getItem('valid8_user');
@@ -17,7 +18,25 @@ const Navigation = () => {
     localStorage.removeItem('valid8_user');
     localStorage.removeItem('valid8_license');
     setUser(null);
-    window.location.href = '/';
+    navigate('/');
+  };
+
+  const handleHashClick = (e: React.MouseEvent<HTMLAnchorElement>, hash: string) => {
+    e.preventDefault();
+    if (location.pathname !== '/') {
+      navigate('/');
+      setTimeout(() => {
+        const element = document.querySelector(hash);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    } else {
+      const element = document.querySelector(hash);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
   };
 
   const isHomePage = location.pathname === '/';
@@ -35,27 +54,64 @@ const Navigation = () => {
 
           <div className="hidden md:flex items-center space-x-8">
             {isHomePage ? (
-              // Home page navigation
               <>
-                <a href="#features" className="text-gray-600 hover:text-blue-600 transition-colors">Features</a>
-                <a href="#pricing" className="text-gray-600 hover:text-blue-600 transition-colors">Pricing</a>
-                <a href="https://github.com/Valid8-security/parry-scanner" className="text-gray-600 hover:text-blue-600 transition-colors">GitHub</a>
-                <a href="https://github.com/Valid8-security/parry-scanner/blob/main/README.md" className="text-gray-600 hover:text-blue-600 transition-colors">Docs</a>
+                <a 
+                  href="#features" 
+                  onClick={(e) => handleHashClick(e, '#features')}
+                  className="text-gray-600 hover:text-blue-600 transition-colors"
+                >
+                  Features
+                </a>
+                <a 
+                  href="#pricing" 
+                  onClick={(e) => handleHashClick(e, '#pricing')}
+                  className="text-gray-600 hover:text-blue-600 transition-colors"
+                >
+                  Pricing
+                </a>
+                <a 
+                  href="https://github.com/Valid8-security/parry-scanner" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-gray-600 hover:text-blue-600 transition-colors"
+                >
+                  GitHub
+                </a>
+                <a 
+                  href="https://github.com/Valid8-security/parry-scanner/blob/main/README.md" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-gray-600 hover:text-blue-600 transition-colors"
+                >
+                  Docs
+                </a>
               </>
             ) : (
-              // Authenticated user navigation
               <>
                 <Link to="/dashboard" className="text-gray-600 hover:text-blue-600 transition-colors">Dashboard</Link>
                 <Link to="/account" className="text-gray-600 hover:text-blue-600 transition-colors">Account</Link>
-                <a href="https://github.com/Valid8-security/parry-scanner" className="text-gray-600 hover:text-blue-600 transition-colors">GitHub</a>
-                <a href="https://github.com/Valid8-security/parry-scanner/blob/main/README.md" className="text-gray-600 hover:text-blue-600 transition-colors">Docs</a>
+                <a 
+                  href="https://github.com/Valid8-security/parry-scanner" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-gray-600 hover:text-blue-600 transition-colors"
+                >
+                  GitHub
+                </a>
+                <a 
+                  href="https://github.com/Valid8-security/parry-scanner/blob/main/README.md" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-gray-600 hover:text-blue-600 transition-colors"
+                >
+                  Docs
+                </a>
               </>
             )}
           </div>
 
           <div className="flex items-center space-x-4">
             {user ? (
-              // User is logged in
               <div className="flex items-center space-x-4">
                 <div className="flex items-center text-sm text-gray-700">
                   <User className="h-4 w-4 mr-1" />
@@ -70,7 +126,6 @@ const Navigation = () => {
                 </button>
               </div>
             ) : (
-              // User is not logged in
               <div className="flex items-center space-x-3">
                 <Link
                   to="/login"

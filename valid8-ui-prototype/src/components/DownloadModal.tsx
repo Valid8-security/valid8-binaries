@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { X, Download, CheckCircle, Shield } from 'lucide-react';
 
 interface DownloadModalProps {
@@ -7,13 +8,13 @@ interface DownloadModalProps {
 }
 
 const DownloadModal: React.FC<DownloadModalProps> = ({ isOpen, onClose }) => {
+  const navigate = useNavigate();
+  
   if (!isOpen) return null;
 
-  // Check if user is authenticated
   const userData = localStorage.getItem('valid8_user');
   const user = userData ? JSON.parse(userData) : null;
 
-  // Detect user's platform
   const getPlatform = () => {
     const userAgent = navigator.userAgent.toLowerCase();
     if (userAgent.includes('win')) return 'windows';
@@ -24,25 +25,26 @@ const DownloadModal: React.FC<DownloadModalProps> = ({ isOpen, onClose }) => {
   const platform = getPlatform();
 
   const getDownloadUrl = (platform: string) => {
-    // Point to the official Valid8 binaries repository
-    const baseUrl = 'https://github.com/Valid8-security/valid8-binaries/releases/latest/download';
-    // Use the correct filenames from the existing release
+    const baseUrl = 'https://github.com/Valid8-security/parry-scanner/releases/latest/download';
     if (platform === 'macos') {
       return `${baseUrl}/valid8-macos-arm64.zip`;
+    } else if (platform === 'windows') {
+      return `${baseUrl}/valid8-windows-amd64.zip`;
     }
-    return `${baseUrl}/valid8-${platform}.zip`;
+    return `${baseUrl}/valid8-linux-amd64.zip`;
   };
 
   const handleDownload = (platform: string) => {
     if (!user) {
       alert('Please create an account first to download Valid8.');
+      navigate('/signup');
+      onClose();
       return;
     }
     const url = getDownloadUrl(platform);
     window.open(url, '_blank');
   };
 
-  // If user is not authenticated, show login prompt
   if (!user) {
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
@@ -65,19 +67,21 @@ const DownloadModal: React.FC<DownloadModalProps> = ({ isOpen, onClose }) => {
                 To download Valid8, you need to create an account with a free trial license.
               </p>
               <div className="space-y-3">
-                <a
-                  href="/signup"
+                <Link
+                  to="/signup"
+                  onClick={onClose}
                   className="w-full bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center font-semibold"
                 >
                   <Shield className="mr-2 h-5 w-5" />
                   Start Free Trial
-                </a>
-                <a
-                  href="/login"
+                </Link>
+                <Link
+                  to="/login"
+                  onClick={onClose}
                   className="block text-blue-600 hover:text-blue-500 text-sm"
                 >
                   Already have an account? Sign in
-                </a>
+                </Link>
               </div>
             </div>
           </div>
@@ -101,23 +105,21 @@ const DownloadModal: React.FC<DownloadModalProps> = ({ isOpen, onClose }) => {
           </div>
 
           <div className="space-y-6">
-            {/* License Status */}
             <div className="bg-green-50 border border-green-200 rounded-lg p-4">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-lg font-semibold text-green-900">License Active ✅</h3>
                   <p className="text-green-700 text-sm">
-                    {user.subscription === 'free_trial' ? 'Free Trial' : 'Pro Plan'} • {user.scans_remaining} scans remaining
+                    {user.subscription === 'free_trial' ? 'Free Trial' : 'Pro Plan'} • {user.scans_remaining || 'Unlimited'} scans remaining
                   </p>
                 </div>
                 <div className="text-right">
                   <p className="text-xs text-green-600">Machine-bound license</p>
-                  <p className="text-xs font-mono text-green-800">{user.machine_id.substring(0, 12)}...</p>
+                  <p className="text-xs font-mono text-green-800">{user.machine_id?.substring(0, 12) || 'N/A'}...</p>
                 </div>
               </div>
             </div>
 
-            {/* Prerequisites */}
             <div>
               <h3 className="text-lg font-semibold mb-3 text-gray-900">System Requirements</h3>
               <div className="bg-blue-50 p-4 rounded-lg">
@@ -138,13 +140,9 @@ const DownloadModal: React.FC<DownloadModalProps> = ({ isOpen, onClose }) => {
               </div>
             </div>
 
-            {/* Download Options */}
             <div>
               <h3 className="text-lg font-semibold mb-3 text-gray-900">Download Full Version</h3>
-
-              {/* Platform-specific downloads */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                {/* Windows */}
                 <div className={`border rounded-lg p-4 ${platform === 'windows' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'}`}>
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center">
@@ -167,7 +165,6 @@ const DownloadModal: React.FC<DownloadModalProps> = ({ isOpen, onClose }) => {
                   </p>
                 </div>
 
-                {/* macOS */}
                 <div className={`border rounded-lg p-4 ${platform === 'macos' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'}`}>
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center">
@@ -190,7 +187,6 @@ const DownloadModal: React.FC<DownloadModalProps> = ({ isOpen, onClose }) => {
                   </p>
                 </div>
 
-                {/* Linux */}
                 <div className={`border rounded-lg p-4 ${platform === 'linux' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'}`}>
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center">
@@ -213,7 +209,6 @@ const DownloadModal: React.FC<DownloadModalProps> = ({ isOpen, onClose }) => {
                   </p>
                 </div>
 
-                {/* All Platforms */}
                 <div className="border border-gray-200 rounded-lg p-4">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center">
@@ -222,7 +217,7 @@ const DownloadModal: React.FC<DownloadModalProps> = ({ isOpen, onClose }) => {
                     </div>
                   </div>
                   <a
-                    href="https://github.com/Valid8-security/valid8-binaries/releases"
+                    href="https://github.com/Valid8-security/parry-scanner/releases"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-full bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors flex items-center justify-center"
@@ -231,13 +226,12 @@ const DownloadModal: React.FC<DownloadModalProps> = ({ isOpen, onClose }) => {
                     View All Downloads
                   </a>
                   <p className="text-gray-600 text-xs mt-2">
-                    Valid8-security/valid8-binaries • Checksums included
+                    Valid8-security/parry-scanner • Checksums included
                   </p>
                 </div>
               </div>
             </div>
 
-            {/* Quick Start */}
             <div>
               <h3 className="text-lg font-semibold mb-3 text-gray-900">Quick Start</h3>
               <div className="bg-gray-50 p-4 rounded-lg">
@@ -251,7 +245,6 @@ const DownloadModal: React.FC<DownloadModalProps> = ({ isOpen, onClose }) => {
               </div>
             </div>
 
-            {/* Documentation Link */}
             <div className="border-t pt-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -259,7 +252,9 @@ const DownloadModal: React.FC<DownloadModalProps> = ({ isOpen, onClose }) => {
                   <p className="text-gray-600 text-sm">Check out our documentation for advanced usage</p>
                 </div>
                 <a
-                  href="#"
+                  href="https://github.com/Valid8-security/parry-scanner/blob/main/README.md"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center"
                 >
                   <Download className="h-4 w-4 mr-2" />
