@@ -195,3 +195,4 @@ class PluginRegistry(IPluginRegistry):
 # Global instances
 config_manager = ConfigurationManager()
 plugin_registry = PluginRegistry()
+

@@ -4,8 +4,16 @@ Java language security analyzer.
 
 import re
 from typing import List
-from .base import LanguageAnalyzer, Vulnerability
-from .universal_detectors import UniversalDetectors
+# Robust import
+try:
+    from .base import LanguageAnalyzer, Vulnerability
+except ImportError:
+    from valid8.base import LanguageAnalyzer, Vulnerability
+# Robust import
+try:
+    from .universal_detectors import UniversalDetectors
+except ImportError:
+    from valid8.universal_detectors import UniversalDetectors
 
 
 class JavaAnalyzer(LanguageAnalyzer, UniversalDetectors):

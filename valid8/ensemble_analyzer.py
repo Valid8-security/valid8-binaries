@@ -723,3 +723,4 @@ class EnsembleAnalyzer:
 def create_ensemble_scanner():
     """Create the complete 7-layer ensemble scanner."""
     return EnsembleAnalyzer()
+

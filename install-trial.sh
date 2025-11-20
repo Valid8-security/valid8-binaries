@@ -89,3 +89,4 @@ echo ""
 echo "Upgrade anytime at: https://valid8.dev/pricing"
 echo ""
 echo "Happy scanning! 🔒✨"
+

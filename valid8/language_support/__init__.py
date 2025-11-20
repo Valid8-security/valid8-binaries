@@ -1,58 +1,87 @@
 """
-Multi-language support for Parry Security Scanner.
+Multi-language support for Valid8 Security Scanner.
 
 This package provides language-specific vulnerability detection
 for various programming languages.
 """
 
 from typing import Dict, Type
-from .base import LanguageAnalyzer
-from .python_analyzer import PythonAnalyzer
-from .javascript_analyzer import JavaScriptAnalyzer
-from .java_analyzer import JavaAnalyzer
-from .go_analyzer import GoAnalyzer
-from .rust_analyzer import RustAnalyzer
-from .cpp_analyzer import CppAnalyzer
-from .php_analyzer import PHPAnalyzer
-from .ruby_analyzer import RubyAnalyzer
 
-# Additional language analyzers (using existing analyzers as fallbacks)
-from .universal_detectors import UniversalDetectors
+# Robust imports that work in different contexts
+try:
+    from .base import LanguageAnalyzer
+    from .python_analyzer import PythonAnalyzer
+    from .javascript_analyzer import JavaScriptAnalyzer
+    from .java_analyzer import JavaAnalyzer
+    from .go_analyzer import GoAnalyzer
+    from .rust_analyzer import RustAnalyzer
+    from .cpp_analyzer import CppAnalyzer
+    from .php_analyzer import PHPAnalyzer
+    from .ruby_analyzer import RubyAnalyzer
+    from .universal_detectors import UniversalDetectors
+except ImportError:
+    # Fallback imports
+    try:
+        from valid8.language_support.base import LanguageAnalyzer
+        from valid8.language_support.python_analyzer import PythonAnalyzer
+        from valid8.language_support.javascript_analyzer import JavaScriptAnalyzer
+        from valid8.language_support.java_analyzer import JavaAnalyzer
+        from valid8.language_support.go_analyzer import GoAnalyzer
+        from valid8.language_support.rust_analyzer import RustAnalyzer
+        from valid8.language_support.cpp_analyzer import CppAnalyzer
+        from valid8.language_support.php_analyzer import PHPAnalyzer
+        from valid8.language_support.ruby_analyzer import RubyAnalyzer
+        from valid8.language_support.universal_detectors import UniversalDetectors
+    except ImportError:
+        # Minimal fallback
+        LanguageAnalyzer = None
+        PythonAnalyzer = None
+        JavaScriptAnalyzer = None
+        JavaAnalyzer = None
+        GoAnalyzer = None
+        RustAnalyzer = None
+        CppAnalyzer = None
+        PHPAnalyzer = None
+        RubyAnalyzer = None
+        UniversalDetectors = None
 
 # Language registry (25+ languages supported)
-LANGUAGE_ANALYZERS: Dict[str, Type[LanguageAnalyzer]] = {
-    # Core languages with dedicated analyzers
-    'python': PythonAnalyzer,
-    'javascript': JavaScriptAnalyzer,
-    'typescript': JavaScriptAnalyzer,  # TypeScript uses same analyzer
-    'java': JavaAnalyzer,
-    'kotlin': JavaAnalyzer,  # Kotlin uses Java analyzer (JVM)
-    'scala': JavaAnalyzer,  # Scala uses Java analyzer (JVM)
-    'groovy': JavaAnalyzer,  # Groovy uses Java analyzer (JVM)
-    'go': GoAnalyzer,
-    'rust': RustAnalyzer,
-    'cpp': CppAnalyzer,
-    'c': CppAnalyzer,  # C uses same analyzer as C++
-    'csharp': CppAnalyzer,  # C# uses C++ analyzer (similar syntax)
-    'fsharp': CppAnalyzer,  # F# uses C++ analyzer (fallback)
-    'vbnet': CppAnalyzer,  # VB.NET uses C++ analyzer (fallback)
-    'php': PHPAnalyzer,
-    'ruby': RubyAnalyzer,
-    'swift': CppAnalyzer,  # Swift uses C++ analyzer (similar syntax)
-    'perl': PHPAnalyzer,  # Perl uses PHP analyzer (similar syntax)
-    'lua': JavaScriptAnalyzer,  # Lua uses JS analyzer (similar syntax)
-    'haskell': CppAnalyzer,  # Haskell uses C++ analyzer (fallback)
-    'clojure': JavaScriptAnalyzer,  # Clojure uses JS analyzer (similar syntax)
-    'erlang': JavaScriptAnalyzer,  # Erlang uses JS analyzer (fallback)
+LANGUAGE_ANALYZERS: Dict[str, Type[LanguageAnalyzer]] = {}
 
-    # Data/Configuration languages (universal detectors)
-    'sql': UniversalDetectors,
-    'yaml': UniversalDetectors,
-    'json': UniversalDetectors,
-    'xml': UniversalDetectors,
-    'bash': UniversalDetectors,
-    'powershell': UniversalDetectors,
-}
+if PythonAnalyzer and JavaScriptAnalyzer and JavaAnalyzer:
+    LANGUAGE_ANALYZERS = {
+        # Core languages with dedicated analyzers
+        'python': PythonAnalyzer,
+        'javascript': JavaScriptAnalyzer,
+        'typescript': JavaScriptAnalyzer,  # TypeScript uses same analyzer
+        'java': JavaAnalyzer,
+        'kotlin': JavaAnalyzer,  # Kotlin uses Java analyzer (JVM)
+        'scala': JavaAnalyzer,  # Scala uses Java analyzer (JVM)
+        'groovy': JavaAnalyzer,  # Groovy uses Java analyzer (JVM)
+        'go': GoAnalyzer,
+        'rust': RustAnalyzer,
+        'cpp': CppAnalyzer,
+        'c': CppAnalyzer,  # C uses same analyzer as C++
+        'csharp': CppAnalyzer,  # C# uses C++ analyzer (similar syntax)
+        'fsharp': CppAnalyzer,  # F# uses C++ analyzer (fallback)
+        'vbnet': CppAnalyzer,  # VB.NET uses C++ analyzer (fallback)
+        'php': PHPAnalyzer,
+        'ruby': RubyAnalyzer,
+        'swift': CppAnalyzer,  # Swift uses C++ analyzer (similar syntax)
+        'perl': PHPAnalyzer,  # Perl uses PHP analyzer (similar syntax)
+        'lua': JavaScriptAnalyzer,  # Lua uses JS analyzer (similar syntax)
+        'haskell': CppAnalyzer,  # Haskell uses C++ analyzer (fallback)
+        'clojure': JavaScriptAnalyzer,  # Clojure uses JS analyzer (similar syntax)
+        'erlang': JavaScriptAnalyzer,  # Erlang uses JS analyzer (fallback)
+
+        # Data/Configuration languages (universal detectors)
+        'sql': UniversalDetectors,
+        'yaml': UniversalDetectors,
+        'json': UniversalDetectors,
+        'xml': UniversalDetectors,
+        'bash': UniversalDetectors,
+        'powershell': UniversalDetectors,
+    }
 
 # File extension to language mapping (25+ languages)
 FILE_EXTENSIONS = {
@@ -180,5 +209,3 @@ __all__ = [
     'get_language_from_file',
     'get_analyzer',
 ]
-
-

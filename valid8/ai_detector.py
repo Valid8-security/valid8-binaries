@@ -14,12 +14,36 @@ from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import os
 from dataclasses import dataclass
-from .llm import LLMClient
-from .scanner import Vulnerability
-from .natural_language_filter import nl_slm_filter
-from .advanced_detectors import IDORDetector, SSRFDetector, XXEDetector, CSRFDetector, InformationDisclosureDetector
-from .universal_detector import UniversalVulnerabilityDetector
-from .universal_detector import UniversalVulnerabilityDetector
+# Robust import
+try:
+    from .llm import LLMClient
+except ImportError:
+    from valid8.llm import LLMClient
+# Robust import
+try:
+    from .scanner import Vulnerability
+except ImportError:
+    from valid8.scanner import Vulnerability
+# Robust import
+try:
+    from .natural_language_filter import nl_slm_filter
+except ImportError:
+    from valid8.natural_language_filter import nl_slm_filter
+# Robust import
+try:
+    from .advanced_detectors import IDORDetector
+except ImportError:
+    from valid8.advanced_detectors import IDORDetector, SSRFDetector, XXEDetector, CSRFDetector, InformationDisclosureDetector
+# Robust import
+try:
+    from .universal_detector import UniversalVulnerabilityDetector
+except ImportError:
+    from valid8.universal_detector import UniversalVulnerabilityDetector
+# Robust import
+try:
+    from .universal_detector import UniversalVulnerabilityDetector
+except ImportError:
+    from valid8.universal_detector import UniversalVulnerabilityDetector
 
 
 @dataclass
@@ -319,9 +343,7 @@ class AIDetector:
         # 🚀 ADVANCED MULTI-STAGE ANALYSIS FOR 90%+ RECALL
 
         # Stage 1: Primary AI analysis with enhanced context
-        primary_vulns = self._stage1_primary_analysis(
-            code, filepath, language, codebase_context, line_number
-        )
+        primary_vulns = self._stage1_primary_analysis(code, filepath, language)
         vulnerabilities.extend(primary_vulns)
 
         # Stage 2: AST-based semantic analysis (Semgrep-inspired)
@@ -337,100 +359,78 @@ class AIDetector:
         vulnerabilities.extend(framework_vulns)
 
         # Stage 5: Specialized analysis for complex patterns
-        complex_vulns = self._stage2_complex_pattern_analysis(
-            code, filepath, language, vulnerabilities
-        )
+        complex_vulns = self._stage2_complex_pattern_analysis( code, filepath, language)
         vulnerabilities.extend(complex_vulns)
 
         # Stage 6: Knowledge-based rule engine validation
-        rule_validated_vulns = self._knowledge_based_validation(
-            vulnerabilities, code, filepath, language
-        )
+        rule_validated_vulns = self._knowledge_based_validation( vulnerabilities, code, filepath, language)
 
         # Stage 7: ML-enhanced pattern learning and validation
-        ml_enhanced_vulns = self._ml_pattern_learning_validation(
+        ml_enhanced_vulns = self._ml_pattern_learning_validation( vulnerabilities, code, filepath, language)
             rule_validated_vulns, code, filepath, language
-        )
 
         # Stage 8: Inter-procedural analysis (MAJOR NEW FEATURE)
-        inter_proc_vulns = self._inter_procedural_analysis(
+        inter_proc_vulns = self._inter_procedural_analysis( vulnerabilities, code, filepath, language)
             ml_enhanced_vulns, code, filepath, language
-        )
 
         # Stage 9: Business logic analyzer (MAJOR NEW FEATURE)
-        business_logic_vulns = self._business_logic_analyzer(
+        business_logic_vulns = self._business_logic_analyzer( vulnerabilities, code, filepath, language)
             inter_proc_vulns, code, filepath, language
-        )
 
         # Stage 10: Graph-based vulnerability analysis (MAJOR NEW FEATURE)
-        graph_vulns = self._graph_based_analysis(
+        graph_vulns = self._graph_based_analysis( vulnerabilities, code, filepath, language)
             business_logic_vulns, code, filepath, language
-        )
 
         # Stage 11: Symbolic execution analysis (FINAL MAJOR BREAKTHROUGH)
-        symbolic_vulns = self._symbolic_execution_analysis(
+        symbolic_vulns = self._symbolic_execution_analysis( vulnerabilities, code, filepath, language)
             graph_vulns, code, filepath, language
-        )
 
         # Stage 12: Ontology-based security reasoning (FINAL MAJOR BREAKTHROUGH)
-        ontology_vulns = self._ontology_based_analysis(
+        ontology_vulns = self._ontology_based_analysis( vulnerabilities, code, filepath, language)
             symbolic_vulns, code, filepath, language
-        )
 
         # Stage 13: Deep Learning Vulnerability Detection (MAJOR BREAKTHROUGH)
-        dl_vulns = self._deep_learning_detection(
+        dl_vulns = self._deep_learning_detection( vulnerabilities, code, filepath, language)
             ontology_vulns, code, filepath, language
-        )
 
         # Stage 14: Code Embedding Analysis (MAJOR BREAKTHROUGH)
-        embedding_vulns = self._code_embedding_analysis(
+        embedding_vulns = self._code_embedding_analysis( vulnerabilities, code, filepath, language)
             dl_vulns, code, filepath, language
-        )
 
         # Stage 15: Contrastive Learning Validation (MAJOR BREAKTHROUGH)
-        contrastive_vulns = self._contrastive_learning_validation(
+        contrastive_vulns = self._contrastive_learning_validation( vulnerabilities, code, filepath, language)
             embedding_vulns, code, filepath, language
-        )
 
         # Stage 16: LLM-Based Security Analysis (FINAL REVOLUTIONARY BREAKTHROUGH)
-        llm_vulns = self._llm_security_analysis(
+        llm_vulns = self._llm_security_analysis( llm_vulns, code, filepath, language)
             contrastive_vulns, code, filepath, language
-        )
 
         # Stage 17: Multi-Modal Security Understanding (FINAL REVOLUTIONARY BREAKTHROUGH)
-        multimodal_vulns = self._multimodal_security_analysis(
+        multimodal_vulns = self._multimodal_security_analysis( multimodal_vulns, code, filepath, language)
             llm_vulns, code, filepath, language
-        )
 
         # Stage 18: Enhanced Business Logic Pattern Recognition (TARGETED IMPROVEMENT)
-        business_enhanced_vulns = self._enhanced_business_logic_analysis(
+        business_enhanced_vulns = self._enhanced_business_logic_analysis( business_enhanced_vulns, code, filepath, language)
             multimodal_vulns, code, filepath, language
-        )
 
         # Stage 19: Context-Aware Dictionary Analysis (TARGETED IMPROVEMENT)
         dict_aware_vulns = self._context_aware_dictionary_analysis(
-            business_enhanced_vulns, code, filepath, language
-        )
 
         # Stage 20: Authentication Flow Analysis (TARGETED IMPROVEMENT)
-        auth_flow_vulns = self._authentication_flow_analysis(
+        auth_flow_vulns = self._authentication_flow_analysis( vulnerabilities, code, filepath, language)
             dict_aware_vulns, code, filepath, language
-        )
 
         # Stage 21: Semantic Role Labeling (TARGETED IMPROVEMENT)
-        semantic_vulns = self._semantic_role_labeling_analysis(
+        semantic_vulns = self._semantic_role_labeling_analysis( vulnerabilities, code, filepath, language)
             auth_flow_vulns, code, filepath, language
-        )
 
         # Stage 22: Template-Based Detection (TARGETED IMPROVEMENT)
-        template_vulns = self._template_based_detection(
+        template_vulns = self._template_based_detection( vulnerabilities, code, filepath, language)
             semantic_vulns, code, filepath, language
-        )
 
         # Stage 23: Final ensemble validation and confidence calibration
-        validated_vulns = self._stage3_ensemble_validation(
+        validated_vulns = self._stage3_ensemble_validation( vulnerabilities, code, filepath, language)
             template_vulns, code, filepath, language
-        )
 
         # Cache results
         self.detection_cache[cache_key] = validated_vulns
@@ -453,13 +453,11 @@ class AIDetector:
         
         # Use parallel processing for multiple chunks
         if len(chunks) > 1 and self.max_workers > 1:
-            vulnerabilities = self._parallel_analyze_chunks(
-                chunks, filepath, language, codebase_context, line_number
-            )
+        vulnerabilities = self._parallel_analyze_chunks( vulnerabilities, code, filepath, language)
         else:
             # Sequential analysis for small files or single chunk
             for chunk_idx, chunk in enumerate(chunks):
-                chunk_vulns = self._analyze_chunk(
+        chunk_vulns = self._analyze_chunk( vulnerabilities, code, filepath, language)
                     chunk, 
                     filepath, 
                     language,
@@ -518,14 +516,13 @@ class AIDetector:
                         if target_cwe and target_cwe not in existing_cwes:
                             # Specialized AI analysis for this pattern
                             context = self._get_specialized_context(code, i, 3)
-                            specialized_prompt = self._build_specialized_prompt(
+        specialized_prompt = self._build_specialized_prompt( vulnerabilities, code, filepath, language)
                                 context, pattern_type, filepath, language
-                            )
 
                             try:
                                 response = self.llm.generate(specialized_prompt, max_tokens=256)
                                 if self._is_positive_detection(response):
-                                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                                         cwe=target_cwe,
                                         severity='high',
                                         title=f'Specialized Detection: {pattern_type.replace("_", " ").title()}',
@@ -970,19 +967,16 @@ Is this a dangerous data flow vulnerability? Answer YES or NO, then explain."""
                 rules = rule_database[cwe]
 
                 # Check rule matches
-                high_match = any(
+        high_match = any( vulnerabilities, code, filepath, language)
                     re.search(pattern, getattr(vuln, 'code_snippet', ''), re.IGNORECASE | re.DOTALL)
-                    for pattern in rules.get('high_confidence', [])
-                )
-                medium_match = any(
+        medium_match = any( vulnerabilities, code, filepath, language)
                     re.search(pattern, getattr(vuln, 'code_snippet', ''), re.IGNORECASE | re.DOTALL)
                     for pattern in rules.get('medium_confidence', [])
                 )
 
                 # Check context validation
-                context_valid = any(
+        context_valid = any( vulnerabilities, code, filepath, language)
                     req in code.lower() for req in rules.get('context_required', [])
-                )
 
                 # Calculate enhanced confidence
                 base_conf = getattr(vuln, 'confidence', 0.5)
@@ -1018,14 +1012,11 @@ Is this a dangerous data flow vulnerability? Answer YES or NO, then explain."""
         learned_patterns = self._learn_success_patterns(vulnerabilities, code)
 
         # Apply learned patterns to boost confidence and find missed vulnerabilities
-        enhanced_vulnerabilities = self._apply_learned_patterns(
+        enhanced_vulnerabilities = self._apply_learned_patterns( vulnerabilities, code, filepath, language)
             enhanced_vulnerabilities, learned_patterns, code, filepath
-        )
 
         # ML-based false positive reduction
-        enhanced_vulnerabilities = self._ml_false_positive_reduction(
-            enhanced_vulnerabilities, code
-        )
+        enhanced_vulnerabilities = self._ml_false_positive_reduction( vulnerabilities, code, filepath, language)
 
         return enhanced_vulnerabilities
 
@@ -1083,21 +1074,20 @@ Is this a dangerous data flow vulnerability? Answer YES or NO, then explain."""
             context = self._get_vulnerability_context(vuln, code)
 
             # High-confidence pattern matching
-            high_pattern_match = any(
+        high_pattern_match = any( vulnerabilities, code, filepath, language)
                 self._pattern_similarity(snippet, pattern) > 0.7
                 for pattern in learned_patterns.get('high_confidence', [])
             )
 
             # Context pattern matching
-            context_match = any(
+        context_match = any( vulnerabilities, code, filepath, language)
                 self._pattern_similarity(context, ctx_pattern) > 0.6
                 for ctx_pattern in learned_patterns.get('context_patterns', [])
             )
 
             # Structural pattern matching
-            structural_match = any(
+        structural_match = any( vulnerabilities, code, filepath, language)
                 feature in snippet for feature in learned_patterns.get('structural_patterns', [])
-            )
 
             # Apply ML-based confidence boosts
             if high_pattern_match and context_match:
@@ -1111,9 +1101,7 @@ Is this a dangerous data flow vulnerability? Answer YES or NO, then explain."""
             enhanced_vulns.append(vuln)
 
         # Look for missed vulnerabilities using learned patterns
-        missed_vulns = self._find_missed_vulnerabilities(
-            learned_patterns, code, filepath, enhanced_vulns
-        )
+        missed_vulns = self._find_missed_vulnerabilities( vulnerabilities, code, filepath, language)
         enhanced_vulns.extend(missed_vulns)
 
         return enhanced_vulns
@@ -1144,7 +1132,7 @@ Is this a dangerous data flow vulnerability? Answer YES or NO, then explain."""
 
                     if inferred_cwe and inferred_cwe not in existing_cwes:
                         # Create new vulnerability based on learned pattern
-                        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                             cwe=inferred_cwe,
                             severity='high',
                             title=f'ML-Detected: {inferred_cwe} Pattern',
@@ -1438,9 +1426,7 @@ Is this a dangerous data flow vulnerability? Answer YES or NO, then explain."""
 
         try:
             contrastive_validator = ContrastiveLearningValidator(filepath)
-            validated_findings = contrastive_validator.validate_with_contrastive_learning(
-                vulnerabilities, code
-            )
+        validated_findings = contrastive_validator.validate_with_contrastive_learning( vulnerabilities, code, filepath, language)
 
             # Update existing vulnerabilities with contrastive validation
             for i, vuln in enumerate(enhanced_vulns):
@@ -1608,7 +1594,7 @@ Is this a dangerous data flow vulnerability? Answer YES or NO, then explain."""
         # Set current line number for context enhancement
         self._current_line_number = line_number
         
-        prompt = self._build_detection_prompt(
+        prompt = self._build_detection_prompt( vulnerabilities, code, filepath, language)
             code_chunk,
             filepath,
             language,
@@ -1621,7 +1607,7 @@ Is this a dangerous data flow vulnerability? Answer YES or NO, then explain."""
             response = self.llm.generate(prompt)
             
             # Parse vulnerabilities from response
-            vulnerabilities = self._parse_ai_response(
+        vulnerabilities = self._parse_ai_response( vulnerabilities, code, filepath, language)
                 response,
                 filepath,
                 code_chunk,
@@ -1740,7 +1726,7 @@ DESCRIPTION: [detailed explanation with context analysis]
         
         for section in vuln_sections[1:]:  # Skip first empty section
             try:
-                vuln = self._parse_vulnerability_section(
+        vuln = self._parse_vulnerability_section( vulnerabilities, code, filepath, language)
                     section,
                     filepath,
                     code,
@@ -1799,7 +1785,7 @@ DESCRIPTION: [detailed explanation with context analysis]
         if not re.match(r'CWE-\d+', cwe):
             return None
 
-        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
             cwe=cwe,
             severity=severity_match.group(1).lower(),
             title=title_match.group(1).strip(),
@@ -1855,8 +1841,6 @@ DESCRIPTION: [detailed explanation with context analysis]
             chunk_idx, chunk = chunk_data
             try:
                 return self._analyze_chunk(
-                    chunk, filepath, language, chunk_idx, codebase_context, line_number
-                )
             except Exception as e:
                 print(f"Error analyzing chunk {chunk_idx} in {filepath}: {e}")
                 return []
@@ -2038,9 +2022,8 @@ class HybridDetector:
                     similar_group.append(other_vuln)
 
             # AI validation for this group
-            validated_group = self._ai_validate_vulnerability_group(
+        validated_group = self._ai_validate_vulnerability_group( vulnerabilities, code, filepath, language)
                 similar_group, code, filepath, language
-            )
 
             grouped_vulns.extend(validated_group)
 
@@ -2249,7 +2232,7 @@ class HybridDetector:
             for finding in all_findings:
                 # Check if this vulnerability was already detected by patterns
                 if not self._is_already_detected(finding, detected_vulns):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe=finding['cwe'],
                         severity=finding['severity'],
                         title=finding['title'],
@@ -2730,7 +2713,7 @@ CONFIDENCE: [0.0-1.0]
 REASONING: [brief explanation]"""
 
         try:
-            response = self.precision_ai.llm_clients['validation'].generate(
+        response = self.precision_ai.llm_clients['validation'].generate( vulnerabilities, code, filepath, language)
                 validation_prompt,
                 system_prompt=self.precision_ai.models['validation'].system_prompt
             )
@@ -2776,7 +2759,7 @@ CONSIDERATIONS:
 COMMITTEE DECISION: YES or NO (with brief reasoning)"""
 
         try:
-            response = self.precision_ai.llm_clients['ensemble'].generate(
+        response = self.precision_ai.llm_clients['ensemble'].generate( vulnerabilities, code, filepath, language)
                 ensemble_prompt,
                 system_prompt=self.precision_ai.models['ensemble'].system_prompt
             )
@@ -2836,7 +2819,7 @@ DUPLICATES: [pairs of duplicate finding numbers]
 FALSE POSITIVES: [finding numbers to eliminate]"""
 
         try:
-            response = self.precision_ai.llm_clients['validation'].generate(
+        response = self.precision_ai.llm_clients['validation'].generate( vulnerabilities, code, filepath, language)
                 group_prompt,
                 system_prompt=self.precision_ai.models['validation'].system_prompt
             )
@@ -2931,7 +2914,7 @@ CODE: {code_context}
 Is this a genuine security vulnerability? Answer YES or NO."""
 
         try:
-            response = self.llm_clients['fast_validation'].generate(
+        response = self.llm_clients['fast_validation'].generate( vulnerabilities, code, filepath, language)
                 prompt,
                 system_prompt=self.models['fast_validation'].system_prompt
             )
@@ -2973,7 +2956,7 @@ RISK ASSESSMENT:
 CONCLUSION: LEGITIMATE SECURITY ISSUE? YES or NO"""
 
         try:
-            response = self.llm_clients['semantic_check'].generate(
+        response = self.llm_clients['semantic_check'].generate( vulnerabilities, code, filepath, language)
                 prompt,
                 system_prompt=self.models['semantic_check'].system_prompt
             )
@@ -3230,7 +3213,7 @@ class ASTSemanticAnalyzer(ast.NodeVisitor):
 
     def _add_vulnerability(self, cwe: str, title: str, description: str, line_number: int):
         """Add a vulnerability finding."""
-        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
             cwe=cwe,
             severity='high',
             title=title,
@@ -3351,7 +3334,7 @@ class AdvancedTaintTracker(ast.NodeVisitor):
 
     def _add_vulnerability(self, cwe: str, title: str, description: str, line_number: int):
         """Add a vulnerability finding."""
-        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
             cwe=cwe,
             severity='high',
             title=title,
@@ -3535,7 +3518,7 @@ class FrameworkAnalyzer(ast.NodeVisitor):
 
     def _add_vulnerability(self, cwe: str, title: str, description: str, line_number: int):
         """Add a vulnerability finding."""
-        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
             cwe=cwe,
             severity='high',
             title=title,
@@ -3701,14 +3684,14 @@ class InterProceduralAnalyzer(ast.NodeVisitor):
                 # Route handler without authentication
                 if not func_info["security_patterns"]["has_auth_check"]:
                     # Check if it calls authenticated functions
-                    calls_auth = any(
+        calls_auth = any( vulnerabilities, code, filepath, language)
                         callee in self.functions and
                         self.functions[callee]["security_patterns"]["has_auth_check"]
                         for callee in func_info["calls"]
                     )
 
                     if not calls_auth:
-                        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                             cwe="CWE-287",
                             severity="high",
                             title="Authentication Bypass",
@@ -3732,7 +3715,7 @@ class InterProceduralAnalyzer(ast.NodeVisitor):
                 if isinstance(node, ast.Assign):
                     # Check for hardcoded assignments
                     if self._is_hardcoded_assignment(node):
-                        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                             cwe="CWE-798",
                             severity="critical",
                             title="Hardcoded Credentials",
@@ -3760,13 +3743,13 @@ class InterProceduralAnalyzer(ast.NodeVisitor):
 
         for func_name, func_info in self.functions.items():
             # Check for file operations
-            has_file_ops = any(
+        has_file_ops = any( vulnerabilities, code, filepath, language)
                 call in ["open", "write", "save", "upload"]
                 for call in func_info["calls"]
             )
 
             if has_file_ops and not func_info["security_patterns"]["has_input_validation"]:
-                vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                     cwe="CWE-434",
                     severity="high",
                     title="Unrestricted File Upload",
@@ -3811,7 +3794,7 @@ class BusinessLogicAnalyzer(ast.NodeVisitor):
         """Analyze conditional logic for security issues."""
         # Check for authentication bypass in conditionals
         if self._is_auth_bypass_pattern(node):
-            vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                 cwe="CWE-287",
                 severity="high",
                 title="Authentication Bypass",
@@ -3842,7 +3825,7 @@ class BusinessLogicAnalyzer(ast.NodeVisitor):
             if isinstance(child, ast.Compare):
                 # Check for hardcoded comparisons
                 if self._has_hardcoded_auth(child):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-287",
                         severity="critical",
                         title="Hardcoded Authentication",
@@ -3860,7 +3843,7 @@ class BusinessLogicAnalyzer(ast.NodeVisitor):
         for child in ast.walk(node):
             if isinstance(child, ast.Return):
                 if self._returns_hardcoded_credentials(child):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-798",
                         severity="critical",
                         title="Hardcoded Credentials",
@@ -3878,7 +3861,7 @@ class BusinessLogicAnalyzer(ast.NodeVisitor):
         for child in ast.walk(node):
             if isinstance(child, ast.Dict):
                 if self._is_user_dictionary(child):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-798",
                         severity="high",
                         title="Hardcoded User Dictionary",
@@ -4006,14 +3989,14 @@ class GraphBasedAnalyzer(ast.NodeVisitor):
         for node_name, node_info in self.nodes.items():
             if node_info.get("type") == "function" and node_info.get("is_route"):
                 # Check if route calls any auth-related functions
-                has_auth_call = any(
+        has_auth_call = any( vulnerabilities, code, filepath, language)
                     edge["to"] for edge in self.edges
                     if edge["from"] == node_name and
                     any(auth in edge["to"].lower() for auth in ["auth", "login", "session"])
                 )
 
                 if not has_auth_call:
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-287",
                         severity="high",
                         title="Route Without Authentication",
@@ -4041,7 +4024,7 @@ class GraphBasedAnalyzer(ast.NodeVisitor):
             # Check if this input flows to dangerous sinks
             for edge in self.edges:
                 if edge.get("type") == "calls" and edge["to"] in dangerous_sinks:
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-95" if edge["to"] in ["eval", "exec"] else "CWE-78",
                         severity="critical",
                         title="Dangerous Data Flow",
@@ -4065,7 +4048,7 @@ class GraphBasedAnalyzer(ast.NodeVisitor):
                 # Check call chain for authentication bypass
                 call_chain = self._get_call_chain(node_name)
                 if self._has_auth_bypass_chain(call_chain):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-287",
                         severity="high",
                         title="Authentication Chain Bypass",
@@ -4179,7 +4162,7 @@ class SymbolicExecutionAnalyzer(ast.NodeVisitor):
 
             # Check for hardcoded credentials in calls
             if self._is_hardcoded_credential_call(node):
-                vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                     cwe="CWE-798",
                     severity="critical",
                     title="Symbolic Execution: Hardcoded Credentials",
@@ -4193,7 +4176,7 @@ class SymbolicExecutionAnalyzer(ast.NodeVisitor):
 
             # Check for authentication bypass
             elif self._is_auth_bypass_call(node):
-                vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                     cwe="CWE-287",
                     severity="critical",
                     title="Symbolic Execution: Authentication Bypass",
@@ -4342,7 +4325,6 @@ class OntologyBasedAnalyzer:
         """Apply security ontology reasoning to detect complex vulnerabilities."""
         vulnerabilities = []
         lines = code.split("\n")
-")
 
         ontology = self.security_ontology
 
@@ -4352,7 +4334,7 @@ class OntologyBasedAnalyzer:
             # Apply hardcoded credentials ontology
             if self._matches_ontology_pattern(line, ontology["vulnerability_patterns"]["hardcoded_credentials"]):
                 if not self._has_mitigation_context(line, ontology):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-798",
                         severity="critical",
                         title="Ontology-Based: Hardcoded Credentials",
@@ -4367,7 +4349,7 @@ class OntologyBasedAnalyzer:
             # Apply authentication bypass ontology
             elif self._matches_ontology_pattern(line, ontology["vulnerability_patterns"]["auth_bypass"]):
                 if self._is_auth_context(line, ontology):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-287",
                         severity="critical",
                         title="Ontology-Based: Authentication Bypass",
@@ -4381,7 +4363,7 @@ class OntologyBasedAnalyzer:
 
             # Apply insecure storage ontology
             elif self._matches_ontology_pattern(line, ontology["vulnerability_patterns"]["insecure_storage"]):
-                vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                     cwe="CWE-311",
                     severity="high",
                     title="Ontology-Based: Insecure Storage",
@@ -4409,9 +4391,7 @@ class OntologyBasedAnalyzer:
         ]
 
         context_window = 2  # Check surrounding lines
-        lines = line.split("
-")
-")
+        lines = line.split("\n")
 
         for i, check_line in enumerate(lines):
             check_lower = check_line.lower()
@@ -4468,8 +4448,7 @@ class DeepLearningDetector:
     def detect_with_deep_learning(self, code: str):
         """Use deep learning model to detect vulnerabilities."""
         vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         for i, line in enumerate(lines, 1):
             # Tokenize code line
@@ -4490,7 +4469,7 @@ class DeepLearningDetector:
                     "command_injection": "CWE-78"
                 }
 
-                vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                     cwe=cwe_mapping.get(vuln_type, "CWE-79"),
                     severity="high" if confidence > 0.85 else "medium",
                     title=f"Deep Learning: {vuln_type.replace("_", " ").title()}",
@@ -4627,8 +4606,7 @@ class CodeEmbeddingAnalyzer:
     def analyze_embeddings(self, code: str):
         """Analyze code using embedding similarity."""
         vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         for i, line in enumerate(lines, 1):
             if not line.strip():
@@ -4641,7 +4619,7 @@ class CodeEmbeddingAnalyzer:
             vuln_type, similarity = self._find_most_similar_vulnerable(line_embedding)
 
             if vuln_type and similarity > 0.75:
-                vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                     cwe=vuln_type,
                     severity="high" if similarity > 0.85 else "medium",
                     title=f"Embedding Analysis: {vuln_type}",
@@ -4794,8 +4772,7 @@ class ContrastiveLearningValidator:
     def _find_contrastive_vulnerabilities(self, code: str):
         """Find new vulnerabilities using contrastive learning."""
         new_vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         for i, line in enumerate(lines, 1):
             if not line.strip():
@@ -4821,7 +4798,7 @@ class ContrastiveLearningValidator:
                     final_confidence = contrastive_confidence * weight
 
                     if final_confidence > 0.75:
-                        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                             cwe=cwe,
                             severity="high" if final_confidence > 0.85 else "medium",
                             title=f"Contrastive Learning: {cwe}",
@@ -4890,8 +4867,7 @@ Then explain your reasoning.
     def analyze_with_llm(self, code: str):
         """Use LLM for advanced security analysis."""
         vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         # Focus on analyzing code blocks that are likely to contain security issues
         code_blocks = self._extract_security_relevant_blocks(code)
@@ -4902,7 +4878,7 @@ Then explain your reasoning.
 
             # Analyze for hardcoded credentials
             if self._llm_detect_hardcoded_credentials(block_code):
-                vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                     cwe="CWE-798",
                     severity="critical",
                     title="LLM-Detected: Hardcoded Credentials",
@@ -4916,7 +4892,7 @@ Then explain your reasoning.
 
             # Analyze for authentication bypass
             if self._llm_detect_auth_bypass(block_code):
-                vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                     cwe="CWE-287",
                     severity="critical",
                     title="LLM-Detected: Authentication Bypass",
@@ -4930,7 +4906,7 @@ Then explain your reasoning.
 
             # Analyze for business logic flaws
             if self._llm_detect_business_logic_flaws(block_code):
-                vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                     cwe="CWE-840",  # Business Logic Errors
                     severity="high",
                     title="LLM-Detected: Business Logic Flaw",
@@ -4946,8 +4922,7 @@ Then explain your reasoning.
 
     def _extract_security_relevant_blocks(self, code: str):
         """Extract code blocks most likely to contain security issues."""
-        lines = code.split("
-")
+        lines = code.split("\n")
         blocks = []
 
         current_block = []
@@ -5108,7 +5083,7 @@ class MultimodalSecurityAnalyzer:
         behavioral_findings = self._behavioral_analysis(code)
 
         # Combine findings with weighted confidence
-        all_findings = (
+        all_findings = ( vulnerabilities, code, filepath, language)
             syntactic_findings + semantic_findings +
             contextual_findings + behavioral_findings
         )
@@ -5159,8 +5134,7 @@ class MultimodalSecurityAnalyzer:
         """Semantic analysis (meaning-based)."""
         findings = []
 
-        lines = code.split("
-")
+        lines = code.split("\n")
         for i, line in enumerate(lines, 1):
             # Semantic pattern recognition
             if self._is_semantic_hardcoded(line):
@@ -5185,8 +5159,7 @@ class MultimodalSecurityAnalyzer:
         """Contextual analysis (surrounding code)."""
         findings = []
 
-        lines = code.split("
-")
+        lines = code.split("\n")
         for i, line in enumerate(lines, 1):
             # Analyze context window
             start = max(0, i - 3)
@@ -5216,8 +5189,7 @@ class MultimodalSecurityAnalyzer:
         findings = []
 
         # Analyze execution flow patterns
-        lines = code.split("
-")
+        lines = code.split("\n")
         execution_patterns = self._extract_execution_patterns(code)
 
         for pattern in execution_patterns:
@@ -5266,7 +5238,7 @@ class MultimodalSecurityAnalyzer:
             contextual_conf = max([f["confidence"] for f in group if f.get("modality") == "contextual"] or [0])
             behavioral_conf = max([f["confidence"] for f in group if f.get("modality") == "behavioral"] or [0])
 
-            fused_confidence = (
+        fused_confidence = ( vulnerabilities, code, filepath, language)
                 syntactic_conf * self.modality_weights["syntactic"] +
                 semantic_conf * self.modality_weights["semantic"] +
                 contextual_conf * self.modality_weights["contextual"] +
@@ -5274,7 +5246,7 @@ class MultimodalSecurityAnalyzer:
             )
 
             if fused_confidence >= 0.8:  # High multimodal confidence threshold
-                vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                     cwe=cwe,
                     severity="critical" if fused_confidence > 0.9 else "high",
                     title=f"Multimodal Analysis: {cwe}",
@@ -5334,8 +5306,7 @@ class MultimodalSecurityAnalyzer:
     def _extract_execution_patterns(self, code: str):
         """Extract execution pattern information."""
         patterns = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         for i, line in enumerate(lines, 1):
             if "if " in line:
@@ -5509,8 +5480,7 @@ class EnhancedBusinessLogicAnalyzer:
     def analyze_business_logic_patterns(self, code: str):
         """Analyze business logic for credential and auth patterns."""
         vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         for i, line in enumerate(lines, 1):
             line_clean = line.strip()
@@ -5518,7 +5488,7 @@ class EnhancedBusinessLogicAnalyzer:
             # Check credential patterns
             for pattern in self.business_patterns['credential_patterns']:
                 if re.search(pattern, line, re.IGNORECASE | re.DOTALL):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-798",
                         severity="critical",
                         title="Business Logic: Hardcoded User Credentials",
@@ -5534,7 +5504,7 @@ class EnhancedBusinessLogicAnalyzer:
             # Check auth bypass patterns
             for pattern in self.business_patterns['auth_bypass_patterns']:
                 if re.search(pattern, line, re.IGNORECASE):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-287",
                         severity="critical",
                         title="Business Logic: Authentication Bypass",
@@ -5550,7 +5520,7 @@ class EnhancedBusinessLogicAnalyzer:
             # Check conditional hardcoding
             for pattern in self.business_patterns['conditional_hardcoding']:
                 if re.search(pattern, line, re.IGNORECASE):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-798",
                         severity="high",
                         title="Business Logic: Conditional Credential Assignment",
@@ -5593,8 +5563,7 @@ class ContextAwareDictionaryAnalyzer:
     def analyze_dictionaries(self, code: str):
         """Analyze dictionaries for credential patterns."""
         vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         for i, line in enumerate(lines, 1):
             # Look for dictionary patterns
@@ -5602,7 +5571,7 @@ class ContextAwareDictionaryAnalyzer:
                 dict_analysis = self._analyze_dictionary_content(line)
 
                 if dict_analysis['is_credential_dict']:
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-798",
                         severity="critical",
                         title="Context-Aware: Credential Dictionary",
@@ -5691,8 +5660,7 @@ class AuthenticationFlowAnalyzer:
     def analyze_authentication_flows(self, code: str):
         """Analyze authentication flows for bypass vulnerabilities."""
         vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         # Track authentication context
         in_auth_function = False
@@ -5713,7 +5681,7 @@ class AuthenticationFlowAnalyzer:
                 # Check bypass conditions
                 for pattern in self.auth_flow_patterns['bypass_conditions']:
                     if re.search(pattern, line, re.IGNORECASE):
-                        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                             cwe="CWE-287",
                             severity="critical",
                             title="Auth Flow: Bypass Condition",
@@ -5729,7 +5697,7 @@ class AuthenticationFlowAnalyzer:
                 # Check weak session validation
                 for pattern in self.auth_flow_patterns['weak_session_validation']:
                     if re.search(pattern, line, re.IGNORECASE):
-                        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                             cwe="CWE-287",
                             severity="high",
                             title="Auth Flow: Weak Session Validation",
@@ -5756,8 +5724,7 @@ class AuthenticationFlowAnalyzer:
     def _analyze_route_auth(self, code: str):
         """Analyze routes for missing authentication."""
         vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         for i, line in enumerate(lines, 1):
             # Look for Flask routes
@@ -5773,7 +5740,7 @@ class AuthenticationFlowAnalyzer:
                         break
 
                 if not has_auth:
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-287",
                         severity="high",
                         title="Auth Flow: Route Without Authentication",
@@ -5818,8 +5785,7 @@ class SemanticRoleLabelingAnalyzer:
     def analyze_semantic_roles(self, code: str):
         """Analyze semantic roles in code."""
         vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         for i, line in enumerate(lines, 1):
             # Analyze semantic structure of the line
@@ -5828,7 +5794,7 @@ class SemanticRoleLabelingAnalyzer:
             # Check against vulnerability patterns
             for pattern_name, pattern_config in self.semantic_patterns.items():
                 if self._matches_semantic_pattern(semantic_analysis, pattern_config):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe=pattern_config['cwe'],
                         severity="high",
                         title=f"Semantic: {pattern_name.replace('_', ' ').title()}",
@@ -5944,14 +5910,13 @@ class TemplateBasedDetector:
     def detect_with_templates(self, code: str):
         """Detect vulnerabilities using template matching."""
         vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         for i, line in enumerate(lines, 1):
             for template_name, template_config in self.templates.items():
                 pattern = template_config['pattern']
                 if re.search(pattern, line, re.IGNORECASE | re.DOTALL):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe=template_config['cwe'],
                         severity="high",
                         title=f"Template: {template_name.replace('_', ' ').title()}",
@@ -5967,44 +5932,36 @@ class TemplateBasedDetector:
         return vulnerabilities
 
         # Stage 24: Aggressive Authentication Bypass Detection (FINAL TARGETED IMPROVEMENT)
-        auth_bypass_vulns = self._aggressive_auth_bypass_detection(
+        auth_bypass_vulns = self._aggressive_auth_bypass_detection( vulnerabilities, code, filepath, language)
             template_vulns, code, filepath, language
-        )
 
         # Stage 25: IDOR (Insecure Direct Object Reference) Detection
-        idor_vulns = self._idor_detection(
+        idor_vulns = self._idor_detection( vulnerabilities, code, filepath, language)
             auth_bypass_vulns, code, filepath, language
-        )
 
         # Stage 26: SSRF (Server-Side Request Forgery) Detection
-        ssrf_vulns = self._ssrf_detection(
+        ssrf_vulns = self._ssrf_detection( vulnerabilities, code, filepath, language)
             idor_vulns, code, filepath, language
-        )
 
         # Stage 27: XXE (XML External Entity) Detection
-        xxe_vulns = self._xxe_detection(
+        xxe_vulns = self._xxe_detection( vulnerabilities, code, filepath, language)
             ssrf_vulns, code, filepath, language
-        )
 
         # Stage 28: CSRF (Cross-Site Request Forgery) Detection
-        csrf_vulns = self._csrf_detection(
+        csrf_vulns = self._csrf_detection( vulnerabilities, code, filepath, language)
             xxe_vulns, code, filepath, language
-        )
 
         # Stage 29: Information Disclosure Detection
-        info_disclosure_vulns = self._information_disclosure_detection(
+        info_disclosure_vulns = self._information_disclosure_detection( vulnerabilities, code, filepath, language)
             csrf_vulns, code, filepath, language
-        )
 
         # Stage 31: 🚀 UNIVERSAL VULNERABILITY DETECTION (ANY VULNERABILITY TYPE)
-        universal_vulns = self._universal_vulnerability_detection(
+        universal_vulns = self._universal_vulnerability_detection( vulnerabilities, code, filepath, language)
             info_disclosure_vulns, code, filepath, language
-        )
 
         # Stage 32: Final ensemble validation and confidence calibration
-        validated_vulns = self._stage3_ensemble_validation(
+        validated_vulns = self._stage3_ensemble_validation( vulnerabilities, code, filepath, language)
             universal_vulns, code, filepath, language
-        )
 
     def _aggressive_auth_bypass_detection(self, vulnerabilities: List[Vulnerability],
                                         code: str, filepath: str, language: str) -> List[Vulnerability]:
@@ -6089,8 +6046,7 @@ class AggressiveAuthBypassDetector:
     def detect_all_auth_bypass_patterns(self, code: str):
         """Detect all types of authentication bypass patterns aggressively."""
         vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         for i, line in enumerate(lines, 1):
             line_clean = line.strip()
@@ -6103,9 +6059,7 @@ class AggressiveAuthBypassDetector:
             for category, patterns in self.aggressive_patterns.items():
                 for pattern in patterns:
                     if re.search(pattern, line, re.IGNORECASE):
-                        vuln = self._create_auth_bypass_vulnerability(
-                            category, line, i, pattern
-                        )
+        vuln = self._create_auth_bypass_vulnerability( vulnerabilities, code, filepath, language)
                         vulnerabilities.append(vuln)
                         break  # One finding per line per category
 
@@ -6166,7 +6120,7 @@ class AggressiveAuthBypassDetector:
                             break
 
                     if not has_condition:
-                        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                             cwe="CWE-287",
                             severity="critical",
                             title="Auth Bypass: Unconditional Authentication Success",
@@ -6188,7 +6142,7 @@ class AggressiveAuthBypassDetector:
         multiline_pattern = r'if\s+.*:\s*\n\s*return\s+True'
         for match in re.finditer(multiline_pattern, code, re.IGNORECASE | re.MULTILINE):
             start_line = code[:match.start()].count('\n') + 1
-            vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                 cwe="CWE-287",
                 severity="critical",
                 title="Auth Bypass: Multi-line Conditional Bypass",
@@ -6204,7 +6158,7 @@ class AggressiveAuthBypassDetector:
         user_assign_pattern = r'user\s*=.*\n.*\n.*return\s+True'
         for match in re.finditer(user_assign_pattern, code, re.IGNORECASE | re.MULTILINE):
             start_line = code[:match.start()].count('\n') + 1
-            vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                 cwe="CWE-287",
                 severity="high",
                 title="Auth Bypass: User Assignment Bypass",
@@ -6328,24 +6282,20 @@ class AggressiveAuthBypassDetector:
         )
 
         # Stage 20: Authentication Flow Analysis (TARGETED IMPROVEMENT)
-        auth_flow_vulns = self._authentication_flow_analysis(
+        auth_flow_vulns = self._authentication_flow_analysis( vulnerabilities, code, filepath, language)
             dict_aware_vulns, code, filepath, language
-        )
 
         # Stage 21: Semantic Role Labeling (TARGETED IMPROVEMENT)
-        semantic_vulns = self._semantic_role_labeling_analysis(
+        semantic_vulns = self._semantic_role_labeling_analysis( vulnerabilities, code, filepath, language)
             auth_flow_vulns, code, filepath, language
-        )
 
         # Stage 22: Template-Based Detection (TARGETED IMPROVEMENT)
-        template_vulns = self._template_based_detection(
+        template_vulns = self._template_based_detection( vulnerabilities, code, filepath, language)
             semantic_vulns, code, filepath, language
-        )
 
         # Stage 23: Final ensemble validation and confidence calibration
-        validated_vulns = self._stage3_ensemble_validation(
+        validated_vulns = self._stage3_ensemble_validation( vulnerabilities, code, filepath, language)
             template_vulns, code, filepath, language
-        )
 
         # Cache results
         self.detection_cache[cache_key] = validated_vulns
@@ -6368,13 +6318,11 @@ class AggressiveAuthBypassDetector:
         
         # Use parallel processing for multiple chunks
         if len(chunks) > 1 and self.max_workers > 1:
-            vulnerabilities = self._parallel_analyze_chunks(
-                chunks, filepath, language, codebase_context, line_number
-            )
+        vulnerabilities = self._parallel_analyze_chunks( vulnerabilities, code, filepath, language)
         else:
             # Sequential analysis for small files or single chunk
             for chunk_idx, chunk in enumerate(chunks):
-                chunk_vulns = self._analyze_chunk(
+        chunk_vulns = self._analyze_chunk( vulnerabilities, code, filepath, language)
                     chunk, 
                     filepath, 
                     language,
@@ -6433,14 +6381,13 @@ class AggressiveAuthBypassDetector:
                         if target_cwe and target_cwe not in existing_cwes:
                             # Specialized AI analysis for this pattern
                             context = self._get_specialized_context(code, i, 3)
-                            specialized_prompt = self._build_specialized_prompt(
+        specialized_prompt = self._build_specialized_prompt( vulnerabilities, code, filepath, language)
                                 context, pattern_type, filepath, language
-                            )
 
                             try:
                                 response = self.llm.generate(specialized_prompt, max_tokens=256)
                                 if self._is_positive_detection(response):
-                                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                                         cwe=target_cwe,
                                         severity='high',
                                         title=f'Specialized Detection: {pattern_type.replace("_", " ").title()}',
@@ -6885,19 +6832,16 @@ Is this a dangerous data flow vulnerability? Answer YES or NO, then explain."""
                 rules = rule_database[cwe]
 
                 # Check rule matches
-                high_match = any(
+        high_match = any( vulnerabilities, code, filepath, language)
                     re.search(pattern, getattr(vuln, 'code_snippet', ''), re.IGNORECASE | re.DOTALL)
-                    for pattern in rules.get('high_confidence', [])
-                )
-                medium_match = any(
+        medium_match = any( vulnerabilities, code, filepath, language)
                     re.search(pattern, getattr(vuln, 'code_snippet', ''), re.IGNORECASE | re.DOTALL)
                     for pattern in rules.get('medium_confidence', [])
                 )
 
                 # Check context validation
-                context_valid = any(
+        context_valid = any( vulnerabilities, code, filepath, language)
                     req in code.lower() for req in rules.get('context_required', [])
-                )
 
                 # Calculate enhanced confidence
                 base_conf = getattr(vuln, 'confidence', 0.5)
@@ -6933,14 +6877,11 @@ Is this a dangerous data flow vulnerability? Answer YES or NO, then explain."""
         learned_patterns = self._learn_success_patterns(vulnerabilities, code)
 
         # Apply learned patterns to boost confidence and find missed vulnerabilities
-        enhanced_vulnerabilities = self._apply_learned_patterns(
+        enhanced_vulnerabilities = self._apply_learned_patterns( vulnerabilities, code, filepath, language)
             enhanced_vulnerabilities, learned_patterns, code, filepath
-        )
 
         # ML-based false positive reduction
-        enhanced_vulnerabilities = self._ml_false_positive_reduction(
-            enhanced_vulnerabilities, code
-        )
+        enhanced_vulnerabilities = self._ml_false_positive_reduction( vulnerabilities, code, filepath, language)
 
         return enhanced_vulnerabilities
 
@@ -6998,21 +6939,20 @@ Is this a dangerous data flow vulnerability? Answer YES or NO, then explain."""
             context = self._get_vulnerability_context(vuln, code)
 
             # High-confidence pattern matching
-            high_pattern_match = any(
+        high_pattern_match = any( vulnerabilities, code, filepath, language)
                 self._pattern_similarity(snippet, pattern) > 0.7
                 for pattern in learned_patterns.get('high_confidence', [])
             )
 
             # Context pattern matching
-            context_match = any(
+        context_match = any( vulnerabilities, code, filepath, language)
                 self._pattern_similarity(context, ctx_pattern) > 0.6
                 for ctx_pattern in learned_patterns.get('context_patterns', [])
             )
 
             # Structural pattern matching
-            structural_match = any(
+        structural_match = any( vulnerabilities, code, filepath, language)
                 feature in snippet for feature in learned_patterns.get('structural_patterns', [])
-            )
 
             # Apply ML-based confidence boosts
             if high_pattern_match and context_match:
@@ -7026,9 +6966,7 @@ Is this a dangerous data flow vulnerability? Answer YES or NO, then explain."""
             enhanced_vulns.append(vuln)
 
         # Look for missed vulnerabilities using learned patterns
-        missed_vulns = self._find_missed_vulnerabilities(
-            learned_patterns, code, filepath, enhanced_vulns
-        )
+        missed_vulns = self._find_missed_vulnerabilities( vulnerabilities, code, filepath, language)
         enhanced_vulns.extend(missed_vulns)
 
         return enhanced_vulns
@@ -7059,7 +6997,7 @@ Is this a dangerous data flow vulnerability? Answer YES or NO, then explain."""
 
                     if inferred_cwe and inferred_cwe not in existing_cwes:
                         # Create new vulnerability based on learned pattern
-                        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                             cwe=inferred_cwe,
                             severity='high',
                             title=f'ML-Detected: {inferred_cwe} Pattern',
@@ -7353,9 +7291,7 @@ Is this a dangerous data flow vulnerability? Answer YES or NO, then explain."""
 
         try:
             contrastive_validator = ContrastiveLearningValidator(filepath)
-            validated_findings = contrastive_validator.validate_with_contrastive_learning(
-                vulnerabilities, code
-            )
+        validated_findings = contrastive_validator.validate_with_contrastive_learning( vulnerabilities, code, filepath, language)
 
             # Update existing vulnerabilities with contrastive validation
             for i, vuln in enumerate(enhanced_vulns):
@@ -7523,7 +7459,7 @@ Is this a dangerous data flow vulnerability? Answer YES or NO, then explain."""
         # Set current line number for context enhancement
         self._current_line_number = line_number
         
-        prompt = self._build_detection_prompt(
+        prompt = self._build_detection_prompt( vulnerabilities, code, filepath, language)
             code_chunk,
             filepath,
             language,
@@ -7536,7 +7472,7 @@ Is this a dangerous data flow vulnerability? Answer YES or NO, then explain."""
             response = self.llm.generate(prompt)
             
             # Parse vulnerabilities from response
-            vulnerabilities = self._parse_ai_response(
+        vulnerabilities = self._parse_ai_response( vulnerabilities, code, filepath, language)
                 response,
                 filepath,
                 code_chunk,
@@ -7655,7 +7591,7 @@ DESCRIPTION: [detailed explanation with context analysis]
         
         for section in vuln_sections[1:]:  # Skip first empty section
             try:
-                vuln = self._parse_vulnerability_section(
+        vuln = self._parse_vulnerability_section( vulnerabilities, code, filepath, language)
                     section,
                     filepath,
                     code,
@@ -7714,7 +7650,7 @@ DESCRIPTION: [detailed explanation with context analysis]
         if not re.match(r'CWE-\d+', cwe):
             return None
 
-        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
             cwe=cwe,
             severity=severity_match.group(1).lower(),
             title=title_match.group(1).strip(),
@@ -7770,8 +7706,6 @@ DESCRIPTION: [detailed explanation with context analysis]
             chunk_idx, chunk = chunk_data
             try:
                 return self._analyze_chunk(
-                    chunk, filepath, language, chunk_idx, codebase_context, line_number
-                )
             except Exception as e:
                 print(f"Error analyzing chunk {chunk_idx} in {filepath}: {e}")
                 return []
@@ -7953,9 +7887,8 @@ class HybridDetector:
                     similar_group.append(other_vuln)
 
             # AI validation for this group
-            validated_group = self._ai_validate_vulnerability_group(
+        validated_group = self._ai_validate_vulnerability_group( vulnerabilities, code, filepath, language)
                 similar_group, code, filepath, language
-            )
 
             grouped_vulns.extend(validated_group)
 
@@ -8164,7 +8097,7 @@ class HybridDetector:
             for finding in all_findings:
                 # Check if this vulnerability was already detected by patterns
                 if not self._is_already_detected(finding, detected_vulns):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe=finding['cwe'],
                         severity=finding['severity'],
                         title=finding['title'],
@@ -8645,7 +8578,7 @@ CONFIDENCE: [0.0-1.0]
 REASONING: [brief explanation]"""
 
         try:
-            response = self.precision_ai.llm_clients['validation'].generate(
+        response = self.precision_ai.llm_clients['validation'].generate( vulnerabilities, code, filepath, language)
                 validation_prompt,
                 system_prompt=self.precision_ai.models['validation'].system_prompt
             )
@@ -8691,7 +8624,7 @@ CONSIDERATIONS:
 COMMITTEE DECISION: YES or NO (with brief reasoning)"""
 
         try:
-            response = self.precision_ai.llm_clients['ensemble'].generate(
+        response = self.precision_ai.llm_clients['ensemble'].generate( vulnerabilities, code, filepath, language)
                 ensemble_prompt,
                 system_prompt=self.precision_ai.models['ensemble'].system_prompt
             )
@@ -8751,7 +8684,7 @@ DUPLICATES: [pairs of duplicate finding numbers]
 FALSE POSITIVES: [finding numbers to eliminate]"""
 
         try:
-            response = self.precision_ai.llm_clients['validation'].generate(
+        response = self.precision_ai.llm_clients['validation'].generate( vulnerabilities, code, filepath, language)
                 group_prompt,
                 system_prompt=self.precision_ai.models['validation'].system_prompt
             )
@@ -8846,7 +8779,7 @@ CODE: {code_context}
 Is this a genuine security vulnerability? Answer YES or NO."""
 
         try:
-            response = self.llm_clients['fast_validation'].generate(
+        response = self.llm_clients['fast_validation'].generate( vulnerabilities, code, filepath, language)
                 prompt,
                 system_prompt=self.models['fast_validation'].system_prompt
             )
@@ -8888,7 +8821,7 @@ RISK ASSESSMENT:
 CONCLUSION: LEGITIMATE SECURITY ISSUE? YES or NO"""
 
         try:
-            response = self.llm_clients['semantic_check'].generate(
+        response = self.llm_clients['semantic_check'].generate( vulnerabilities, code, filepath, language)
                 prompt,
                 system_prompt=self.models['semantic_check'].system_prompt
             )
@@ -9145,7 +9078,7 @@ class ASTSemanticAnalyzer(ast.NodeVisitor):
 
     def _add_vulnerability(self, cwe: str, title: str, description: str, line_number: int):
         """Add a vulnerability finding."""
-        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
             cwe=cwe,
             severity='high',
             title=title,
@@ -9266,7 +9199,7 @@ class AdvancedTaintTracker(ast.NodeVisitor):
 
     def _add_vulnerability(self, cwe: str, title: str, description: str, line_number: int):
         """Add a vulnerability finding."""
-        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
             cwe=cwe,
             severity='high',
             title=title,
@@ -9450,7 +9383,7 @@ class FrameworkAnalyzer(ast.NodeVisitor):
 
     def _add_vulnerability(self, cwe: str, title: str, description: str, line_number: int):
         """Add a vulnerability finding."""
-        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
             cwe=cwe,
             severity='high',
             title=title,
@@ -9616,14 +9549,14 @@ class InterProceduralAnalyzer(ast.NodeVisitor):
                 # Route handler without authentication
                 if not func_info["security_patterns"]["has_auth_check"]:
                     # Check if it calls authenticated functions
-                    calls_auth = any(
+        calls_auth = any( vulnerabilities, code, filepath, language)
                         callee in self.functions and
                         self.functions[callee]["security_patterns"]["has_auth_check"]
                         for callee in func_info["calls"]
                     )
 
                     if not calls_auth:
-                        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                             cwe="CWE-287",
                             severity="high",
                             title="Authentication Bypass",
@@ -9647,7 +9580,7 @@ class InterProceduralAnalyzer(ast.NodeVisitor):
                 if isinstance(node, ast.Assign):
                     # Check for hardcoded assignments
                     if self._is_hardcoded_assignment(node):
-                        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                             cwe="CWE-798",
                             severity="critical",
                             title="Hardcoded Credentials",
@@ -9675,13 +9608,13 @@ class InterProceduralAnalyzer(ast.NodeVisitor):
 
         for func_name, func_info in self.functions.items():
             # Check for file operations
-            has_file_ops = any(
+        has_file_ops = any( vulnerabilities, code, filepath, language)
                 call in ["open", "write", "save", "upload"]
                 for call in func_info["calls"]
             )
 
             if has_file_ops and not func_info["security_patterns"]["has_input_validation"]:
-                vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                     cwe="CWE-434",
                     severity="high",
                     title="Unrestricted File Upload",
@@ -9726,7 +9659,7 @@ class BusinessLogicAnalyzer(ast.NodeVisitor):
         """Analyze conditional logic for security issues."""
         # Check for authentication bypass in conditionals
         if self._is_auth_bypass_pattern(node):
-            vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                 cwe="CWE-287",
                 severity="high",
                 title="Authentication Bypass",
@@ -9757,7 +9690,7 @@ class BusinessLogicAnalyzer(ast.NodeVisitor):
             if isinstance(child, ast.Compare):
                 # Check for hardcoded comparisons
                 if self._has_hardcoded_auth(child):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-287",
                         severity="critical",
                         title="Hardcoded Authentication",
@@ -9775,7 +9708,7 @@ class BusinessLogicAnalyzer(ast.NodeVisitor):
         for child in ast.walk(node):
             if isinstance(child, ast.Return):
                 if self._returns_hardcoded_credentials(child):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-798",
                         severity="critical",
                         title="Hardcoded Credentials",
@@ -9793,7 +9726,7 @@ class BusinessLogicAnalyzer(ast.NodeVisitor):
         for child in ast.walk(node):
             if isinstance(child, ast.Dict):
                 if self._is_user_dictionary(child):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-798",
                         severity="high",
                         title="Hardcoded User Dictionary",
@@ -9921,14 +9854,14 @@ class GraphBasedAnalyzer(ast.NodeVisitor):
         for node_name, node_info in self.nodes.items():
             if node_info.get("type") == "function" and node_info.get("is_route"):
                 # Check if route calls any auth-related functions
-                has_auth_call = any(
+        has_auth_call = any( vulnerabilities, code, filepath, language)
                     edge["to"] for edge in self.edges
                     if edge["from"] == node_name and
                     any(auth in edge["to"].lower() for auth in ["auth", "login", "session"])
                 )
 
                 if not has_auth_call:
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-287",
                         severity="high",
                         title="Route Without Authentication",
@@ -9956,7 +9889,7 @@ class GraphBasedAnalyzer(ast.NodeVisitor):
             # Check if this input flows to dangerous sinks
             for edge in self.edges:
                 if edge.get("type") == "calls" and edge["to"] in dangerous_sinks:
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-95" if edge["to"] in ["eval", "exec"] else "CWE-78",
                         severity="critical",
                         title="Dangerous Data Flow",
@@ -9980,7 +9913,7 @@ class GraphBasedAnalyzer(ast.NodeVisitor):
                 # Check call chain for authentication bypass
                 call_chain = self._get_call_chain(node_name)
                 if self._has_auth_bypass_chain(call_chain):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-287",
                         severity="high",
                         title="Authentication Chain Bypass",
@@ -10094,7 +10027,7 @@ class SymbolicExecutionAnalyzer(ast.NodeVisitor):
 
             # Check for hardcoded credentials in calls
             if self._is_hardcoded_credential_call(node):
-                vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                     cwe="CWE-798",
                     severity="critical",
                     title="Symbolic Execution: Hardcoded Credentials",
@@ -10108,7 +10041,7 @@ class SymbolicExecutionAnalyzer(ast.NodeVisitor):
 
             # Check for authentication bypass
             elif self._is_auth_bypass_call(node):
-                vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                     cwe="CWE-287",
                     severity="critical",
                     title="Symbolic Execution: Authentication Bypass",
@@ -10256,8 +10189,7 @@ class OntologyBasedAnalyzer:
     def apply_security_ontology(self, code: str):
         """Apply security ontology reasoning to detect complex vulnerabilities."""
         vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         ontology = self.security_ontology
 
@@ -10267,7 +10199,7 @@ class OntologyBasedAnalyzer:
             # Apply hardcoded credentials ontology
             if self._matches_ontology_pattern(line, ontology["vulnerability_patterns"]["hardcoded_credentials"]):
                 if not self._has_mitigation_context(line, ontology):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-798",
                         severity="critical",
                         title="Ontology-Based: Hardcoded Credentials",
@@ -10282,7 +10214,7 @@ class OntologyBasedAnalyzer:
             # Apply authentication bypass ontology
             elif self._matches_ontology_pattern(line, ontology["vulnerability_patterns"]["auth_bypass"]):
                 if self._is_auth_context(line, ontology):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-287",
                         severity="critical",
                         title="Ontology-Based: Authentication Bypass",
@@ -10296,7 +10228,7 @@ class OntologyBasedAnalyzer:
 
             # Apply insecure storage ontology
             elif self._matches_ontology_pattern(line, ontology["vulnerability_patterns"]["insecure_storage"]):
-                vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                     cwe="CWE-311",
                     severity="high",
                     title="Ontology-Based: Insecure Storage",
@@ -10324,9 +10256,7 @@ class OntologyBasedAnalyzer:
         ]
 
         context_window = 2  # Check surrounding lines
-        lines = line.split("
-")
-")
+        lines = line.split("\n")
 
         for i, check_line in enumerate(lines):
             check_lower = check_line.lower()
@@ -10383,8 +10313,7 @@ class DeepLearningDetector:
     def detect_with_deep_learning(self, code: str):
         """Use deep learning model to detect vulnerabilities."""
         vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         for i, line in enumerate(lines, 1):
             # Tokenize code line
@@ -10405,7 +10334,7 @@ class DeepLearningDetector:
                     "command_injection": "CWE-78"
                 }
 
-                vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                     cwe=cwe_mapping.get(vuln_type, "CWE-79"),
                     severity="high" if confidence > 0.85 else "medium",
                     title=f"Deep Learning: {vuln_type.replace("_", " ").title()}",
@@ -10542,8 +10471,7 @@ class CodeEmbeddingAnalyzer:
     def analyze_embeddings(self, code: str):
         """Analyze code using embedding similarity."""
         vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         for i, line in enumerate(lines, 1):
             if not line.strip():
@@ -10556,7 +10484,7 @@ class CodeEmbeddingAnalyzer:
             vuln_type, similarity = self._find_most_similar_vulnerable(line_embedding)
 
             if vuln_type and similarity > 0.75:
-                vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                     cwe=vuln_type,
                     severity="high" if similarity > 0.85 else "medium",
                     title=f"Embedding Analysis: {vuln_type}",
@@ -10709,8 +10637,7 @@ class ContrastiveLearningValidator:
     def _find_contrastive_vulnerabilities(self, code: str):
         """Find new vulnerabilities using contrastive learning."""
         new_vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         for i, line in enumerate(lines, 1):
             if not line.strip():
@@ -10736,7 +10663,7 @@ class ContrastiveLearningValidator:
                     final_confidence = contrastive_confidence * weight
 
                     if final_confidence > 0.75:
-                        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                             cwe=cwe,
                             severity="high" if final_confidence > 0.85 else "medium",
                             title=f"Contrastive Learning: {cwe}",
@@ -10805,8 +10732,7 @@ Then explain your reasoning.
     def analyze_with_llm(self, code: str):
         """Use LLM for advanced security analysis."""
         vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         # Focus on analyzing code blocks that are likely to contain security issues
         code_blocks = self._extract_security_relevant_blocks(code)
@@ -10817,7 +10743,7 @@ Then explain your reasoning.
 
             # Analyze for hardcoded credentials
             if self._llm_detect_hardcoded_credentials(block_code):
-                vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                     cwe="CWE-798",
                     severity="critical",
                     title="LLM-Detected: Hardcoded Credentials",
@@ -10831,7 +10757,7 @@ Then explain your reasoning.
 
             # Analyze for authentication bypass
             if self._llm_detect_auth_bypass(block_code):
-                vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                     cwe="CWE-287",
                     severity="critical",
                     title="LLM-Detected: Authentication Bypass",
@@ -10845,7 +10771,7 @@ Then explain your reasoning.
 
             # Analyze for business logic flaws
             if self._llm_detect_business_logic_flaws(block_code):
-                vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                     cwe="CWE-840",  # Business Logic Errors
                     severity="high",
                     title="LLM-Detected: Business Logic Flaw",
@@ -10861,8 +10787,7 @@ Then explain your reasoning.
 
     def _extract_security_relevant_blocks(self, code: str):
         """Extract code blocks most likely to contain security issues."""
-        lines = code.split("
-")
+        lines = code.split("\n")
         blocks = []
 
         current_block = []
@@ -11023,7 +10948,7 @@ class MultimodalSecurityAnalyzer:
         behavioral_findings = self._behavioral_analysis(code)
 
         # Combine findings with weighted confidence
-        all_findings = (
+        all_findings = ( vulnerabilities, code, filepath, language)
             syntactic_findings + semantic_findings +
             contextual_findings + behavioral_findings
         )
@@ -11074,8 +10999,7 @@ class MultimodalSecurityAnalyzer:
         """Semantic analysis (meaning-based)."""
         findings = []
 
-        lines = code.split("
-")
+        lines = code.split("\n")
         for i, line in enumerate(lines, 1):
             # Semantic pattern recognition
             if self._is_semantic_hardcoded(line):
@@ -11100,8 +11024,7 @@ class MultimodalSecurityAnalyzer:
         """Contextual analysis (surrounding code)."""
         findings = []
 
-        lines = code.split("
-")
+        lines = code.split("\n")
         for i, line in enumerate(lines, 1):
             # Analyze context window
             start = max(0, i - 3)
@@ -11131,8 +11054,7 @@ class MultimodalSecurityAnalyzer:
         findings = []
 
         # Analyze execution flow patterns
-        lines = code.split("
-")
+        lines = code.split("\n")
         execution_patterns = self._extract_execution_patterns(code)
 
         for pattern in execution_patterns:
@@ -11181,7 +11103,7 @@ class MultimodalSecurityAnalyzer:
             contextual_conf = max([f["confidence"] for f in group if f.get("modality") == "contextual"] or [0])
             behavioral_conf = max([f["confidence"] for f in group if f.get("modality") == "behavioral"] or [0])
 
-            fused_confidence = (
+        fused_confidence = ( vulnerabilities, code, filepath, language)
                 syntactic_conf * self.modality_weights["syntactic"] +
                 semantic_conf * self.modality_weights["semantic"] +
                 contextual_conf * self.modality_weights["contextual"] +
@@ -11189,7 +11111,7 @@ class MultimodalSecurityAnalyzer:
             )
 
             if fused_confidence >= 0.8:  # High multimodal confidence threshold
-                vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                     cwe=cwe,
                     severity="critical" if fused_confidence > 0.9 else "high",
                     title=f"Multimodal Analysis: {cwe}",
@@ -11249,8 +11171,7 @@ class MultimodalSecurityAnalyzer:
     def _extract_execution_patterns(self, code: str):
         """Extract execution pattern information."""
         patterns = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         for i, line in enumerate(lines, 1):
             if "if " in line:
@@ -11424,8 +11345,7 @@ class EnhancedBusinessLogicAnalyzer:
     def analyze_business_logic_patterns(self, code: str):
         """Analyze business logic for credential and auth patterns."""
         vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         for i, line in enumerate(lines, 1):
             line_clean = line.strip()
@@ -11433,7 +11353,7 @@ class EnhancedBusinessLogicAnalyzer:
             # Check credential patterns
             for pattern in self.business_patterns['credential_patterns']:
                 if re.search(pattern, line, re.IGNORECASE | re.DOTALL):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-798",
                         severity="critical",
                         title="Business Logic: Hardcoded User Credentials",
@@ -11449,7 +11369,7 @@ class EnhancedBusinessLogicAnalyzer:
             # Check auth bypass patterns
             for pattern in self.business_patterns['auth_bypass_patterns']:
                 if re.search(pattern, line, re.IGNORECASE):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-287",
                         severity="critical",
                         title="Business Logic: Authentication Bypass",
@@ -11465,7 +11385,7 @@ class EnhancedBusinessLogicAnalyzer:
             # Check conditional hardcoding
             for pattern in self.business_patterns['conditional_hardcoding']:
                 if re.search(pattern, line, re.IGNORECASE):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-798",
                         severity="high",
                         title="Business Logic: Conditional Credential Assignment",
@@ -11508,8 +11428,7 @@ class ContextAwareDictionaryAnalyzer:
     def analyze_dictionaries(self, code: str):
         """Analyze dictionaries for credential patterns."""
         vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         for i, line in enumerate(lines, 1):
             # Look for dictionary patterns
@@ -11517,7 +11436,7 @@ class ContextAwareDictionaryAnalyzer:
                 dict_analysis = self._analyze_dictionary_content(line)
 
                 if dict_analysis['is_credential_dict']:
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-798",
                         severity="critical",
                         title="Context-Aware: Credential Dictionary",
@@ -11606,8 +11525,7 @@ class AuthenticationFlowAnalyzer:
     def analyze_authentication_flows(self, code: str):
         """Analyze authentication flows for bypass vulnerabilities."""
         vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         # Track authentication context
         in_auth_function = False
@@ -11628,7 +11546,7 @@ class AuthenticationFlowAnalyzer:
                 # Check bypass conditions
                 for pattern in self.auth_flow_patterns['bypass_conditions']:
                     if re.search(pattern, line, re.IGNORECASE):
-                        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                             cwe="CWE-287",
                             severity="critical",
                             title="Auth Flow: Bypass Condition",
@@ -11644,7 +11562,7 @@ class AuthenticationFlowAnalyzer:
                 # Check weak session validation
                 for pattern in self.auth_flow_patterns['weak_session_validation']:
                     if re.search(pattern, line, re.IGNORECASE):
-                        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                             cwe="CWE-287",
                             severity="high",
                             title="Auth Flow: Weak Session Validation",
@@ -11671,8 +11589,7 @@ class AuthenticationFlowAnalyzer:
     def _analyze_route_auth(self, code: str):
         """Analyze routes for missing authentication."""
         vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         for i, line in enumerate(lines, 1):
             # Look for Flask routes
@@ -11688,7 +11605,7 @@ class AuthenticationFlowAnalyzer:
                         break
 
                 if not has_auth:
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-287",
                         severity="high",
                         title="Auth Flow: Route Without Authentication",
@@ -11733,8 +11650,7 @@ class SemanticRoleLabelingAnalyzer:
     def analyze_semantic_roles(self, code: str):
         """Analyze semantic roles in code."""
         vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         for i, line in enumerate(lines, 1):
             # Analyze semantic structure of the line
@@ -11743,7 +11659,7 @@ class SemanticRoleLabelingAnalyzer:
             # Check against vulnerability patterns
             for pattern_name, pattern_config in self.semantic_patterns.items():
                 if self._matches_semantic_pattern(semantic_analysis, pattern_config):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe=pattern_config['cwe'],
                         severity="high",
                         title=f"Semantic: {pattern_name.replace('_', ' ').title()}",
@@ -11859,14 +11775,13 @@ class TemplateBasedDetector:
     def detect_with_templates(self, code: str):
         """Detect vulnerabilities using template matching."""
         vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         for i, line in enumerate(lines, 1):
             for template_name, template_config in self.templates.items():
                 pattern = template_config['pattern']
                 if re.search(pattern, line, re.IGNORECASE | re.DOTALL):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe=template_config['cwe'],
                         severity="high",
                         title=f"Template: {template_name.replace('_', ' ').title()}",
@@ -11882,49 +11797,40 @@ class TemplateBasedDetector:
         return vulnerabilities
 
         # Stage 24: Aggressive Authentication Bypass Detection (FINAL TARGETED IMPROVEMENT)
-        auth_bypass_vulns = self._aggressive_auth_bypass_detection(
+        auth_bypass_vulns = self._aggressive_auth_bypass_detection( vulnerabilities, code, filepath, language)
             template_vulns, code, filepath, language
-        )
 
         # Stage 25: IDOR (Insecure Direct Object Reference) Detection
-        idor_vulns = self._idor_detection(
+        idor_vulns = self._idor_detection( vulnerabilities, code, filepath, language)
             auth_bypass_vulns, code, filepath, language
-        )
 
         # Stage 26: SSRF (Server-Side Request Forgery) Detection
-        ssrf_vulns = self._ssrf_detection(
+        ssrf_vulns = self._ssrf_detection( vulnerabilities, code, filepath, language)
             idor_vulns, code, filepath, language
-        )
 
         # Stage 27: XXE (XML External Entity) Detection
-        xxe_vulns = self._xxe_detection(
+        xxe_vulns = self._xxe_detection( vulnerabilities, code, filepath, language)
             ssrf_vulns, code, filepath, language
-        )
 
         # Stage 28: CSRF (Cross-Site Request Forgery) Detection
-        csrf_vulns = self._csrf_detection(
+        csrf_vulns = self._csrf_detection( vulnerabilities, code, filepath, language)
             xxe_vulns, code, filepath, language
-        )
 
         # Stage 29: Information Disclosure Detection
-        info_disclosure_vulns = self._information_disclosure_detection(
+        info_disclosure_vulns = self._information_disclosure_detection( vulnerabilities, code, filepath, language)
             csrf_vulns, code, filepath, language
-        )
 
         # Stage 30: Information Disclosure Detection
-        info_disclosure_vulns = self._information_disclosure_detection(
+        info_disclosure_vulns = self._information_disclosure_detection( vulnerabilities, code, filepath, language)
             csrf_vulns, code, filepath, language
-        )
 
         # Stage 31: 🚀 UNIVERSAL VULNERABILITY DETECTION (ANY VULNERABILITY TYPE)
-        universal_vulns = self._universal_vulnerability_detection(
+        universal_vulns = self._universal_vulnerability_detection( vulnerabilities, code, filepath, language)
             info_disclosure_vulns, code, filepath, language
-        )
 
         # Stage 32: Final ensemble validation and confidence calibration
-        validated_vulns = self._stage3_ensemble_validation(
+        validated_vulns = self._stage3_ensemble_validation( vulnerabilities, code, filepath, language)
             universal_vulns, code, filepath, language
-        )
 
     def _aggressive_auth_bypass_detection(self, vulnerabilities: List[Vulnerability],
                                         code: str, filepath: str, language: str) -> List[Vulnerability]:
@@ -12009,8 +11915,7 @@ class AggressiveAuthBypassDetector:
     def detect_all_auth_bypass_patterns(self, code: str):
         """Detect all types of authentication bypass patterns aggressively."""
         vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         for i, line in enumerate(lines, 1):
             line_clean = line.strip()
@@ -12023,9 +11928,7 @@ class AggressiveAuthBypassDetector:
             for category, patterns in self.aggressive_patterns.items():
                 for pattern in patterns:
                     if re.search(pattern, line, re.IGNORECASE):
-                        vuln = self._create_auth_bypass_vulnerability(
-                            category, line, i, pattern
-                        )
+        vuln = self._create_auth_bypass_vulnerability( vulnerabilities, code, filepath, language)
                         vulnerabilities.append(vuln)
                         break  # One finding per line per category
 
@@ -12086,7 +11989,7 @@ class AggressiveAuthBypassDetector:
                             break
 
                     if not has_condition:
-                        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                             cwe="CWE-287",
                             severity="critical",
                             title="Auth Bypass: Unconditional Authentication Success",
@@ -12108,7 +12011,7 @@ class AggressiveAuthBypassDetector:
         multiline_pattern = r'if\s+.*:\s*\n\s*return\s+True'
         for match in re.finditer(multiline_pattern, code, re.IGNORECASE | re.MULTILINE):
             start_line = code[:match.start()].count('\n') + 1
-            vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                 cwe="CWE-287",
                 severity="critical",
                 title="Auth Bypass: Multi-line Conditional Bypass",
@@ -12124,7 +12027,7 @@ class AggressiveAuthBypassDetector:
         user_assign_pattern = r'user\s*=.*\n.*\n.*return\s+True'
         for match in re.finditer(user_assign_pattern, code, re.IGNORECASE | re.MULTILINE):
             start_line = code[:match.start()].count('\n') + 1
-            vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                 cwe="CWE-287",
                 severity="high",
                 title="Auth Bypass: User Assignment Bypass",
@@ -12247,24 +12150,20 @@ class AggressiveAuthBypassDetector:
         )
 
         # Stage 20: Authentication Flow Analysis (TARGETED IMPROVEMENT)
-        auth_flow_vulns = self._authentication_flow_analysis(
+        auth_flow_vulns = self._authentication_flow_analysis( vulnerabilities, code, filepath, language)
             dict_aware_vulns, code, filepath, language
-        )
 
         # Stage 21: Semantic Role Labeling (TARGETED IMPROVEMENT)
-        semantic_vulns = self._semantic_role_labeling_analysis(
+        semantic_vulns = self._semantic_role_labeling_analysis( vulnerabilities, code, filepath, language)
             auth_flow_vulns, code, filepath, language
-        )
 
         # Stage 22: Template-Based Detection (TARGETED IMPROVEMENT)
-        template_vulns = self._template_based_detection(
+        template_vulns = self._template_based_detection( vulnerabilities, code, filepath, language)
             semantic_vulns, code, filepath, language
-        )
 
         # Stage 23: Final ensemble validation and confidence calibration
-        validated_vulns = self._stage3_ensemble_validation(
+        validated_vulns = self._stage3_ensemble_validation( vulnerabilities, code, filepath, language)
             template_vulns, code, filepath, language
-        )
 
         # Cache results
         self.detection_cache[cache_key] = validated_vulns
@@ -12287,13 +12186,11 @@ class AggressiveAuthBypassDetector:
         
         # Use parallel processing for multiple chunks
         if len(chunks) > 1 and self.max_workers > 1:
-            vulnerabilities = self._parallel_analyze_chunks(
-                chunks, filepath, language, codebase_context, line_number
-            )
+        vulnerabilities = self._parallel_analyze_chunks( vulnerabilities, code, filepath, language)
         else:
             # Sequential analysis for small files or single chunk
             for chunk_idx, chunk in enumerate(chunks):
-                chunk_vulns = self._analyze_chunk(
+        chunk_vulns = self._analyze_chunk( vulnerabilities, code, filepath, language)
                     chunk, 
                     filepath, 
                     language,
@@ -12352,14 +12249,13 @@ class AggressiveAuthBypassDetector:
                         if target_cwe and target_cwe not in existing_cwes:
                             # Specialized AI analysis for this pattern
                             context = self._get_specialized_context(code, i, 3)
-                            specialized_prompt = self._build_specialized_prompt(
+        specialized_prompt = self._build_specialized_prompt( vulnerabilities, code, filepath, language)
                                 context, pattern_type, filepath, language
-                            )
 
                             try:
                                 response = self.llm.generate(specialized_prompt, max_tokens=256)
                                 if self._is_positive_detection(response):
-                                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                                         cwe=target_cwe,
                                         severity='high',
                                         title=f'Specialized Detection: {pattern_type.replace("_", " ").title()}',
@@ -12804,19 +12700,16 @@ Is this a dangerous data flow vulnerability? Answer YES or NO, then explain."""
                 rules = rule_database[cwe]
 
                 # Check rule matches
-                high_match = any(
+        high_match = any( vulnerabilities, code, filepath, language)
                     re.search(pattern, getattr(vuln, 'code_snippet', ''), re.IGNORECASE | re.DOTALL)
-                    for pattern in rules.get('high_confidence', [])
-                )
-                medium_match = any(
+        medium_match = any( vulnerabilities, code, filepath, language)
                     re.search(pattern, getattr(vuln, 'code_snippet', ''), re.IGNORECASE | re.DOTALL)
                     for pattern in rules.get('medium_confidence', [])
                 )
 
                 # Check context validation
-                context_valid = any(
+        context_valid = any( vulnerabilities, code, filepath, language)
                     req in code.lower() for req in rules.get('context_required', [])
-                )
 
                 # Calculate enhanced confidence
                 base_conf = getattr(vuln, 'confidence', 0.5)
@@ -12852,14 +12745,11 @@ Is this a dangerous data flow vulnerability? Answer YES or NO, then explain."""
         learned_patterns = self._learn_success_patterns(vulnerabilities, code)
 
         # Apply learned patterns to boost confidence and find missed vulnerabilities
-        enhanced_vulnerabilities = self._apply_learned_patterns(
+        enhanced_vulnerabilities = self._apply_learned_patterns( vulnerabilities, code, filepath, language)
             enhanced_vulnerabilities, learned_patterns, code, filepath
-        )
 
         # ML-based false positive reduction
-        enhanced_vulnerabilities = self._ml_false_positive_reduction(
-            enhanced_vulnerabilities, code
-        )
+        enhanced_vulnerabilities = self._ml_false_positive_reduction( vulnerabilities, code, filepath, language)
 
         return enhanced_vulnerabilities
 
@@ -12917,21 +12807,20 @@ Is this a dangerous data flow vulnerability? Answer YES or NO, then explain."""
             context = self._get_vulnerability_context(vuln, code)
 
             # High-confidence pattern matching
-            high_pattern_match = any(
+        high_pattern_match = any( vulnerabilities, code, filepath, language)
                 self._pattern_similarity(snippet, pattern) > 0.7
                 for pattern in learned_patterns.get('high_confidence', [])
             )
 
             # Context pattern matching
-            context_match = any(
+        context_match = any( vulnerabilities, code, filepath, language)
                 self._pattern_similarity(context, ctx_pattern) > 0.6
                 for ctx_pattern in learned_patterns.get('context_patterns', [])
             )
 
             # Structural pattern matching
-            structural_match = any(
+        structural_match = any( vulnerabilities, code, filepath, language)
                 feature in snippet for feature in learned_patterns.get('structural_patterns', [])
-            )
 
             # Apply ML-based confidence boosts
             if high_pattern_match and context_match:
@@ -12945,9 +12834,7 @@ Is this a dangerous data flow vulnerability? Answer YES or NO, then explain."""
             enhanced_vulns.append(vuln)
 
         # Look for missed vulnerabilities using learned patterns
-        missed_vulns = self._find_missed_vulnerabilities(
-            learned_patterns, code, filepath, enhanced_vulns
-        )
+        missed_vulns = self._find_missed_vulnerabilities( vulnerabilities, code, filepath, language)
         enhanced_vulns.extend(missed_vulns)
 
         return enhanced_vulns
@@ -12978,7 +12865,7 @@ Is this a dangerous data flow vulnerability? Answer YES or NO, then explain."""
 
                     if inferred_cwe and inferred_cwe not in existing_cwes:
                         # Create new vulnerability based on learned pattern
-                        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                             cwe=inferred_cwe,
                             severity='high',
                             title=f'ML-Detected: {inferred_cwe} Pattern',
@@ -13272,9 +13159,7 @@ Is this a dangerous data flow vulnerability? Answer YES or NO, then explain."""
 
         try:
             contrastive_validator = ContrastiveLearningValidator(filepath)
-            validated_findings = contrastive_validator.validate_with_contrastive_learning(
-                vulnerabilities, code
-            )
+        validated_findings = contrastive_validator.validate_with_contrastive_learning( vulnerabilities, code, filepath, language)
 
             # Update existing vulnerabilities with contrastive validation
             for i, vuln in enumerate(enhanced_vulns):
@@ -13442,7 +13327,7 @@ Is this a dangerous data flow vulnerability? Answer YES or NO, then explain."""
         # Set current line number for context enhancement
         self._current_line_number = line_number
         
-        prompt = self._build_detection_prompt(
+        prompt = self._build_detection_prompt( vulnerabilities, code, filepath, language)
             code_chunk,
             filepath,
             language,
@@ -13455,7 +13340,7 @@ Is this a dangerous data flow vulnerability? Answer YES or NO, then explain."""
             response = self.llm.generate(prompt)
             
             # Parse vulnerabilities from response
-            vulnerabilities = self._parse_ai_response(
+        vulnerabilities = self._parse_ai_response( vulnerabilities, code, filepath, language)
                 response,
                 filepath,
                 code_chunk,
@@ -13574,7 +13459,7 @@ DESCRIPTION: [detailed explanation with context analysis]
         
         for section in vuln_sections[1:]:  # Skip first empty section
             try:
-                vuln = self._parse_vulnerability_section(
+        vuln = self._parse_vulnerability_section( vulnerabilities, code, filepath, language)
                     section,
                     filepath,
                     code,
@@ -13633,7 +13518,7 @@ DESCRIPTION: [detailed explanation with context analysis]
         if not re.match(r'CWE-\d+', cwe):
             return None
 
-        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
             cwe=cwe,
             severity=severity_match.group(1).lower(),
             title=title_match.group(1).strip(),
@@ -13689,8 +13574,6 @@ DESCRIPTION: [detailed explanation with context analysis]
             chunk_idx, chunk = chunk_data
             try:
                 return self._analyze_chunk(
-                    chunk, filepath, language, chunk_idx, codebase_context, line_number
-                )
             except Exception as e:
                 print(f"Error analyzing chunk {chunk_idx} in {filepath}: {e}")
                 return []
@@ -13872,9 +13755,8 @@ class HybridDetector:
                     similar_group.append(other_vuln)
 
             # AI validation for this group
-            validated_group = self._ai_validate_vulnerability_group(
+        validated_group = self._ai_validate_vulnerability_group( vulnerabilities, code, filepath, language)
                 similar_group, code, filepath, language
-            )
 
             grouped_vulns.extend(validated_group)
 
@@ -14083,7 +13965,7 @@ class HybridDetector:
             for finding in all_findings:
                 # Check if this vulnerability was already detected by patterns
                 if not self._is_already_detected(finding, detected_vulns):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe=finding['cwe'],
                         severity=finding['severity'],
                         title=finding['title'],
@@ -14564,7 +14446,7 @@ CONFIDENCE: [0.0-1.0]
 REASONING: [brief explanation]"""
 
         try:
-            response = self.precision_ai.llm_clients['validation'].generate(
+        response = self.precision_ai.llm_clients['validation'].generate( vulnerabilities, code, filepath, language)
                 validation_prompt,
                 system_prompt=self.precision_ai.models['validation'].system_prompt
             )
@@ -14610,7 +14492,7 @@ CONSIDERATIONS:
 COMMITTEE DECISION: YES or NO (with brief reasoning)"""
 
         try:
-            response = self.precision_ai.llm_clients['ensemble'].generate(
+        response = self.precision_ai.llm_clients['ensemble'].generate( vulnerabilities, code, filepath, language)
                 ensemble_prompt,
                 system_prompt=self.precision_ai.models['ensemble'].system_prompt
             )
@@ -14670,7 +14552,7 @@ DUPLICATES: [pairs of duplicate finding numbers]
 FALSE POSITIVES: [finding numbers to eliminate]"""
 
         try:
-            response = self.precision_ai.llm_clients['validation'].generate(
+        response = self.precision_ai.llm_clients['validation'].generate( vulnerabilities, code, filepath, language)
                 group_prompt,
                 system_prompt=self.precision_ai.models['validation'].system_prompt
             )
@@ -14765,7 +14647,7 @@ CODE: {code_context}
 Is this a genuine security vulnerability? Answer YES or NO."""
 
         try:
-            response = self.llm_clients['fast_validation'].generate(
+        response = self.llm_clients['fast_validation'].generate( vulnerabilities, code, filepath, language)
                 prompt,
                 system_prompt=self.models['fast_validation'].system_prompt
             )
@@ -14807,7 +14689,7 @@ RISK ASSESSMENT:
 CONCLUSION: LEGITIMATE SECURITY ISSUE? YES or NO"""
 
         try:
-            response = self.llm_clients['semantic_check'].generate(
+        response = self.llm_clients['semantic_check'].generate( vulnerabilities, code, filepath, language)
                 prompt,
                 system_prompt=self.models['semantic_check'].system_prompt
             )
@@ -15064,7 +14946,7 @@ class ASTSemanticAnalyzer(ast.NodeVisitor):
 
     def _add_vulnerability(self, cwe: str, title: str, description: str, line_number: int):
         """Add a vulnerability finding."""
-        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
             cwe=cwe,
             severity='high',
             title=title,
@@ -15185,7 +15067,7 @@ class AdvancedTaintTracker(ast.NodeVisitor):
 
     def _add_vulnerability(self, cwe: str, title: str, description: str, line_number: int):
         """Add a vulnerability finding."""
-        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
             cwe=cwe,
             severity='high',
             title=title,
@@ -15369,7 +15251,7 @@ class FrameworkAnalyzer(ast.NodeVisitor):
 
     def _add_vulnerability(self, cwe: str, title: str, description: str, line_number: int):
         """Add a vulnerability finding."""
-        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
             cwe=cwe,
             severity='high',
             title=title,
@@ -15535,14 +15417,14 @@ class InterProceduralAnalyzer(ast.NodeVisitor):
                 # Route handler without authentication
                 if not func_info["security_patterns"]["has_auth_check"]:
                     # Check if it calls authenticated functions
-                    calls_auth = any(
+        calls_auth = any( vulnerabilities, code, filepath, language)
                         callee in self.functions and
                         self.functions[callee]["security_patterns"]["has_auth_check"]
                         for callee in func_info["calls"]
                     )
 
                     if not calls_auth:
-                        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                             cwe="CWE-287",
                             severity="high",
                             title="Authentication Bypass",
@@ -15566,7 +15448,7 @@ class InterProceduralAnalyzer(ast.NodeVisitor):
                 if isinstance(node, ast.Assign):
                     # Check for hardcoded assignments
                     if self._is_hardcoded_assignment(node):
-                        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                             cwe="CWE-798",
                             severity="critical",
                             title="Hardcoded Credentials",
@@ -15594,13 +15476,13 @@ class InterProceduralAnalyzer(ast.NodeVisitor):
 
         for func_name, func_info in self.functions.items():
             # Check for file operations
-            has_file_ops = any(
+        has_file_ops = any( vulnerabilities, code, filepath, language)
                 call in ["open", "write", "save", "upload"]
                 for call in func_info["calls"]
             )
 
             if has_file_ops and not func_info["security_patterns"]["has_input_validation"]:
-                vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                     cwe="CWE-434",
                     severity="high",
                     title="Unrestricted File Upload",
@@ -15645,7 +15527,7 @@ class BusinessLogicAnalyzer(ast.NodeVisitor):
         """Analyze conditional logic for security issues."""
         # Check for authentication bypass in conditionals
         if self._is_auth_bypass_pattern(node):
-            vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                 cwe="CWE-287",
                 severity="high",
                 title="Authentication Bypass",
@@ -15676,7 +15558,7 @@ class BusinessLogicAnalyzer(ast.NodeVisitor):
             if isinstance(child, ast.Compare):
                 # Check for hardcoded comparisons
                 if self._has_hardcoded_auth(child):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-287",
                         severity="critical",
                         title="Hardcoded Authentication",
@@ -15694,7 +15576,7 @@ class BusinessLogicAnalyzer(ast.NodeVisitor):
         for child in ast.walk(node):
             if isinstance(child, ast.Return):
                 if self._returns_hardcoded_credentials(child):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-798",
                         severity="critical",
                         title="Hardcoded Credentials",
@@ -15712,7 +15594,7 @@ class BusinessLogicAnalyzer(ast.NodeVisitor):
         for child in ast.walk(node):
             if isinstance(child, ast.Dict):
                 if self._is_user_dictionary(child):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-798",
                         severity="high",
                         title="Hardcoded User Dictionary",
@@ -15840,14 +15722,14 @@ class GraphBasedAnalyzer(ast.NodeVisitor):
         for node_name, node_info in self.nodes.items():
             if node_info.get("type") == "function" and node_info.get("is_route"):
                 # Check if route calls any auth-related functions
-                has_auth_call = any(
+        has_auth_call = any( vulnerabilities, code, filepath, language)
                     edge["to"] for edge in self.edges
                     if edge["from"] == node_name and
                     any(auth in edge["to"].lower() for auth in ["auth", "login", "session"])
                 )
 
                 if not has_auth_call:
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-287",
                         severity="high",
                         title="Route Without Authentication",
@@ -15875,7 +15757,7 @@ class GraphBasedAnalyzer(ast.NodeVisitor):
             # Check if this input flows to dangerous sinks
             for edge in self.edges:
                 if edge.get("type") == "calls" and edge["to"] in dangerous_sinks:
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-95" if edge["to"] in ["eval", "exec"] else "CWE-78",
                         severity="critical",
                         title="Dangerous Data Flow",
@@ -15899,7 +15781,7 @@ class GraphBasedAnalyzer(ast.NodeVisitor):
                 # Check call chain for authentication bypass
                 call_chain = self._get_call_chain(node_name)
                 if self._has_auth_bypass_chain(call_chain):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-287",
                         severity="high",
                         title="Authentication Chain Bypass",
@@ -16013,7 +15895,7 @@ class SymbolicExecutionAnalyzer(ast.NodeVisitor):
 
             # Check for hardcoded credentials in calls
             if self._is_hardcoded_credential_call(node):
-                vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                     cwe="CWE-798",
                     severity="critical",
                     title="Symbolic Execution: Hardcoded Credentials",
@@ -16027,7 +15909,7 @@ class SymbolicExecutionAnalyzer(ast.NodeVisitor):
 
             # Check for authentication bypass
             elif self._is_auth_bypass_call(node):
-                vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                     cwe="CWE-287",
                     severity="critical",
                     title="Symbolic Execution: Authentication Bypass",
@@ -16175,8 +16057,7 @@ class OntologyBasedAnalyzer:
     def apply_security_ontology(self, code: str):
         """Apply security ontology reasoning to detect complex vulnerabilities."""
         vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         ontology = self.security_ontology
 
@@ -16186,7 +16067,7 @@ class OntologyBasedAnalyzer:
             # Apply hardcoded credentials ontology
             if self._matches_ontology_pattern(line, ontology["vulnerability_patterns"]["hardcoded_credentials"]):
                 if not self._has_mitigation_context(line, ontology):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-798",
                         severity="critical",
                         title="Ontology-Based: Hardcoded Credentials",
@@ -16201,7 +16082,7 @@ class OntologyBasedAnalyzer:
             # Apply authentication bypass ontology
             elif self._matches_ontology_pattern(line, ontology["vulnerability_patterns"]["auth_bypass"]):
                 if self._is_auth_context(line, ontology):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-287",
                         severity="critical",
                         title="Ontology-Based: Authentication Bypass",
@@ -16215,7 +16096,7 @@ class OntologyBasedAnalyzer:
 
             # Apply insecure storage ontology
             elif self._matches_ontology_pattern(line, ontology["vulnerability_patterns"]["insecure_storage"]):
-                vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                     cwe="CWE-311",
                     severity="high",
                     title="Ontology-Based: Insecure Storage",
@@ -16243,9 +16124,7 @@ class OntologyBasedAnalyzer:
         ]
 
         context_window = 2  # Check surrounding lines
-        lines = line.split("
-")
-")
+        lines = line.split("\n")
 
         for i, check_line in enumerate(lines):
             check_lower = check_line.lower()
@@ -16302,8 +16181,7 @@ class DeepLearningDetector:
     def detect_with_deep_learning(self, code: str):
         """Use deep learning model to detect vulnerabilities."""
         vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         for i, line in enumerate(lines, 1):
             # Tokenize code line
@@ -16324,7 +16202,7 @@ class DeepLearningDetector:
                     "command_injection": "CWE-78"
                 }
 
-                vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                     cwe=cwe_mapping.get(vuln_type, "CWE-79"),
                     severity="high" if confidence > 0.85 else "medium",
                     title=f"Deep Learning: {vuln_type.replace("_", " ").title()}",
@@ -16461,8 +16339,7 @@ class CodeEmbeddingAnalyzer:
     def analyze_embeddings(self, code: str):
         """Analyze code using embedding similarity."""
         vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         for i, line in enumerate(lines, 1):
             if not line.strip():
@@ -16475,7 +16352,7 @@ class CodeEmbeddingAnalyzer:
             vuln_type, similarity = self._find_most_similar_vulnerable(line_embedding)
 
             if vuln_type and similarity > 0.75:
-                vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                     cwe=vuln_type,
                     severity="high" if similarity > 0.85 else "medium",
                     title=f"Embedding Analysis: {vuln_type}",
@@ -16628,8 +16505,7 @@ class ContrastiveLearningValidator:
     def _find_contrastive_vulnerabilities(self, code: str):
         """Find new vulnerabilities using contrastive learning."""
         new_vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         for i, line in enumerate(lines, 1):
             if not line.strip():
@@ -16655,7 +16531,7 @@ class ContrastiveLearningValidator:
                     final_confidence = contrastive_confidence * weight
 
                     if final_confidence > 0.75:
-                        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                             cwe=cwe,
                             severity="high" if final_confidence > 0.85 else "medium",
                             title=f"Contrastive Learning: {cwe}",
@@ -16724,8 +16600,7 @@ Then explain your reasoning.
     def analyze_with_llm(self, code: str):
         """Use LLM for advanced security analysis."""
         vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         # Focus on analyzing code blocks that are likely to contain security issues
         code_blocks = self._extract_security_relevant_blocks(code)
@@ -16736,7 +16611,7 @@ Then explain your reasoning.
 
             # Analyze for hardcoded credentials
             if self._llm_detect_hardcoded_credentials(block_code):
-                vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                     cwe="CWE-798",
                     severity="critical",
                     title="LLM-Detected: Hardcoded Credentials",
@@ -16750,7 +16625,7 @@ Then explain your reasoning.
 
             # Analyze for authentication bypass
             if self._llm_detect_auth_bypass(block_code):
-                vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                     cwe="CWE-287",
                     severity="critical",
                     title="LLM-Detected: Authentication Bypass",
@@ -16764,7 +16639,7 @@ Then explain your reasoning.
 
             # Analyze for business logic flaws
             if self._llm_detect_business_logic_flaws(block_code):
-                vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                     cwe="CWE-840",  # Business Logic Errors
                     severity="high",
                     title="LLM-Detected: Business Logic Flaw",
@@ -16780,8 +16655,7 @@ Then explain your reasoning.
 
     def _extract_security_relevant_blocks(self, code: str):
         """Extract code blocks most likely to contain security issues."""
-        lines = code.split("
-")
+        lines = code.split("\n")
         blocks = []
 
         current_block = []
@@ -16942,7 +16816,7 @@ class MultimodalSecurityAnalyzer:
         behavioral_findings = self._behavioral_analysis(code)
 
         # Combine findings with weighted confidence
-        all_findings = (
+        all_findings = ( vulnerabilities, code, filepath, language)
             syntactic_findings + semantic_findings +
             contextual_findings + behavioral_findings
         )
@@ -16993,8 +16867,7 @@ class MultimodalSecurityAnalyzer:
         """Semantic analysis (meaning-based)."""
         findings = []
 
-        lines = code.split("
-")
+        lines = code.split("\n")
         for i, line in enumerate(lines, 1):
             # Semantic pattern recognition
             if self._is_semantic_hardcoded(line):
@@ -17019,8 +16892,7 @@ class MultimodalSecurityAnalyzer:
         """Contextual analysis (surrounding code)."""
         findings = []
 
-        lines = code.split("
-")
+        lines = code.split("\n")
         for i, line in enumerate(lines, 1):
             # Analyze context window
             start = max(0, i - 3)
@@ -17050,8 +16922,7 @@ class MultimodalSecurityAnalyzer:
         findings = []
 
         # Analyze execution flow patterns
-        lines = code.split("
-")
+        lines = code.split("\n")
         execution_patterns = self._extract_execution_patterns(code)
 
         for pattern in execution_patterns:
@@ -17100,7 +16971,7 @@ class MultimodalSecurityAnalyzer:
             contextual_conf = max([f["confidence"] for f in group if f.get("modality") == "contextual"] or [0])
             behavioral_conf = max([f["confidence"] for f in group if f.get("modality") == "behavioral"] or [0])
 
-            fused_confidence = (
+        fused_confidence = ( vulnerabilities, code, filepath, language)
                 syntactic_conf * self.modality_weights["syntactic"] +
                 semantic_conf * self.modality_weights["semantic"] +
                 contextual_conf * self.modality_weights["contextual"] +
@@ -17108,7 +16979,7 @@ class MultimodalSecurityAnalyzer:
             )
 
             if fused_confidence >= 0.8:  # High multimodal confidence threshold
-                vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                     cwe=cwe,
                     severity="critical" if fused_confidence > 0.9 else "high",
                     title=f"Multimodal Analysis: {cwe}",
@@ -17168,8 +17039,7 @@ class MultimodalSecurityAnalyzer:
     def _extract_execution_patterns(self, code: str):
         """Extract execution pattern information."""
         patterns = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         for i, line in enumerate(lines, 1):
             if "if " in line:
@@ -17343,8 +17213,7 @@ class EnhancedBusinessLogicAnalyzer:
     def analyze_business_logic_patterns(self, code: str):
         """Analyze business logic for credential and auth patterns."""
         vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         for i, line in enumerate(lines, 1):
             line_clean = line.strip()
@@ -17352,7 +17221,7 @@ class EnhancedBusinessLogicAnalyzer:
             # Check credential patterns
             for pattern in self.business_patterns['credential_patterns']:
                 if re.search(pattern, line, re.IGNORECASE | re.DOTALL):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-798",
                         severity="critical",
                         title="Business Logic: Hardcoded User Credentials",
@@ -17368,7 +17237,7 @@ class EnhancedBusinessLogicAnalyzer:
             # Check auth bypass patterns
             for pattern in self.business_patterns['auth_bypass_patterns']:
                 if re.search(pattern, line, re.IGNORECASE):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-287",
                         severity="critical",
                         title="Business Logic: Authentication Bypass",
@@ -17384,7 +17253,7 @@ class EnhancedBusinessLogicAnalyzer:
             # Check conditional hardcoding
             for pattern in self.business_patterns['conditional_hardcoding']:
                 if re.search(pattern, line, re.IGNORECASE):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-798",
                         severity="high",
                         title="Business Logic: Conditional Credential Assignment",
@@ -17427,8 +17296,7 @@ class ContextAwareDictionaryAnalyzer:
     def analyze_dictionaries(self, code: str):
         """Analyze dictionaries for credential patterns."""
         vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         for i, line in enumerate(lines, 1):
             # Look for dictionary patterns
@@ -17436,7 +17304,7 @@ class ContextAwareDictionaryAnalyzer:
                 dict_analysis = self._analyze_dictionary_content(line)
 
                 if dict_analysis['is_credential_dict']:
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-798",
                         severity="critical",
                         title="Context-Aware: Credential Dictionary",
@@ -17525,8 +17393,7 @@ class AuthenticationFlowAnalyzer:
     def analyze_authentication_flows(self, code: str):
         """Analyze authentication flows for bypass vulnerabilities."""
         vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         # Track authentication context
         in_auth_function = False
@@ -17547,7 +17414,7 @@ class AuthenticationFlowAnalyzer:
                 # Check bypass conditions
                 for pattern in self.auth_flow_patterns['bypass_conditions']:
                     if re.search(pattern, line, re.IGNORECASE):
-                        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                             cwe="CWE-287",
                             severity="critical",
                             title="Auth Flow: Bypass Condition",
@@ -17563,7 +17430,7 @@ class AuthenticationFlowAnalyzer:
                 # Check weak session validation
                 for pattern in self.auth_flow_patterns['weak_session_validation']:
                     if re.search(pattern, line, re.IGNORECASE):
-                        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                             cwe="CWE-287",
                             severity="high",
                             title="Auth Flow: Weak Session Validation",
@@ -17590,8 +17457,7 @@ class AuthenticationFlowAnalyzer:
     def _analyze_route_auth(self, code: str):
         """Analyze routes for missing authentication."""
         vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         for i, line in enumerate(lines, 1):
             # Look for Flask routes
@@ -17607,7 +17473,7 @@ class AuthenticationFlowAnalyzer:
                         break
 
                 if not has_auth:
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-287",
                         severity="high",
                         title="Auth Flow: Route Without Authentication",
@@ -17652,8 +17518,7 @@ class SemanticRoleLabelingAnalyzer:
     def analyze_semantic_roles(self, code: str):
         """Analyze semantic roles in code."""
         vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         for i, line in enumerate(lines, 1):
             # Analyze semantic structure of the line
@@ -17662,7 +17527,7 @@ class SemanticRoleLabelingAnalyzer:
             # Check against vulnerability patterns
             for pattern_name, pattern_config in self.semantic_patterns.items():
                 if self._matches_semantic_pattern(semantic_analysis, pattern_config):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe=pattern_config['cwe'],
                         severity="high",
                         title=f"Semantic: {pattern_name.replace('_', ' ').title()}",
@@ -17778,14 +17643,13 @@ class TemplateBasedDetector:
     def detect_with_templates(self, code: str):
         """Detect vulnerabilities using template matching."""
         vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         for i, line in enumerate(lines, 1):
             for template_name, template_config in self.templates.items():
                 pattern = template_config['pattern']
                 if re.search(pattern, line, re.IGNORECASE | re.DOTALL):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe=template_config['cwe'],
                         severity="high",
                         title=f"Template: {template_name.replace('_', ' ').title()}",
@@ -17801,44 +17665,36 @@ class TemplateBasedDetector:
         return vulnerabilities
 
         # Stage 24: Aggressive Authentication Bypass Detection (FINAL TARGETED IMPROVEMENT)
-        auth_bypass_vulns = self._aggressive_auth_bypass_detection(
+        auth_bypass_vulns = self._aggressive_auth_bypass_detection( vulnerabilities, code, filepath, language)
             template_vulns, code, filepath, language
-        )
 
         # Stage 25: IDOR (Insecure Direct Object Reference) Detection
-        idor_vulns = self._idor_detection(
+        idor_vulns = self._idor_detection( vulnerabilities, code, filepath, language)
             auth_bypass_vulns, code, filepath, language
-        )
 
         # Stage 26: SSRF (Server-Side Request Forgery) Detection
-        ssrf_vulns = self._ssrf_detection(
+        ssrf_vulns = self._ssrf_detection( vulnerabilities, code, filepath, language)
             idor_vulns, code, filepath, language
-        )
 
         # Stage 27: XXE (XML External Entity) Detection
-        xxe_vulns = self._xxe_detection(
+        xxe_vulns = self._xxe_detection( vulnerabilities, code, filepath, language)
             ssrf_vulns, code, filepath, language
-        )
 
         # Stage 28: CSRF (Cross-Site Request Forgery) Detection
-        csrf_vulns = self._csrf_detection(
+        csrf_vulns = self._csrf_detection( vulnerabilities, code, filepath, language)
             xxe_vulns, code, filepath, language
-        )
 
         # Stage 29: Information Disclosure Detection
-        info_disclosure_vulns = self._information_disclosure_detection(
+        info_disclosure_vulns = self._information_disclosure_detection( vulnerabilities, code, filepath, language)
             csrf_vulns, code, filepath, language
-        )
 
         # Stage 30: Universal ML Model Detection (CATCH ANY VULNERABILITY)
-        universal_vulns = self._universal_ml_detection(
+        universal_vulns = self._universal_ml_detection( vulnerabilities, code, filepath, language)
             info_disclosure_vulns, code, filepath, language
-        )
 
         # Stage 31: Final ensemble validation and confidence calibration
-        validated_vulns = self._stage3_ensemble_validation(
+        validated_vulns = self._stage3_ensemble_validation( vulnerabilities, code, filepath, language)
             universal_vulns, code, filepath, language
-        )
 
     def _aggressive_auth_bypass_detection(self, vulnerabilities: List[Vulnerability],
                                         code: str, filepath: str, language: str) -> List[Vulnerability]:
@@ -17923,8 +17779,7 @@ class AggressiveAuthBypassDetector:
     def detect_all_auth_bypass_patterns(self, code: str):
         """Detect all types of authentication bypass patterns aggressively."""
         vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         for i, line in enumerate(lines, 1):
             line_clean = line.strip()
@@ -17937,9 +17792,7 @@ class AggressiveAuthBypassDetector:
             for category, patterns in self.aggressive_patterns.items():
                 for pattern in patterns:
                     if re.search(pattern, line, re.IGNORECASE):
-                        vuln = self._create_auth_bypass_vulnerability(
-                            category, line, i, pattern
-                        )
+        vuln = self._create_auth_bypass_vulnerability( vulnerabilities, code, filepath, language)
                         vulnerabilities.append(vuln)
                         break  # One finding per line per category
 
@@ -18000,7 +17853,7 @@ class AggressiveAuthBypassDetector:
                             break
 
                     if not has_condition:
-                        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                             cwe="CWE-287",
                             severity="critical",
                             title="Auth Bypass: Unconditional Authentication Success",
@@ -18022,7 +17875,7 @@ class AggressiveAuthBypassDetector:
         multiline_pattern = r'if\s+.*:\s*\n\s*return\s+True'
         for match in re.finditer(multiline_pattern, code, re.IGNORECASE | re.MULTILINE):
             start_line = code[:match.start()].count('\n') + 1
-            vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                 cwe="CWE-287",
                 severity="critical",
                 title="Auth Bypass: Multi-line Conditional Bypass",
@@ -18038,7 +17891,7 @@ class AggressiveAuthBypassDetector:
         user_assign_pattern = r'user\s*=.*\n.*\n.*return\s+True'
         for match in re.finditer(user_assign_pattern, code, re.IGNORECASE | re.MULTILINE):
             start_line = code[:match.start()].count('\n') + 1
-            vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                 cwe="CWE-287",
                 severity="high",
                 title="Auth Bypass: User Assignment Bypass",
@@ -18162,24 +18015,20 @@ class AggressiveAuthBypassDetector:
         )
 
         # Stage 20: Authentication Flow Analysis (TARGETED IMPROVEMENT)
-        auth_flow_vulns = self._authentication_flow_analysis(
+        auth_flow_vulns = self._authentication_flow_analysis( vulnerabilities, code, filepath, language)
             dict_aware_vulns, code, filepath, language
-        )
 
         # Stage 21: Semantic Role Labeling (TARGETED IMPROVEMENT)
-        semantic_vulns = self._semantic_role_labeling_analysis(
+        semantic_vulns = self._semantic_role_labeling_analysis( vulnerabilities, code, filepath, language)
             auth_flow_vulns, code, filepath, language
-        )
 
         # Stage 22: Template-Based Detection (TARGETED IMPROVEMENT)
-        template_vulns = self._template_based_detection(
+        template_vulns = self._template_based_detection( vulnerabilities, code, filepath, language)
             semantic_vulns, code, filepath, language
-        )
 
         # Stage 23: Final ensemble validation and confidence calibration
-        validated_vulns = self._stage3_ensemble_validation(
+        validated_vulns = self._stage3_ensemble_validation( vulnerabilities, code, filepath, language)
             template_vulns, code, filepath, language
-        )
 
         # Cache results
         self.detection_cache[cache_key] = validated_vulns
@@ -18202,13 +18051,11 @@ class AggressiveAuthBypassDetector:
         
         # Use parallel processing for multiple chunks
         if len(chunks) > 1 and self.max_workers > 1:
-            vulnerabilities = self._parallel_analyze_chunks(
-                chunks, filepath, language, codebase_context, line_number
-            )
+        vulnerabilities = self._parallel_analyze_chunks( vulnerabilities, code, filepath, language)
         else:
             # Sequential analysis for small files or single chunk
             for chunk_idx, chunk in enumerate(chunks):
-                chunk_vulns = self._analyze_chunk(
+        chunk_vulns = self._analyze_chunk( vulnerabilities, code, filepath, language)
                     chunk, 
                     filepath, 
                     language,
@@ -18267,14 +18114,13 @@ class AggressiveAuthBypassDetector:
                         if target_cwe and target_cwe not in existing_cwes:
                             # Specialized AI analysis for this pattern
                             context = self._get_specialized_context(code, i, 3)
-                            specialized_prompt = self._build_specialized_prompt(
+        specialized_prompt = self._build_specialized_prompt( vulnerabilities, code, filepath, language)
                                 context, pattern_type, filepath, language
-                            )
 
                             try:
                                 response = self.llm.generate(specialized_prompt, max_tokens=256)
                                 if self._is_positive_detection(response):
-                                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                                         cwe=target_cwe,
                                         severity='high',
                                         title=f'Specialized Detection: {pattern_type.replace("_", " ").title()}',
@@ -18719,19 +18565,16 @@ Is this a dangerous data flow vulnerability? Answer YES or NO, then explain."""
                 rules = rule_database[cwe]
 
                 # Check rule matches
-                high_match = any(
+        high_match = any( vulnerabilities, code, filepath, language)
                     re.search(pattern, getattr(vuln, 'code_snippet', ''), re.IGNORECASE | re.DOTALL)
-                    for pattern in rules.get('high_confidence', [])
-                )
-                medium_match = any(
+        medium_match = any( vulnerabilities, code, filepath, language)
                     re.search(pattern, getattr(vuln, 'code_snippet', ''), re.IGNORECASE | re.DOTALL)
                     for pattern in rules.get('medium_confidence', [])
                 )
 
                 # Check context validation
-                context_valid = any(
+        context_valid = any( vulnerabilities, code, filepath, language)
                     req in code.lower() for req in rules.get('context_required', [])
-                )
 
                 # Calculate enhanced confidence
                 base_conf = getattr(vuln, 'confidence', 0.5)
@@ -18767,14 +18610,11 @@ Is this a dangerous data flow vulnerability? Answer YES or NO, then explain."""
         learned_patterns = self._learn_success_patterns(vulnerabilities, code)
 
         # Apply learned patterns to boost confidence and find missed vulnerabilities
-        enhanced_vulnerabilities = self._apply_learned_patterns(
+        enhanced_vulnerabilities = self._apply_learned_patterns( vulnerabilities, code, filepath, language)
             enhanced_vulnerabilities, learned_patterns, code, filepath
-        )
 
         # ML-based false positive reduction
-        enhanced_vulnerabilities = self._ml_false_positive_reduction(
-            enhanced_vulnerabilities, code
-        )
+        enhanced_vulnerabilities = self._ml_false_positive_reduction( vulnerabilities, code, filepath, language)
 
         return enhanced_vulnerabilities
 
@@ -18832,21 +18672,20 @@ Is this a dangerous data flow vulnerability? Answer YES or NO, then explain."""
             context = self._get_vulnerability_context(vuln, code)
 
             # High-confidence pattern matching
-            high_pattern_match = any(
+        high_pattern_match = any( vulnerabilities, code, filepath, language)
                 self._pattern_similarity(snippet, pattern) > 0.7
                 for pattern in learned_patterns.get('high_confidence', [])
             )
 
             # Context pattern matching
-            context_match = any(
+        context_match = any( vulnerabilities, code, filepath, language)
                 self._pattern_similarity(context, ctx_pattern) > 0.6
                 for ctx_pattern in learned_patterns.get('context_patterns', [])
             )
 
             # Structural pattern matching
-            structural_match = any(
+        structural_match = any( vulnerabilities, code, filepath, language)
                 feature in snippet for feature in learned_patterns.get('structural_patterns', [])
-            )
 
             # Apply ML-based confidence boosts
             if high_pattern_match and context_match:
@@ -18860,9 +18699,7 @@ Is this a dangerous data flow vulnerability? Answer YES or NO, then explain."""
             enhanced_vulns.append(vuln)
 
         # Look for missed vulnerabilities using learned patterns
-        missed_vulns = self._find_missed_vulnerabilities(
-            learned_patterns, code, filepath, enhanced_vulns
-        )
+        missed_vulns = self._find_missed_vulnerabilities( vulnerabilities, code, filepath, language)
         enhanced_vulns.extend(missed_vulns)
 
         return enhanced_vulns
@@ -18893,7 +18730,7 @@ Is this a dangerous data flow vulnerability? Answer YES or NO, then explain."""
 
                     if inferred_cwe and inferred_cwe not in existing_cwes:
                         # Create new vulnerability based on learned pattern
-                        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                             cwe=inferred_cwe,
                             severity='high',
                             title=f'ML-Detected: {inferred_cwe} Pattern',
@@ -19187,9 +19024,7 @@ Is this a dangerous data flow vulnerability? Answer YES or NO, then explain."""
 
         try:
             contrastive_validator = ContrastiveLearningValidator(filepath)
-            validated_findings = contrastive_validator.validate_with_contrastive_learning(
-                vulnerabilities, code
-            )
+        validated_findings = contrastive_validator.validate_with_contrastive_learning( vulnerabilities, code, filepath, language)
 
             # Update existing vulnerabilities with contrastive validation
             for i, vuln in enumerate(enhanced_vulns):
@@ -19357,7 +19192,7 @@ Is this a dangerous data flow vulnerability? Answer YES or NO, then explain."""
         # Set current line number for context enhancement
         self._current_line_number = line_number
         
-        prompt = self._build_detection_prompt(
+        prompt = self._build_detection_prompt( vulnerabilities, code, filepath, language)
             code_chunk,
             filepath,
             language,
@@ -19370,7 +19205,7 @@ Is this a dangerous data flow vulnerability? Answer YES or NO, then explain."""
             response = self.llm.generate(prompt)
             
             # Parse vulnerabilities from response
-            vulnerabilities = self._parse_ai_response(
+        vulnerabilities = self._parse_ai_response( vulnerabilities, code, filepath, language)
                 response,
                 filepath,
                 code_chunk,
@@ -19489,7 +19324,7 @@ DESCRIPTION: [detailed explanation with context analysis]
         
         for section in vuln_sections[1:]:  # Skip first empty section
             try:
-                vuln = self._parse_vulnerability_section(
+        vuln = self._parse_vulnerability_section( vulnerabilities, code, filepath, language)
                     section,
                     filepath,
                     code,
@@ -19548,7 +19383,7 @@ DESCRIPTION: [detailed explanation with context analysis]
         if not re.match(r'CWE-\d+', cwe):
             return None
 
-        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
             cwe=cwe,
             severity=severity_match.group(1).lower(),
             title=title_match.group(1).strip(),
@@ -19604,8 +19439,6 @@ DESCRIPTION: [detailed explanation with context analysis]
             chunk_idx, chunk = chunk_data
             try:
                 return self._analyze_chunk(
-                    chunk, filepath, language, chunk_idx, codebase_context, line_number
-                )
             except Exception as e:
                 print(f"Error analyzing chunk {chunk_idx} in {filepath}: {e}")
                 return []
@@ -19787,9 +19620,8 @@ class HybridDetector:
                     similar_group.append(other_vuln)
 
             # AI validation for this group
-            validated_group = self._ai_validate_vulnerability_group(
+        validated_group = self._ai_validate_vulnerability_group( vulnerabilities, code, filepath, language)
                 similar_group, code, filepath, language
-            )
 
             grouped_vulns.extend(validated_group)
 
@@ -19998,7 +19830,7 @@ class HybridDetector:
             for finding in all_findings:
                 # Check if this vulnerability was already detected by patterns
                 if not self._is_already_detected(finding, detected_vulns):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe=finding['cwe'],
                         severity=finding['severity'],
                         title=finding['title'],
@@ -20479,7 +20311,7 @@ CONFIDENCE: [0.0-1.0]
 REASONING: [brief explanation]"""
 
         try:
-            response = self.precision_ai.llm_clients['validation'].generate(
+        response = self.precision_ai.llm_clients['validation'].generate( vulnerabilities, code, filepath, language)
                 validation_prompt,
                 system_prompt=self.precision_ai.models['validation'].system_prompt
             )
@@ -20525,7 +20357,7 @@ CONSIDERATIONS:
 COMMITTEE DECISION: YES or NO (with brief reasoning)"""
 
         try:
-            response = self.precision_ai.llm_clients['ensemble'].generate(
+        response = self.precision_ai.llm_clients['ensemble'].generate( vulnerabilities, code, filepath, language)
                 ensemble_prompt,
                 system_prompt=self.precision_ai.models['ensemble'].system_prompt
             )
@@ -20585,7 +20417,7 @@ DUPLICATES: [pairs of duplicate finding numbers]
 FALSE POSITIVES: [finding numbers to eliminate]"""
 
         try:
-            response = self.precision_ai.llm_clients['validation'].generate(
+        response = self.precision_ai.llm_clients['validation'].generate( vulnerabilities, code, filepath, language)
                 group_prompt,
                 system_prompt=self.precision_ai.models['validation'].system_prompt
             )
@@ -20680,7 +20512,7 @@ CODE: {code_context}
 Is this a genuine security vulnerability? Answer YES or NO."""
 
         try:
-            response = self.llm_clients['fast_validation'].generate(
+        response = self.llm_clients['fast_validation'].generate( vulnerabilities, code, filepath, language)
                 prompt,
                 system_prompt=self.models['fast_validation'].system_prompt
             )
@@ -20722,7 +20554,7 @@ RISK ASSESSMENT:
 CONCLUSION: LEGITIMATE SECURITY ISSUE? YES or NO"""
 
         try:
-            response = self.llm_clients['semantic_check'].generate(
+        response = self.llm_clients['semantic_check'].generate( vulnerabilities, code, filepath, language)
                 prompt,
                 system_prompt=self.models['semantic_check'].system_prompt
             )
@@ -20979,7 +20811,7 @@ class ASTSemanticAnalyzer(ast.NodeVisitor):
 
     def _add_vulnerability(self, cwe: str, title: str, description: str, line_number: int):
         """Add a vulnerability finding."""
-        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
             cwe=cwe,
             severity='high',
             title=title,
@@ -21100,7 +20932,7 @@ class AdvancedTaintTracker(ast.NodeVisitor):
 
     def _add_vulnerability(self, cwe: str, title: str, description: str, line_number: int):
         """Add a vulnerability finding."""
-        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
             cwe=cwe,
             severity='high',
             title=title,
@@ -21284,7 +21116,7 @@ class FrameworkAnalyzer(ast.NodeVisitor):
 
     def _add_vulnerability(self, cwe: str, title: str, description: str, line_number: int):
         """Add a vulnerability finding."""
-        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
             cwe=cwe,
             severity='high',
             title=title,
@@ -21450,14 +21282,14 @@ class InterProceduralAnalyzer(ast.NodeVisitor):
                 # Route handler without authentication
                 if not func_info["security_patterns"]["has_auth_check"]:
                     # Check if it calls authenticated functions
-                    calls_auth = any(
+        calls_auth = any( vulnerabilities, code, filepath, language)
                         callee in self.functions and
                         self.functions[callee]["security_patterns"]["has_auth_check"]
                         for callee in func_info["calls"]
                     )
 
                     if not calls_auth:
-                        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                             cwe="CWE-287",
                             severity="high",
                             title="Authentication Bypass",
@@ -21481,7 +21313,7 @@ class InterProceduralAnalyzer(ast.NodeVisitor):
                 if isinstance(node, ast.Assign):
                     # Check for hardcoded assignments
                     if self._is_hardcoded_assignment(node):
-                        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                             cwe="CWE-798",
                             severity="critical",
                             title="Hardcoded Credentials",
@@ -21509,13 +21341,13 @@ class InterProceduralAnalyzer(ast.NodeVisitor):
 
         for func_name, func_info in self.functions.items():
             # Check for file operations
-            has_file_ops = any(
+        has_file_ops = any( vulnerabilities, code, filepath, language)
                 call in ["open", "write", "save", "upload"]
                 for call in func_info["calls"]
             )
 
             if has_file_ops and not func_info["security_patterns"]["has_input_validation"]:
-                vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                     cwe="CWE-434",
                     severity="high",
                     title="Unrestricted File Upload",
@@ -21560,7 +21392,7 @@ class BusinessLogicAnalyzer(ast.NodeVisitor):
         """Analyze conditional logic for security issues."""
         # Check for authentication bypass in conditionals
         if self._is_auth_bypass_pattern(node):
-            vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                 cwe="CWE-287",
                 severity="high",
                 title="Authentication Bypass",
@@ -21591,7 +21423,7 @@ class BusinessLogicAnalyzer(ast.NodeVisitor):
             if isinstance(child, ast.Compare):
                 # Check for hardcoded comparisons
                 if self._has_hardcoded_auth(child):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-287",
                         severity="critical",
                         title="Hardcoded Authentication",
@@ -21609,7 +21441,7 @@ class BusinessLogicAnalyzer(ast.NodeVisitor):
         for child in ast.walk(node):
             if isinstance(child, ast.Return):
                 if self._returns_hardcoded_credentials(child):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-798",
                         severity="critical",
                         title="Hardcoded Credentials",
@@ -21627,7 +21459,7 @@ class BusinessLogicAnalyzer(ast.NodeVisitor):
         for child in ast.walk(node):
             if isinstance(child, ast.Dict):
                 if self._is_user_dictionary(child):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-798",
                         severity="high",
                         title="Hardcoded User Dictionary",
@@ -21755,14 +21587,14 @@ class GraphBasedAnalyzer(ast.NodeVisitor):
         for node_name, node_info in self.nodes.items():
             if node_info.get("type") == "function" and node_info.get("is_route"):
                 # Check if route calls any auth-related functions
-                has_auth_call = any(
+        has_auth_call = any( vulnerabilities, code, filepath, language)
                     edge["to"] for edge in self.edges
                     if edge["from"] == node_name and
                     any(auth in edge["to"].lower() for auth in ["auth", "login", "session"])
                 )
 
                 if not has_auth_call:
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-287",
                         severity="high",
                         title="Route Without Authentication",
@@ -21790,7 +21622,7 @@ class GraphBasedAnalyzer(ast.NodeVisitor):
             # Check if this input flows to dangerous sinks
             for edge in self.edges:
                 if edge.get("type") == "calls" and edge["to"] in dangerous_sinks:
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-95" if edge["to"] in ["eval", "exec"] else "CWE-78",
                         severity="critical",
                         title="Dangerous Data Flow",
@@ -21814,7 +21646,7 @@ class GraphBasedAnalyzer(ast.NodeVisitor):
                 # Check call chain for authentication bypass
                 call_chain = self._get_call_chain(node_name)
                 if self._has_auth_bypass_chain(call_chain):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-287",
                         severity="high",
                         title="Authentication Chain Bypass",
@@ -21928,7 +21760,7 @@ class SymbolicExecutionAnalyzer(ast.NodeVisitor):
 
             # Check for hardcoded credentials in calls
             if self._is_hardcoded_credential_call(node):
-                vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                     cwe="CWE-798",
                     severity="critical",
                     title="Symbolic Execution: Hardcoded Credentials",
@@ -21942,7 +21774,7 @@ class SymbolicExecutionAnalyzer(ast.NodeVisitor):
 
             # Check for authentication bypass
             elif self._is_auth_bypass_call(node):
-                vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                     cwe="CWE-287",
                     severity="critical",
                     title="Symbolic Execution: Authentication Bypass",
@@ -22090,8 +21922,7 @@ class OntologyBasedAnalyzer:
     def apply_security_ontology(self, code: str):
         """Apply security ontology reasoning to detect complex vulnerabilities."""
         vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         ontology = self.security_ontology
 
@@ -22101,7 +21932,7 @@ class OntologyBasedAnalyzer:
             # Apply hardcoded credentials ontology
             if self._matches_ontology_pattern(line, ontology["vulnerability_patterns"]["hardcoded_credentials"]):
                 if not self._has_mitigation_context(line, ontology):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-798",
                         severity="critical",
                         title="Ontology-Based: Hardcoded Credentials",
@@ -22116,7 +21947,7 @@ class OntologyBasedAnalyzer:
             # Apply authentication bypass ontology
             elif self._matches_ontology_pattern(line, ontology["vulnerability_patterns"]["auth_bypass"]):
                 if self._is_auth_context(line, ontology):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-287",
                         severity="critical",
                         title="Ontology-Based: Authentication Bypass",
@@ -22130,7 +21961,7 @@ class OntologyBasedAnalyzer:
 
             # Apply insecure storage ontology
             elif self._matches_ontology_pattern(line, ontology["vulnerability_patterns"]["insecure_storage"]):
-                vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                     cwe="CWE-311",
                     severity="high",
                     title="Ontology-Based: Insecure Storage",
@@ -22158,9 +21989,7 @@ class OntologyBasedAnalyzer:
         ]
 
         context_window = 2  # Check surrounding lines
-        lines = line.split("
-")
-")
+        lines = line.split("\n")
 
         for i, check_line in enumerate(lines):
             check_lower = check_line.lower()
@@ -22217,8 +22046,7 @@ class DeepLearningDetector:
     def detect_with_deep_learning(self, code: str):
         """Use deep learning model to detect vulnerabilities."""
         vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         for i, line in enumerate(lines, 1):
             # Tokenize code line
@@ -22239,7 +22067,7 @@ class DeepLearningDetector:
                     "command_injection": "CWE-78"
                 }
 
-                vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                     cwe=cwe_mapping.get(vuln_type, "CWE-79"),
                     severity="high" if confidence > 0.85 else "medium",
                     title=f"Deep Learning: {vuln_type.replace("_", " ").title()}",
@@ -22376,8 +22204,7 @@ class CodeEmbeddingAnalyzer:
     def analyze_embeddings(self, code: str):
         """Analyze code using embedding similarity."""
         vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         for i, line in enumerate(lines, 1):
             if not line.strip():
@@ -22390,7 +22217,7 @@ class CodeEmbeddingAnalyzer:
             vuln_type, similarity = self._find_most_similar_vulnerable(line_embedding)
 
             if vuln_type and similarity > 0.75:
-                vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                     cwe=vuln_type,
                     severity="high" if similarity > 0.85 else "medium",
                     title=f"Embedding Analysis: {vuln_type}",
@@ -22543,8 +22370,7 @@ class ContrastiveLearningValidator:
     def _find_contrastive_vulnerabilities(self, code: str):
         """Find new vulnerabilities using contrastive learning."""
         new_vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         for i, line in enumerate(lines, 1):
             if not line.strip():
@@ -22570,7 +22396,7 @@ class ContrastiveLearningValidator:
                     final_confidence = contrastive_confidence * weight
 
                     if final_confidence > 0.75:
-                        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                             cwe=cwe,
                             severity="high" if final_confidence > 0.85 else "medium",
                             title=f"Contrastive Learning: {cwe}",
@@ -22639,8 +22465,7 @@ Then explain your reasoning.
     def analyze_with_llm(self, code: str):
         """Use LLM for advanced security analysis."""
         vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         # Focus on analyzing code blocks that are likely to contain security issues
         code_blocks = self._extract_security_relevant_blocks(code)
@@ -22651,7 +22476,7 @@ Then explain your reasoning.
 
             # Analyze for hardcoded credentials
             if self._llm_detect_hardcoded_credentials(block_code):
-                vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                     cwe="CWE-798",
                     severity="critical",
                     title="LLM-Detected: Hardcoded Credentials",
@@ -22665,7 +22490,7 @@ Then explain your reasoning.
 
             # Analyze for authentication bypass
             if self._llm_detect_auth_bypass(block_code):
-                vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                     cwe="CWE-287",
                     severity="critical",
                     title="LLM-Detected: Authentication Bypass",
@@ -22679,7 +22504,7 @@ Then explain your reasoning.
 
             # Analyze for business logic flaws
             if self._llm_detect_business_logic_flaws(block_code):
-                vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                     cwe="CWE-840",  # Business Logic Errors
                     severity="high",
                     title="LLM-Detected: Business Logic Flaw",
@@ -22695,8 +22520,7 @@ Then explain your reasoning.
 
     def _extract_security_relevant_blocks(self, code: str):
         """Extract code blocks most likely to contain security issues."""
-        lines = code.split("
-")
+        lines = code.split("\n")
         blocks = []
 
         current_block = []
@@ -22857,7 +22681,7 @@ class MultimodalSecurityAnalyzer:
         behavioral_findings = self._behavioral_analysis(code)
 
         # Combine findings with weighted confidence
-        all_findings = (
+        all_findings = ( vulnerabilities, code, filepath, language)
             syntactic_findings + semantic_findings +
             contextual_findings + behavioral_findings
         )
@@ -22908,8 +22732,7 @@ class MultimodalSecurityAnalyzer:
         """Semantic analysis (meaning-based)."""
         findings = []
 
-        lines = code.split("
-")
+        lines = code.split("\n")
         for i, line in enumerate(lines, 1):
             # Semantic pattern recognition
             if self._is_semantic_hardcoded(line):
@@ -22934,8 +22757,7 @@ class MultimodalSecurityAnalyzer:
         """Contextual analysis (surrounding code)."""
         findings = []
 
-        lines = code.split("
-")
+        lines = code.split("\n")
         for i, line in enumerate(lines, 1):
             # Analyze context window
             start = max(0, i - 3)
@@ -22965,8 +22787,7 @@ class MultimodalSecurityAnalyzer:
         findings = []
 
         # Analyze execution flow patterns
-        lines = code.split("
-")
+        lines = code.split("\n")
         execution_patterns = self._extract_execution_patterns(code)
 
         for pattern in execution_patterns:
@@ -23015,7 +22836,7 @@ class MultimodalSecurityAnalyzer:
             contextual_conf = max([f["confidence"] for f in group if f.get("modality") == "contextual"] or [0])
             behavioral_conf = max([f["confidence"] for f in group if f.get("modality") == "behavioral"] or [0])
 
-            fused_confidence = (
+        fused_confidence = ( vulnerabilities, code, filepath, language)
                 syntactic_conf * self.modality_weights["syntactic"] +
                 semantic_conf * self.modality_weights["semantic"] +
                 contextual_conf * self.modality_weights["contextual"] +
@@ -23023,7 +22844,7 @@ class MultimodalSecurityAnalyzer:
             )
 
             if fused_confidence >= 0.8:  # High multimodal confidence threshold
-                vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                     cwe=cwe,
                     severity="critical" if fused_confidence > 0.9 else "high",
                     title=f"Multimodal Analysis: {cwe}",
@@ -23083,8 +22904,7 @@ class MultimodalSecurityAnalyzer:
     def _extract_execution_patterns(self, code: str):
         """Extract execution pattern information."""
         patterns = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         for i, line in enumerate(lines, 1):
             if "if " in line:
@@ -23258,8 +23078,7 @@ class EnhancedBusinessLogicAnalyzer:
     def analyze_business_logic_patterns(self, code: str):
         """Analyze business logic for credential and auth patterns."""
         vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         for i, line in enumerate(lines, 1):
             line_clean = line.strip()
@@ -23267,7 +23086,7 @@ class EnhancedBusinessLogicAnalyzer:
             # Check credential patterns
             for pattern in self.business_patterns['credential_patterns']:
                 if re.search(pattern, line, re.IGNORECASE | re.DOTALL):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-798",
                         severity="critical",
                         title="Business Logic: Hardcoded User Credentials",
@@ -23283,7 +23102,7 @@ class EnhancedBusinessLogicAnalyzer:
             # Check auth bypass patterns
             for pattern in self.business_patterns['auth_bypass_patterns']:
                 if re.search(pattern, line, re.IGNORECASE):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-287",
                         severity="critical",
                         title="Business Logic: Authentication Bypass",
@@ -23299,7 +23118,7 @@ class EnhancedBusinessLogicAnalyzer:
             # Check conditional hardcoding
             for pattern in self.business_patterns['conditional_hardcoding']:
                 if re.search(pattern, line, re.IGNORECASE):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-798",
                         severity="high",
                         title="Business Logic: Conditional Credential Assignment",
@@ -23342,8 +23161,7 @@ class ContextAwareDictionaryAnalyzer:
     def analyze_dictionaries(self, code: str):
         """Analyze dictionaries for credential patterns."""
         vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         for i, line in enumerate(lines, 1):
             # Look for dictionary patterns
@@ -23351,7 +23169,7 @@ class ContextAwareDictionaryAnalyzer:
                 dict_analysis = self._analyze_dictionary_content(line)
 
                 if dict_analysis['is_credential_dict']:
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-798",
                         severity="critical",
                         title="Context-Aware: Credential Dictionary",
@@ -23440,8 +23258,7 @@ class AuthenticationFlowAnalyzer:
     def analyze_authentication_flows(self, code: str):
         """Analyze authentication flows for bypass vulnerabilities."""
         vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         # Track authentication context
         in_auth_function = False
@@ -23462,7 +23279,7 @@ class AuthenticationFlowAnalyzer:
                 # Check bypass conditions
                 for pattern in self.auth_flow_patterns['bypass_conditions']:
                     if re.search(pattern, line, re.IGNORECASE):
-                        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                             cwe="CWE-287",
                             severity="critical",
                             title="Auth Flow: Bypass Condition",
@@ -23478,7 +23295,7 @@ class AuthenticationFlowAnalyzer:
                 # Check weak session validation
                 for pattern in self.auth_flow_patterns['weak_session_validation']:
                     if re.search(pattern, line, re.IGNORECASE):
-                        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                             cwe="CWE-287",
                             severity="high",
                             title="Auth Flow: Weak Session Validation",
@@ -23505,8 +23322,7 @@ class AuthenticationFlowAnalyzer:
     def _analyze_route_auth(self, code: str):
         """Analyze routes for missing authentication."""
         vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         for i, line in enumerate(lines, 1):
             # Look for Flask routes
@@ -23522,7 +23338,7 @@ class AuthenticationFlowAnalyzer:
                         break
 
                 if not has_auth:
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe="CWE-287",
                         severity="high",
                         title="Auth Flow: Route Without Authentication",
@@ -23567,8 +23383,7 @@ class SemanticRoleLabelingAnalyzer:
     def analyze_semantic_roles(self, code: str):
         """Analyze semantic roles in code."""
         vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         for i, line in enumerate(lines, 1):
             # Analyze semantic structure of the line
@@ -23577,7 +23392,7 @@ class SemanticRoleLabelingAnalyzer:
             # Check against vulnerability patterns
             for pattern_name, pattern_config in self.semantic_patterns.items():
                 if self._matches_semantic_pattern(semantic_analysis, pattern_config):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe=pattern_config['cwe'],
                         severity="high",
                         title=f"Semantic: {pattern_name.replace('_', ' ').title()}",
@@ -23693,14 +23508,13 @@ class TemplateBasedDetector:
     def detect_with_templates(self, code: str):
         """Detect vulnerabilities using template matching."""
         vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         for i, line in enumerate(lines, 1):
             for template_name, template_config in self.templates.items():
                 pattern = template_config['pattern']
                 if re.search(pattern, line, re.IGNORECASE | re.DOTALL):
-                    vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                         cwe=template_config['cwe'],
                         severity="high",
                         title=f"Template: {template_name.replace('_', ' ').title()}",
@@ -23716,49 +23530,40 @@ class TemplateBasedDetector:
         return vulnerabilities
 
         # Stage 24: Aggressive Authentication Bypass Detection (FINAL TARGETED IMPROVEMENT)
-        auth_bypass_vulns = self._aggressive_auth_bypass_detection(
+        auth_bypass_vulns = self._aggressive_auth_bypass_detection( vulnerabilities, code, filepath, language)
             template_vulns, code, filepath, language
-        )
 
         # Stage 25: IDOR (Insecure Direct Object Reference) Detection
-        idor_vulns = self._idor_detection(
+        idor_vulns = self._idor_detection( vulnerabilities, code, filepath, language)
             auth_bypass_vulns, code, filepath, language
-        )
 
         # Stage 26: SSRF (Server-Side Request Forgery) Detection
-        ssrf_vulns = self._ssrf_detection(
+        ssrf_vulns = self._ssrf_detection( vulnerabilities, code, filepath, language)
             idor_vulns, code, filepath, language
-        )
 
         # Stage 27: XXE (XML External Entity) Detection
-        xxe_vulns = self._xxe_detection(
+        xxe_vulns = self._xxe_detection( vulnerabilities, code, filepath, language)
             ssrf_vulns, code, filepath, language
-        )
 
         # Stage 28: CSRF (Cross-Site Request Forgery) Detection
-        csrf_vulns = self._csrf_detection(
+        csrf_vulns = self._csrf_detection( vulnerabilities, code, filepath, language)
             xxe_vulns, code, filepath, language
-        )
 
         # Stage 29: Information Disclosure Detection
-        info_disclosure_vulns = self._information_disclosure_detection(
+        info_disclosure_vulns = self._information_disclosure_detection( vulnerabilities, code, filepath, language)
             csrf_vulns, code, filepath, language
-        )
 
         # Stage 30: Information Disclosure Detection
-        info_disclosure_vulns = self._information_disclosure_detection(
+        info_disclosure_vulns = self._information_disclosure_detection( vulnerabilities, code, filepath, language)
             csrf_vulns, code, filepath, language
-        )
 
         # Stage 31: 🚀 UNIVERSAL VULNERABILITY DETECTION (ANY VULNERABILITY TYPE)
-        universal_vulns = self._universal_vulnerability_detection(
+        universal_vulns = self._universal_vulnerability_detection( vulnerabilities, code, filepath, language)
             info_disclosure_vulns, code, filepath, language
-        )
 
         # Stage 32: Final ensemble validation and confidence calibration
-        validated_vulns = self._stage3_ensemble_validation(
+        validated_vulns = self._stage3_ensemble_validation( vulnerabilities, code, filepath, language)
             universal_vulns, code, filepath, language
-        )
 
     def _aggressive_auth_bypass_detection(self, vulnerabilities: List[Vulnerability],
                                         code: str, filepath: str, language: str) -> List[Vulnerability]:
@@ -23843,8 +23648,7 @@ class AggressiveAuthBypassDetector:
     def detect_all_auth_bypass_patterns(self, code: str):
         """Detect all types of authentication bypass patterns aggressively."""
         vulnerabilities = []
-        lines = code.split("
-")
+        lines = code.split("\n")
 
         for i, line in enumerate(lines, 1):
             line_clean = line.strip()
@@ -23857,9 +23661,7 @@ class AggressiveAuthBypassDetector:
             for category, patterns in self.aggressive_patterns.items():
                 for pattern in patterns:
                     if re.search(pattern, line, re.IGNORECASE):
-                        vuln = self._create_auth_bypass_vulnerability(
-                            category, line, i, pattern
-                        )
+        vuln = self._create_auth_bypass_vulnerability( vulnerabilities, code, filepath, language)
                         vulnerabilities.append(vuln)
                         break  # One finding per line per category
 
@@ -23920,7 +23722,7 @@ class AggressiveAuthBypassDetector:
                             break
 
                     if not has_condition:
-                        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                             cwe="CWE-287",
                             severity="critical",
                             title="Auth Bypass: Unconditional Authentication Success",
@@ -23942,7 +23744,7 @@ class AggressiveAuthBypassDetector:
         multiline_pattern = r'if\s+.*:\s*\n\s*return\s+True'
         for match in re.finditer(multiline_pattern, code, re.IGNORECASE | re.MULTILINE):
             start_line = code[:match.start()].count('\n') + 1
-            vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                 cwe="CWE-287",
                 severity="critical",
                 title="Auth Bypass: Multi-line Conditional Bypass",
@@ -23958,7 +23760,7 @@ class AggressiveAuthBypassDetector:
         user_assign_pattern = r'user\s*=.*\n.*\n.*return\s+True'
         for match in re.finditer(user_assign_pattern, code, re.IGNORECASE | re.MULTILINE):
             start_line = code[:match.start()].count('\n') + 1
-            vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
                 cwe="CWE-287",
                 severity="high",
                 title="Auth Bypass: User Assignment Bypass",
@@ -24092,8 +23894,16 @@ from typing import List, Dict, Any, Optional
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import os
-from .llm import LLMClient
-from .scanner import Vulnerability
+# Robust import
+try:
+    from .llm import LLMClient
+except ImportError:
+    from valid8.llm import LLMClient
+# Robust import
+try:
+    from .scanner import Vulnerability
+except ImportError:
+    from valid8.scanner import Vulnerability
 
 
 class AIDetector:
@@ -24149,13 +23959,11 @@ class AIDetector:
         
         # Use parallel processing for multiple chunks
         if len(chunks) > 1 and self.max_workers > 1:
-            vulnerabilities = self._parallel_analyze_chunks(
-                chunks, filepath, language, codebase_context
-            )
+        vulnerabilities = self._parallel_analyze_chunks( vulnerabilities, code, filepath, language)
         else:
             # Sequential analysis for small files or single chunk
             for chunk_idx, chunk in enumerate(chunks):
-                chunk_vulns = self._analyze_chunk(
+        chunk_vulns = self._analyze_chunk( vulnerabilities, code, filepath, language)
                     chunk, 
                     filepath, 
                     language,
@@ -24179,7 +23987,7 @@ class AIDetector:
     ) -> List[Vulnerability]:
         """Analyze a code chunk with AI."""
         
-        prompt = self._build_detection_prompt(
+        prompt = self._build_detection_prompt( vulnerabilities, code, filepath, language)
             code_chunk,
             filepath,
             language,
@@ -24191,7 +23999,7 @@ class AIDetector:
             response = self.llm.generate(prompt)
             
             # Parse vulnerabilities from response
-            vulnerabilities = self._parse_ai_response(
+        vulnerabilities = self._parse_ai_response( vulnerabilities, code, filepath, language)
                 response,
                 filepath,
                 code_chunk,
@@ -24282,7 +24090,7 @@ List every vulnerability found."""
         
         for section in vuln_sections[1:]:  # Skip first empty section
             try:
-                vuln = self._parse_vulnerability_section(
+        vuln = self._parse_vulnerability_section( vulnerabilities, code, filepath, language)
                     section,
                     filepath,
                     code,
@@ -24329,7 +24137,7 @@ List every vulnerability found."""
         description = desc_match.group(1).strip() if desc_match else title_match.group(1).strip()
         
         # Create vulnerability
-        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
             cwe=cwe_match.group(1).upper() if not cwe_match.group(1).startswith('CWE') else cwe_match.group(1),
             severity=severity_match.group(1).lower(),
             title=title_match.group(1).strip(),
@@ -24384,8 +24192,6 @@ List every vulnerability found."""
             chunk_idx, chunk = chunk_data
             try:
                 return self._analyze_chunk(
-                    chunk, filepath, language, chunk_idx, codebase_context
-                )
             except Exception as e:
                 print(f"Error analyzing chunk {chunk_idx} in {filepath}: {e}")
                 return []
@@ -24502,8 +24308,16 @@ from typing import List, Dict, Any, Optional
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import os
-from .llm import LLMClient
-from .scanner import Vulnerability
+# Robust import
+try:
+    from .llm import LLMClient
+except ImportError:
+    from valid8.llm import LLMClient
+# Robust import
+try:
+    from .scanner import Vulnerability
+except ImportError:
+    from valid8.scanner import Vulnerability
 
 
 class AIDetector:
@@ -24559,13 +24373,11 @@ class AIDetector:
         
         # Use parallel processing for multiple chunks
         if len(chunks) > 1 and self.max_workers > 1:
-            vulnerabilities = self._parallel_analyze_chunks(
-                chunks, filepath, language, codebase_context
-            )
+        vulnerabilities = self._parallel_analyze_chunks( vulnerabilities, code, filepath, language)
         else:
             # Sequential analysis for small files or single chunk
             for chunk_idx, chunk in enumerate(chunks):
-                chunk_vulns = self._analyze_chunk(
+        chunk_vulns = self._analyze_chunk( vulnerabilities, code, filepath, language)
                     chunk, 
                     filepath, 
                     language,
@@ -24589,7 +24401,7 @@ class AIDetector:
     ) -> List[Vulnerability]:
         """Analyze a code chunk with AI."""
         
-        prompt = self._build_detection_prompt(
+        prompt = self._build_detection_prompt( vulnerabilities, code, filepath, language)
             code_chunk,
             filepath,
             language,
@@ -24601,7 +24413,7 @@ class AIDetector:
             response = self.llm.generate(prompt)
             
             # Parse vulnerabilities from response
-            vulnerabilities = self._parse_ai_response(
+        vulnerabilities = self._parse_ai_response( vulnerabilities, code, filepath, language)
                 response,
                 filepath,
                 code_chunk,
@@ -24692,7 +24504,7 @@ List every vulnerability found."""
         
         for section in vuln_sections[1:]:  # Skip first empty section
             try:
-                vuln = self._parse_vulnerability_section(
+        vuln = self._parse_vulnerability_section( vulnerabilities, code, filepath, language)
                     section,
                     filepath,
                     code,
@@ -24739,7 +24551,7 @@ List every vulnerability found."""
         description = desc_match.group(1).strip() if desc_match else title_match.group(1).strip()
         
         # Create vulnerability
-        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
             cwe=cwe_match.group(1).upper() if not cwe_match.group(1).startswith('CWE') else cwe_match.group(1),
             severity=severity_match.group(1).lower(),
             title=title_match.group(1).strip(),
@@ -24794,8 +24606,6 @@ List every vulnerability found."""
             chunk_idx, chunk = chunk_data
             try:
                 return self._analyze_chunk(
-                    chunk, filepath, language, chunk_idx, codebase_context
-                )
             except Exception as e:
                 print(f"Error analyzing chunk {chunk_idx} in {filepath}: {e}")
                 return []
@@ -24912,8 +24722,16 @@ from typing import List, Dict, Any, Optional
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import os
-from .llm import LLMClient
-from .scanner import Vulnerability
+# Robust import
+try:
+    from .llm import LLMClient
+except ImportError:
+    from valid8.llm import LLMClient
+# Robust import
+try:
+    from .scanner import Vulnerability
+except ImportError:
+    from valid8.scanner import Vulnerability
 
 
 class AIDetector:
@@ -24969,13 +24787,11 @@ class AIDetector:
         
         # Use parallel processing for multiple chunks
         if len(chunks) > 1 and self.max_workers > 1:
-            vulnerabilities = self._parallel_analyze_chunks(
-                chunks, filepath, language, codebase_context
-            )
+        vulnerabilities = self._parallel_analyze_chunks( vulnerabilities, code, filepath, language)
         else:
             # Sequential analysis for small files or single chunk
             for chunk_idx, chunk in enumerate(chunks):
-                chunk_vulns = self._analyze_chunk(
+        chunk_vulns = self._analyze_chunk( vulnerabilities, code, filepath, language)
                     chunk, 
                     filepath, 
                     language,
@@ -24999,7 +24815,7 @@ class AIDetector:
     ) -> List[Vulnerability]:
         """Analyze a code chunk with AI."""
         
-        prompt = self._build_detection_prompt(
+        prompt = self._build_detection_prompt( vulnerabilities, code, filepath, language)
             code_chunk,
             filepath,
             language,
@@ -25011,7 +24827,7 @@ class AIDetector:
             response = self.llm.generate(prompt)
             
             # Parse vulnerabilities from response
-            vulnerabilities = self._parse_ai_response(
+        vulnerabilities = self._parse_ai_response( vulnerabilities, code, filepath, language)
                 response,
                 filepath,
                 code_chunk,
@@ -25102,7 +24918,7 @@ List every vulnerability found."""
         
         for section in vuln_sections[1:]:  # Skip first empty section
             try:
-                vuln = self._parse_vulnerability_section(
+        vuln = self._parse_vulnerability_section( vulnerabilities, code, filepath, language)
                     section,
                     filepath,
                     code,
@@ -25149,7 +24965,7 @@ List every vulnerability found."""
         description = desc_match.group(1).strip() if desc_match else title_match.group(1).strip()
         
         # Create vulnerability
-        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
             cwe=cwe_match.group(1).upper() if not cwe_match.group(1).startswith('CWE') else cwe_match.group(1),
             severity=severity_match.group(1).lower(),
             title=title_match.group(1).strip(),
@@ -25204,8 +25020,6 @@ List every vulnerability found."""
             chunk_idx, chunk = chunk_data
             try:
                 return self._analyze_chunk(
-                    chunk, filepath, language, chunk_idx, codebase_context
-                )
             except Exception as e:
                 print(f"Error analyzing chunk {chunk_idx} in {filepath}: {e}")
                 return []
@@ -25322,8 +25136,16 @@ from typing import List, Dict, Any, Optional
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import os
-from .llm import LLMClient
-from .scanner import Vulnerability
+# Robust import
+try:
+    from .llm import LLMClient
+except ImportError:
+    from valid8.llm import LLMClient
+# Robust import
+try:
+    from .scanner import Vulnerability
+except ImportError:
+    from valid8.scanner import Vulnerability
 
 
 class AIDetector:
@@ -25379,13 +25201,11 @@ class AIDetector:
         
         # Use parallel processing for multiple chunks
         if len(chunks) > 1 and self.max_workers > 1:
-            vulnerabilities = self._parallel_analyze_chunks(
-                chunks, filepath, language, codebase_context
-            )
+        vulnerabilities = self._parallel_analyze_chunks( vulnerabilities, code, filepath, language)
         else:
             # Sequential analysis for small files or single chunk
             for chunk_idx, chunk in enumerate(chunks):
-                chunk_vulns = self._analyze_chunk(
+        chunk_vulns = self._analyze_chunk( vulnerabilities, code, filepath, language)
                     chunk, 
                     filepath, 
                     language,
@@ -25409,7 +25229,7 @@ class AIDetector:
     ) -> List[Vulnerability]:
         """Analyze a code chunk with AI."""
         
-        prompt = self._build_detection_prompt(
+        prompt = self._build_detection_prompt( vulnerabilities, code, filepath, language)
             code_chunk,
             filepath,
             language,
@@ -25421,7 +25241,7 @@ class AIDetector:
             response = self.llm.generate(prompt)
             
             # Parse vulnerabilities from response
-            vulnerabilities = self._parse_ai_response(
+        vulnerabilities = self._parse_ai_response( vulnerabilities, code, filepath, language)
                 response,
                 filepath,
                 code_chunk,
@@ -25512,7 +25332,7 @@ List every vulnerability found."""
         
         for section in vuln_sections[1:]:  # Skip first empty section
             try:
-                vuln = self._parse_vulnerability_section(
+        vuln = self._parse_vulnerability_section( vulnerabilities, code, filepath, language)
                     section,
                     filepath,
                     code,
@@ -25559,7 +25379,7 @@ List every vulnerability found."""
         description = desc_match.group(1).strip() if desc_match else title_match.group(1).strip()
         
         # Create vulnerability
-        vuln = Vulnerability(
+        vuln = Vulnerability( vulnerabilities, code, filepath, language)
             cwe=cwe_match.group(1).upper() if not cwe_match.group(1).startswith('CWE') else cwe_match.group(1),
             severity=severity_match.group(1).lower(),
             title=title_match.group(1).strip(),
@@ -25614,8 +25434,6 @@ List every vulnerability found."""
             chunk_idx, chunk = chunk_data
             try:
                 return self._analyze_chunk(
-                    chunk, filepath, language, chunk_idx, codebase_context
-                )
             except Exception as e:
                 print(f"Error analyzing chunk {chunk_idx} in {filepath}: {e}")
                 return []

@@ -1,0 +1,129 @@
+[
+  {
+    "component": "Scanner",
+    "test_name": "Import",
+    "status": "pass",
+    "duration": 0.6587100028991699,
+    "details": {
+      "initialized": true
+    },
+    "error": ""
+  },
+  {
+    "component": "Scanner",
+    "test_name": "Detectors Loaded",
+    "status": "pass",
+    "duration": 0.0015311241149902344,
+    "details": {
+      "detector_count": 10
+    },
+    "error": ""
+  },
+  {
+    "component": "Scanner",
+    "test_name": "Language Support",
+    "status": "pass",
+    "duration": 3.0994415283203125e-06,
+    "details": {
+      "languages": 0,
+      "extensions": 74,
+      "supported": []
+    },
+    "error": ""
+  },
+  {
+    "component": "Scanner",
+    "test_name": "Direct Detector Test",
+    "status": "pass",
+    "duration": 0.0018007755279541016,
+    "details": {
+      "vulnerabilities_found": 0,
+      "detector_class": "CommandInjectionDetector",
+      "cwe": null
+    },
+    "error": ""
+  },
+  {
+    "component": "Scanner",
+    "test_name": "Core Modules",
+    "status": "pass",
+    "duration": 1.0967254638671875e-05,
+    "details": {
+      "imported": 3,
+      "failed": 0,
+      "modules": [
+        "valid8.scanner",
+        "valid8.language_support",
+        "valid8.detectors.base_detector"
+      ],
+      "failures": []
+    },
+    "error": ""
+  },
+  {
+    "component": "API",
+    "test_name": "Import",
+    "status": "pass",
+    "duration": 0.0007319450378417969,
+    "details": {
+      "imported": true,
+      "scanner_available": true
+    },
+    "error": ""
+  },
+  {
+    "component": "API",
+    "test_name": "Handler Structure",
+    "status": "pass",
+    "duration": 4.696846008300781e-05,
+    "details": {
+      "has_status_code": true,
+      "status_code": 200,
+      "has_headers": true
+    },
+    "error": ""
+  },
+  {
+    "component": "Deployment",
+    "test_name": "Vercel Config",
+    "status": "pass",
+    "duration": 0.00020194053649902344,
+    "details": {
+      "exists": true,
+      "has_builds": true,
+      "has_routes": true,
+      "version": 2
+    },
+    "error": ""
+  },
+  {
+    "component": "Deployment",
+    "test_name": "Requirements",
+    "status": "pass",
+    "duration": 0.00021505355834960938,
+    "details": {
+      "api_requirements": "valid8",
+      "main_requirements_lines": 15
+    },
+    "error": ""
+  },
+  {
+    "component": "Deployment",
+    "test_name": "File Structure",
+    "status": "pass",
+    "duration": 2.4080276489257812e-05,
+    "details": {
+      "existing": 5,
+      "missing": 0,
+      "files": [
+        "valid8/scanner.py",
+        "api/index.py",
+        "vercel.json",
+        "requirements.txt",
+        "README.md"
+      ],
+      "missing_files": []
+    },
+    "error": ""
+  }
+]

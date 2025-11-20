@@ -13,7 +13,11 @@ import os
 from pathlib import Path
 from typing import List, Dict, Any, Set, Tuple, Optional
 from dataclasses import dataclass
-from ..models import Vulnerability
+# Robust import
+try:
+    from ..models import Vulnerability
+except ImportError:
+    from valid8.models import Vulnerability
 
 
 @dataclass
@@ -668,3 +672,20 @@ class UltraPermissivePatternDetector:
                 'confidence_boost': 0.3
             }
         }
+
+    def _get_framework_detectors(self):
+        """Get framework-specific detectors"""
+        try:
+            from valid8.detectors import get_all_framework_detectors
+            return get_all_framework_detectors()
+        except ImportError:
+            return []
+
+    def _get_language_analyzers(self):
+        """Get language-specific analyzers"""
+        try:
+            from valid8.language_support import LANGUAGE_ANALYZERS
+            return LANGUAGE_ANALYZERS
+        except ImportError:
+            return {}
+

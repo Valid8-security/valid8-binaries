@@ -161,3 +161,4 @@ def get_project_root(start_path: Path) -> Path:
 def ensure_directory(path: Path) -> None:
     """Ensure directory exists"""
     path.mkdir(parents=True, exist_ok=True)
+

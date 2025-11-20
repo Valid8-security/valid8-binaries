@@ -1,0 +1,60 @@
+[
+  {
+    "component": "Website",
+    "status": "HTML Files",
+    "details": {
+      "website_html": 1,
+      "templates": 6,
+      "total_html": 7
+    },
+    "duration": 0.0
+  },
+  {
+    "component": "Website",
+    "status": "API Endpoint",
+    "details": {
+      "exists": true,
+      "has_handler": true,
+      "has_cors": true,
+      "has_get": true,
+      "has_post": true,
+      "size_bytes": 3727
+    },
+    "duration": 0.0
+  },
+  {
+    "component": "Website",
+    "status": "Vercel Config",
+    "details": {
+      "exists": true,
+      "version": 2,
+      "builds": 1,
+      "routes": 1
+    },
+    "duration": 0.0
+  },
+  {
+    "component": "CI/CD",
+    "status": "Jenkinsfile",
+    "details": {
+      "exists": true,
+      "has_pipeline": true,
+      "has_stages": true,
+      "size_bytes": 9871
+    },
+    "duration": 0.0
+  },
+  {
+    "component": "CI/CD",
+    "status": "GitHub Actions",
+    "details": {
+      "workflows": 3,
+      "files": [
+        ".github/workflows/formal-benchmark.yml",
+        ".github/workflows/parry-scan.yml",
+        ".github/workflows/ci.yml"
+      ]
+    },
+    "duration": 0.0
+  }
+]

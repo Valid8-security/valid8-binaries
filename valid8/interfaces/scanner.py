@@ -88,3 +88,4 @@ class IAnalyzer(ABC):
     def can_analyze(self, file_path: str) -> bool:
         """Check if this analyzer can handle the file"""
         pass
+

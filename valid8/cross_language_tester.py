@@ -885,3 +885,4 @@ def run_cross_language_tests():
 def validate_cross_language_support():
     """Validate that Valid8 works consistently across multiple programming languages."""
     return run_cross_language_tests()
+

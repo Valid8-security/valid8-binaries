@@ -9,10 +9,26 @@ from collections import Counter
 from dataclasses import dataclass
 from typing import Dict, Iterable, List, Optional
 
-from .base import LanguageAnalyzer, Vulnerability
-from .universal_detectors import UniversalDetectors
-from ..codeql_analyzer import DataFlowAnalyzer
-from ..framework_detectors import DjangoDetector, FlaskDetector
+# Robust import
+try:
+    from .base import LanguageAnalyzer, Vulnerability
+except ImportError:
+    from valid8.base import LanguageAnalyzer, Vulnerability
+# Robust import
+try:
+    from .universal_detectors import UniversalDetectors
+except ImportError:
+    from valid8.universal_detectors import UniversalDetectors
+# Robust import
+try:
+    from ..codeql_analyzer import DataFlowAnalyzer
+except ImportError:
+    from valid8.codeql_analyzer import DataFlowAnalyzer
+# Robust import
+try:
+    from ..framework_detectors import FrameworkDetectors
+except ImportError:
+    from valid8.framework_detectors import DjangoDetector, FlaskDetector
 
 
 @dataclass(frozen=True)

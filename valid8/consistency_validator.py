@@ -721,3 +721,4 @@ def run_consistency_validation():
 def validate_system_consistency():
     """Validate that Valid8 maintains consistent performance over time."""
     return run_consistency_validation()
+

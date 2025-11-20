@@ -16,18 +16,63 @@ from rich.table import Table
 from rich.panel import Panel
 from rich.progress import Progress, SpinnerColumn, TextColumn
 
-from valid8.scanner import Scanner
-from valid8.llm import LLMClient
-from valid8.patch import PatchGenerator
-# Reporter import is conditional to avoid heavy dependencies in binary
-from valid8.compare import Comparator
-from valid8.validator import VulnerabilityValidator
-from valid8.sca import SCAScanner
-from valid8.custom_rules import CustomRulesEngine
-from valid8.cache import ProjectCache, ScanCache
-from valid8.api import start_api_server
-from valid8.setup import SetupHelper, run_setup_wizard, run_doctor, create_config
-from valid8.license import has_feature, require_feature, LicenseManager
+# Robust imports that work in different contexts
+
+@click.group()
+@click.version_option(version="0.7.0")
+def main():
+    """
+    Valid8 Security Scanner - Privacy-first AI-powered security scanner
+
+    All scanning and inference happens locally on your machine.
+    """
+    pass
+try:
+    from .scanner import Scanner
+    from .llm import LLMClient
+    from .patch import PatchGenerator
+    from .compare import Comparator
+    from .validator import VulnerabilityValidator
+    from .sca import SCAScanner
+    from .custom_rules import CustomRulesEngine
+    from .cache import ProjectCache, ScanCache
+    from .api import start_api_server
+    from .setup import SetupHelper, run_setup_wizard, run_doctor, create_config
+    from .license import has_feature, require_feature, LicenseManager
+except ImportError:
+    # Fallback imports for when relative imports fail
+    try:
+        from valid8.scanner import Scanner
+        from valid8.llm import LLMClient
+        from valid8.patch import PatchGenerator
+        from valid8.compare import Comparator
+        from valid8.validator import VulnerabilityValidator
+        from valid8.sca import SCAScanner
+        from valid8.custom_rules import CustomRulesEngine
+        from valid8.cache import ProjectCache, ScanCache
+        from valid8.api import start_api_server
+        from valid8.setup import SetupHelper, run_setup_wizard, run_doctor, create_config
+        from valid8.license import has_feature, require_feature, LicenseManager
+    except ImportError:
+        # Minimal fallback for demo mode
+        print("Warning: Some Valid8 components not available - running in demo mode")
+        Scanner = None
+        LLMClient = None
+        PatchGenerator = None
+        Comparator = None
+        VulnerabilityValidator = None
+        SCAScanner = None
+        CustomRulesEngine = None
+        ProjectCache = None
+        ScanCache = None
+        start_api_server = None
+        SetupHelper = None
+        run_setup_wizard = None
+        run_doctor = None
+        create_config = None
+        has_feature = None
+        require_feature = None
+        LicenseManager = None
 
 # 🚀 AI PERFORMANCE OPTIMIZATIONS
 # Temporarily disabled to avoid import errors

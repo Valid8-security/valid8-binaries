@@ -278,3 +278,4 @@ command_registry = CLICommandRegistry()
 
 # Register built-in commands
 command_registry.register_command(ScanCommand())
+

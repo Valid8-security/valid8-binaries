@@ -86,3 +86,4 @@ def setup_structured_logging() -> None:
     # This could be extended to use structured logging libraries
     # like structlog or json logging for better observability
     pass
+

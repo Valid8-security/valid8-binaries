@@ -331,3 +331,4 @@ gui_registry = GUIComponentRegistry()
 gui_registry.register_component(ScanComponent())
 gui_registry.register_component(ResultsComponent())
 gui_registry.register_component(DashboardComponent())
+

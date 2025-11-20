@@ -133,3 +133,4 @@ def register_service(service_type: Type[T], implementation: Type[T],
 def get_service(service_type: Type[T]) -> T:
     """Convenience function to get service"""
     return container.get_service(service_type)
+

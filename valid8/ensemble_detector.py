@@ -25,14 +25,22 @@ class EnsembleDetector:
     def _load_tools(self):
         """Load working detection tools."""
         try:
-            from .ml_vulnerability_classifier import MLVulnerabilityClassifier
+            # Robust import
+try:
+    from .ml_vulnerability_classifier import
+except ImportError:
+    from valid8.ml_vulnerability_classifier import MLVulnerabilityClassifier
             self.tools['ml'] = MLVulnerabilityClassifier()
         except:
             pass
         
         # Load only working groundbreaking tools
         try:
-            from .federated_learning_detector import FederatedLearningCoordinator
+            # Robust import
+try:
+    from .federated_learning_detector import
+except ImportError:
+    from valid8.federated_learning_detector import FederatedLearningCoordinator
             self.tools['federated'] = FederatedLearningCoordinator()
         except Exception as e:
             print(f"Skipping federated learning: {e}")

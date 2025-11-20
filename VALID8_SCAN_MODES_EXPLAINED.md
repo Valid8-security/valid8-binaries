@@ -388,3 +388,4 @@ Need results in < 30 seconds?
 - **Deep Mode**: Accuracy-optimized for security audits
 
 **Choose the right mode for your specific needs and workflow requirements.**
+

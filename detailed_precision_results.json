@@ -1,0 +1,509 @@
+{
+  "summary": {
+    "total_findings": 840,
+    "test_files_filtered": 770,
+    "production_findings": 70,
+    "true_positives": 68,
+    "false_positives": 2,
+    "overall_precision": 97.14285714285714,
+    "raw_precision": 8.095238095238095,
+    "improvement_points": 89.04761904761904,
+    "estimated_payout": 46200.0
+  },
+  "repositories": [
+    {
+      "repo": "flask",
+      "total_findings": 5,
+      "test_files_filtered": 1,
+      "production_findings": 4,
+      "true_positives": 4,
+      "false_positives": 0,
+      "precision": 100.0,
+      "raw_precision": 80.0,
+      "findings_by_cwe": {
+        "CWE-327": {
+          "total": 3,
+          "true_positive": 3,
+          "false_positive": 0,
+          "test_files": 0
+        },
+        "CWE-798": {
+          "total": 1,
+          "true_positive": 1,
+          "false_positive": 0,
+          "test_files": 0
+        }
+      },
+      "tp_details": [
+        [
+          "CWE-327",
+          "Weak Cryptographic Algorithm",
+          0.95
+        ],
+        [
+          "CWE-327",
+          "Weak Cryptographic Algorithm",
+          0.95
+        ],
+        [
+          "CWE-327",
+          "Weak Cryptographic Algorithm",
+          0.95
+        ],
+        [
+          "CWE-798",
+          "Hardcoded Credentials",
+          0.9
+        ]
+      ]
+    },
+    {
+      "repo": "django",
+      "total_findings": 461,
+      "test_files_filtered": 423,
+      "production_findings": 38,
+      "true_positives": 37,
+      "false_positives": 1,
+      "precision": 97.36842105263158,
+      "raw_precision": 8.026030368763557,
+      "findings_by_cwe": {
+        "CWE-89": {
+          "total": 6,
+          "true_positive": 6,
+          "false_positive": 0,
+          "test_files": 0
+        },
+        "CWE-502": {
+          "total": 7,
+          "true_positive": 7,
+          "false_positive": 0,
+          "test_files": 0
+        },
+        "CWE-732": {
+          "total": 1,
+          "true_positive": 1,
+          "false_positive": 0,
+          "test_files": 0
+        },
+        "CWE-327": {
+          "total": 21,
+          "true_positive": 21,
+          "false_positive": 0,
+          "test_files": 0
+        },
+        "CWE-22": {
+          "total": 1,
+          "true_positive": 0,
+          "false_positive": 1,
+          "test_files": 0
+        },
+        "CWE-798": {
+          "total": 1,
+          "true_positive": 1,
+          "false_positive": 0,
+          "test_files": 0
+        },
+        "CWE-79": {
+          "total": 1,
+          "true_positive": 1,
+          "false_positive": 0,
+          "test_files": 0
+        }
+      },
+      "tp_details": [
+        [
+          "CWE-89",
+          "SQL Injection",
+          0.7
+        ],
+        [
+          "CWE-89",
+          "SQL Injection",
+          0.7
+        ],
+        [
+          "CWE-502",
+          "Unsafe Deserialization",
+          0.95
+        ],
+        [
+          "CWE-502",
+          "Unsafe Deserialization",
+          0.95
+        ],
+        [
+          "CWE-502",
+          "Unsafe Deserialization",
+          0.95
+        ],
+        [
+          "CWE-502",
+          "Unsafe Deserialization",
+          0.95
+        ],
+        [
+          "CWE-502",
+          "Unsafe Deserialization",
+          0.95
+        ],
+        [
+          "CWE-502",
+          "Unsafe Deserialization",
+          0.95
+        ],
+        [
+          "CWE-502",
+          "Unsafe Deserialization",
+          0.95
+        ],
+        [
+          "CWE-732",
+          "Incorrect Permission Assignment",
+          0.7
+        ],
+        [
+          "CWE-327",
+          "Weak Cryptographic Algorithm",
+          0.95
+        ],
+        [
+          "CWE-327",
+          "Weak Cryptographic Algorithm",
+          0.95
+        ],
+        [
+          "CWE-327",
+          "Weak Cryptographic Algorithm",
+          0.95
+        ],
+        [
+          "CWE-327",
+          "Weak Cryptographic Algorithm",
+          0.95
+        ],
+        [
+          "CWE-327",
+          "Weak Cryptographic Algorithm",
+          0.95
+        ],
+        [
+          "CWE-327",
+          "Weak Cryptographic Algorithm",
+          0.95
+        ],
+        [
+          "CWE-327",
+          "Weak Cryptographic Algorithm",
+          0.95
+        ],
+        [
+          "CWE-327",
+          "Weak Cryptographic Algorithm",
+          0.95
+        ],
+        [
+          "CWE-327",
+          "Weak Cryptographic Algorithm",
+          0.95
+        ],
+        [
+          "CWE-798",
+          "Hardcoded Credentials",
+          0.9
+        ],
+        [
+          "CWE-327",
+          "Weak Cryptographic Algorithm",
+          0.95
+        ],
+        [
+          "CWE-327",
+          "Weak Cryptographic Algorithm",
+          0.95
+        ],
+        [
+          "CWE-327",
+          "Weak Cryptographic Algorithm",
+          0.95
+        ],
+        [
+          "CWE-79",
+          "Cross-Site Scripting (XSS)",
+          0.75
+        ],
+        [
+          "CWE-327",
+          "Weak Cryptographic Algorithm",
+          0.95
+        ],
+        [
+          "CWE-327",
+          "Weak Cryptographic Algorithm",
+          0.95
+        ],
+        [
+          "CWE-327",
+          "Weak Cryptographic Algorithm",
+          0.95
+        ],
+        [
+          "CWE-89",
+          "SQL Injection",
+          0.7
+        ],
+        [
+          "CWE-89",
+          "SQL Injection",
+          0.7
+        ],
+        [
+          "CWE-327",
+          "Weak Cryptographic Algorithm",
+          0.95
+        ],
+        [
+          "CWE-327",
+          "Weak Cryptographic Algorithm",
+          0.95
+        ],
+        [
+          "CWE-327",
+          "Weak Cryptographic Algorithm",
+          0.95
+        ],
+        [
+          "CWE-327",
+          "Weak Cryptographic Algorithm",
+          0.95
+        ],
+        [
+          "CWE-89",
+          "SQL Injection",
+          0.7
+        ],
+        [
+          "CWE-89",
+          "SQL Injection",
+          0.7
+        ],
+        [
+          "CWE-327",
+          "Weak Cryptographic Algorithm",
+          0.95
+        ],
+        [
+          "CWE-327",
+          "Weak Cryptographic Algorithm",
+          0.95
+        ]
+      ]
+    },
+    {
+      "repo": "requests",
+      "total_findings": 14,
+      "test_files_filtered": 8,
+      "production_findings": 6,
+      "true_positives": 6,
+      "false_positives": 0,
+      "precision": 100.0,
+      "raw_precision": 42.857142857142854,
+      "findings_by_cwe": {
+        "CWE-327": {
+          "total": 6,
+          "true_positive": 6,
+          "false_positive": 0,
+          "test_files": 0
+        }
+      },
+      "tp_details": [
+        [
+          "CWE-327",
+          "Weak Cryptographic Algorithm",
+          0.95
+        ],
+        [
+          "CWE-327",
+          "Weak Cryptographic Algorithm",
+          0.95
+        ],
+        [
+          "CWE-327",
+          "Weak Cryptographic Algorithm",
+          0.95
+        ],
+        [
+          "CWE-327",
+          "Weak Cryptographic Algorithm",
+          0.95
+        ],
+        [
+          "CWE-327",
+          "Weak Cryptographic Algorithm",
+          0.95
+        ],
+        [
+          "CWE-327",
+          "Weak Cryptographic Algorithm",
+          0.95
+        ]
+      ]
+    },
+    {
+      "repo": "cryptography",
+      "total_findings": 215,
+      "test_files_filtered": 207,
+      "production_findings": 8,
+      "true_positives": 8,
+      "false_positives": 0,
+      "precision": 100.0,
+      "raw_precision": 3.7209302325581395,
+      "findings_by_cwe": {
+        "CWE-327": {
+          "total": 8,
+          "true_positive": 8,
+          "false_positive": 0,
+          "test_files": 0
+        }
+      },
+      "tp_details": [
+        [
+          "CWE-327",
+          "Weak Cryptographic Algorithm",
+          0.95
+        ],
+        [
+          "CWE-327",
+          "Weak Cryptographic Algorithm",
+          0.95
+        ],
+        [
+          "CWE-327",
+          "Weak Cryptographic Algorithm",
+          0.95
+        ],
+        [
+          "CWE-327",
+          "Weak Cryptographic Algorithm",
+          0.95
+        ],
+        [
+          "CWE-327",
+          "Weak Cryptographic Algorithm",
+          0.95
+        ],
+        [
+          "CWE-327",
+          "Weak Cryptographic Algorithm",
+          0.95
+        ],
+        [
+          "CWE-327",
+          "Weak Cryptographic Algorithm",
+          0.95
+        ],
+        [
+          "CWE-327",
+          "Weak Cryptographic Algorithm",
+          0.95
+        ]
+      ]
+    },
+    {
+      "repo": "sqlalchemy",
+      "total_findings": 145,
+      "test_files_filtered": 131,
+      "production_findings": 14,
+      "true_positives": 13,
+      "false_positives": 1,
+      "precision": 92.85714285714286,
+      "raw_precision": 8.96551724137931,
+      "findings_by_cwe": {
+        "CWE-327": {
+          "total": 2,
+          "true_positive": 2,
+          "false_positive": 0,
+          "test_files": 0
+        },
+        "CWE-89": {
+          "total": 8,
+          "true_positive": 8,
+          "false_positive": 0,
+          "test_files": 0
+        },
+        "CWE-798": {
+          "total": 4,
+          "true_positive": 3,
+          "false_positive": 1,
+          "test_files": 0
+        }
+      },
+      "tp_details": [
+        [
+          "CWE-327",
+          "Weak Cryptographic Algorithm",
+          0.95
+        ],
+        [
+          "CWE-327",
+          "Weak Cryptographic Algorithm",
+          0.95
+        ],
+        [
+          "CWE-89",
+          "SQL Injection",
+          0.7
+        ],
+        [
+          "CWE-89",
+          "SQL Injection",
+          0.7
+        ],
+        [
+          "CWE-89",
+          "SQL Injection",
+          0.7
+        ],
+        [
+          "CWE-89",
+          "SQL Injection",
+          0.7
+        ],
+        [
+          "CWE-89",
+          "SQL Injection",
+          0.7
+        ],
+        [
+          "CWE-89",
+          "SQL Injection",
+          0.7
+        ],
+        [
+          "CWE-89",
+          "SQL Injection",
+          0.7
+        ],
+        [
+          "CWE-89",
+          "SQL Injection",
+          0.7
+        ],
+        [
+          "CWE-798",
+          "Hardcoded Credentials",
+          0.9
+        ],
+        [
+          "CWE-798",
+          "Hardcoded Credentials",
+          0.9
+        ],
+        [
+          "CWE-798",
+          "Hardcoded Credentials",
+          0.9
+        ]
+      ]
+    }
+  ]
+}

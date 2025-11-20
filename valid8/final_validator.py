@@ -611,3 +611,4 @@ def run_final_validation():
 def validate_97_percent_f1_score():
     """Validate that Valid8 achieves the 97% F1-score target."""
     return run_final_validation()
+

@@ -95,3 +95,4 @@ class IPluginRegistry(ABC):
     def list_analyzers(self) -> Dict[str, type]:
         """List all registered analyzers"""
         pass
+

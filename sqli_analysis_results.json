@@ -1,0 +1,9 @@
+{
+  "total_analyzed": 50,
+  "real_vulns": 0,
+  "false_positives": 50,
+  "needs_analysis": 0,
+  "bounty_eligible": 0,
+  "real_vulnerabilities": [],
+  "bounty_eligible_vulns": []
+}

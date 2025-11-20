@@ -1,0 +1,66 @@
+[
+  {
+    "component": "Scanner",
+    "test_name": "Import",
+    "status": "pass",
+    "duration": 1.3463881015777588,
+    "details": {
+      "scanner_created": true
+    },
+    "error": ""
+  },
+  {
+    "component": "Scanner",
+    "test_name": "Basic Scan",
+    "status": "error",
+    "duration": 1590.5763630867004,
+    "details": {},
+    "error": "'dict' object has no attribute 'cwe'"
+  },
+  {
+    "component": "Scanner",
+    "test_name": "Multi-language Support",
+    "status": "pass",
+    "duration": 0.002525806427001953,
+    "details": {
+      "supported_languages": 0,
+      "languages": []
+    },
+    "error": ""
+  },
+  {
+    "component": "API",
+    "test_name": "Handler Structure",
+    "status": "pass",
+    "duration": 0.000993967056274414,
+    "details": {
+      "scanner_available": true,
+      "get_endpoint_works": true,
+      "response_structure": true
+    },
+    "error": ""
+  },
+  {
+    "component": "Deployment",
+    "test_name": "Vercel Config",
+    "status": "pass",
+    "duration": 0.0001881122589111328,
+    "details": {
+      "config_valid": true,
+      "has_builds": true,
+      "has_routes": true
+    },
+    "error": ""
+  },
+  {
+    "component": "Deployment",
+    "test_name": "Requirements",
+    "status": "pass",
+    "duration": 0.00027108192443847656,
+    "details": {
+      "api_requirements": "valid8",
+      "main_requirements": 16
+    },
+    "error": ""
+  }
+]

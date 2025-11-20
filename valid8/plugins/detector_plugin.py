@@ -218,3 +218,4 @@ def load_detector_plugins(plugin_dir: Optional[Path] = None) -> None:
     """Load detector plugins from directory"""
     if plugin_dir:
         detector_plugin_manager.load_external_plugins(plugin_dir)
+

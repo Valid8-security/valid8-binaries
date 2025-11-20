@@ -377,11 +377,13 @@ class AITruePositiveValidator:
         reasons = []
 
         if ensemble_score >= self.confidence_threshold:
-            reasons.append(".3f"        else:
-            reasons.append(".3f"
+            reasons.append(f"High ensemble confidence: {ensemble_score:.3f}")
+        else:
+            reasons.append(f"High ensemble confidence: {ensemble_score:.3f}")
         if ensemble_std < (1 - self.consensus_threshold):
-            reasons.append(".3f"        else:
-            reasons.append(".3f"
+            reasons.append(f"High ensemble confidence: {ensemble_score:.3f}")
+        else:
+            reasons.append(f"High ensemble confidence: {ensemble_score:.3f}")
         # CWE-specific reasoning
         cwe = vuln.get('cwe', '')
         if cwe == 'CWE-89':
@@ -712,8 +714,8 @@ class AITruePositiveValidator:
                 precision = precision_score(y_test, y_pred)
                 recall = recall_score(y_test, y_pred)
                 f1 = f1_score(y_test, y_pred)
-
-                print(".3f"                        print(".3f"                        print(".3f"
+                print(f"F1 Score: {f1:.3f}")
+                # Additional metrics
                 # Save trained model
                 model_path = self.models_dir / f"{model_name}_model.pkl"
                 with open(model_path, 'wb') as f:
