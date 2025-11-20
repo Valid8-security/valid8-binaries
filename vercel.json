@@ -1,0 +1,31 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/index.py",
+      "use": "@vercel/python"
+    },
+    {
+      "src": "api/webhooks/stripe.py",
+      "use": "@vercel/python"
+    },
+    {
+      "src": "api/create-checkout-session.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/webhooks/stripe",
+      "dest": "api/webhooks/stripe.py"
+    },
+    {
+      "src": "/api/create-checkout-session",
+      "dest": "api/create-checkout-session.py"
+    },
+    {
+      "src": "/api/(.*)",
+      "dest": "api/index.py"
+    }
+  ]
+}

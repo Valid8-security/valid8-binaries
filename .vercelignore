@@ -1,0 +1,23 @@
+# Ignore files that shouldn't be deployed
+valid8-bounty-hunting/
+archived_docs/
+*.md
+!README.md
+!DEPLOYMENT.md
+!QUICK_DEPLOYMENT_GUIDE.md
+.env
+.env.local
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+node_modules/
+*.log
