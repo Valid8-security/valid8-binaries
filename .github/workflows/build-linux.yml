@@ -28,6 +28,14 @@ jobs:
     - name: Build binary
       run: |
         pyinstaller --clean --noconfirm --onefile --name=valid8 --add-data="valid8:valid8" --hidden-import=valid8.scanner --hidden-import=valid8.cli --hidden-import=valid8.detectors valid8/__main__.py
+        if [ -f "dist/valid8" ]; then
+          echo "Binary built successfully"
+          ls -lh dist/valid8
+        else
+          echo "Binary not found!"
+          ls -la dist/
+          exit 1
+        fi
         
     - name: Upload binary artifact
       uses: actions/upload-artifact@v4
