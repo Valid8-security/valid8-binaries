@@ -1,0 +1,7 @@
+{
+  "name": "valid8",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "cd valid8-ui-prototype && npm install && npm run build"
+  }
+}
