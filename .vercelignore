@@ -1,12 +1,8 @@
-# Ignore files that shouldn't be deployed
+# Ignore large directories to speed up deployment
 valid8-bounty-hunting/
 archived_docs/
-*.md
-!README.md
-!DEPLOYMENT.md
-!QUICK_DEPLOYMENT_GUIDE.md
-.env
-.env.local
+real_world_tests/
+node_modules/
 __pycache__/
 *.pyc
 *.pyo
@@ -19,5 +15,10 @@ dist/
 build/
 .venv/
 venv/
-node_modules/
 *.log
+*.md
+!README.md
+!DEPLOYMENT.md
+!QUICK_DEPLOYMENT_GUIDE.md
+.git/
+.gitignore
