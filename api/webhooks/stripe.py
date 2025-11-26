@@ -1,3 +1,14 @@
+#!/usr/bin/env python3
+"""
+Copyright (c) 2025 Valid8 Security
+All rights reserved.
+
+This software is proprietary and confidential. Unauthorized copying,
+modification, distribution, or use of this software, via any medium is
+strictly prohibited without the express written permission of Valid8 Security.
+
+"""
+
 """
 Stripe Webhook Handler for Valid8
 """
@@ -125,3 +136,4 @@ def handler(request):
         'headers': headers,
         'body': json.dumps({'received': True, 'event': event_type})
     }
+

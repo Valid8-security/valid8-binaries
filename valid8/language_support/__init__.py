@@ -1,3 +1,14 @@
+#!/usr/bin/env python3
+"""
+Copyright (c) 2025 Valid8 Security
+All rights reserved.
+
+This software is proprietary and confidential. Unauthorized copying,
+modification, distribution, or use of this software, via any medium is
+strictly prohibited without the express written permission of Valid8 Security.
+
+"""
+
 """
 Multi-language support for Valid8 Security Scanner.
 
@@ -8,71 +19,142 @@ for various programming languages.
 from typing import Dict, Type
 
 # Robust imports that work in different contexts
+LanguageAnalyzer = None
+PythonAnalyzer = None
+JavaScriptAnalyzer = None
+JavaAnalyzer = None
+GoAnalyzer = None
+RustAnalyzer = None
+CppAnalyzer = None
+PHPAnalyzer = None
+RubyAnalyzer = None
+UniversalDetectors = None
+
 try:
     from .base import LanguageAnalyzer
+    print("✅ LanguageAnalyzer imported")
+except ImportError as e:
+    print(f"⚠️  LanguageAnalyzer import failed: {e}")
+
+try:
     from .python_analyzer import PythonAnalyzer
+    print("✅ PythonAnalyzer imported")
+except ImportError as e:
+    print(f"⚠️  PythonAnalyzer import failed: {e}")
+
+try:
     from .javascript_analyzer import JavaScriptAnalyzer
+    print("✅ JavaScriptAnalyzer imported")
+except ImportError as e:
+    print(f"⚠️  JavaScriptAnalyzer import failed: {e}")
+
+try:
     from .java_analyzer import JavaAnalyzer
+    print("✅ JavaAnalyzer imported")
+except ImportError as e:
+    print(f"⚠️  JavaAnalyzer import failed: {e}")
+
+try:
     from .go_analyzer import GoAnalyzer
+    print("✅ GoAnalyzer imported")
+except ImportError as e:
+    print(f"⚠️  GoAnalyzer import failed: {e}")
+
+try:
     from .rust_analyzer import RustAnalyzer
+    print("✅ RustAnalyzer imported")
+except ImportError as e:
+    print(f"⚠️  RustAnalyzer import failed: {e}")
+
+try:
     from .cpp_analyzer import CppAnalyzer
+    print("✅ CppAnalyzer imported")
+except ImportError as e:
+    print(f"⚠️  CppAnalyzer import failed: {e}")
+
+try:
     from .php_analyzer import PHPAnalyzer
+    print("✅ PHPAnalyzer imported")
+except ImportError as e:
+    print(f"⚠️  PHPAnalyzer import failed: {e}")
+
+try:
     from .ruby_analyzer import RubyAnalyzer
+    print("✅ RubyAnalyzer imported")
+except ImportError as e:
+    print(f"⚠️  RubyAnalyzer import failed: {e}")
+
+try:
     from .universal_detectors import UniversalDetectors
-except ImportError:
-    # Fallback imports
-    try:
-        from valid8.language_support.base import LanguageAnalyzer
-        from valid8.language_support.python_analyzer import PythonAnalyzer
-        from valid8.language_support.javascript_analyzer import JavaScriptAnalyzer
-        from valid8.language_support.java_analyzer import JavaAnalyzer
-        from valid8.language_support.go_analyzer import GoAnalyzer
-        from valid8.language_support.rust_analyzer import RustAnalyzer
-        from valid8.language_support.cpp_analyzer import CppAnalyzer
-        from valid8.language_support.php_analyzer import PHPAnalyzer
-        from valid8.language_support.ruby_analyzer import RubyAnalyzer
-        from valid8.language_support.universal_detectors import UniversalDetectors
-    except ImportError:
-        # Minimal fallback
-        LanguageAnalyzer = None
-        PythonAnalyzer = None
-        JavaScriptAnalyzer = None
-        JavaAnalyzer = None
-        GoAnalyzer = None
-        RustAnalyzer = None
-        CppAnalyzer = None
-        PHPAnalyzer = None
-        RubyAnalyzer = None
-        UniversalDetectors = None
+    print("✅ UniversalDetectors imported")
+except ImportError as e:
+    print(f"⚠️  UniversalDetectors import failed: {e}")
 
 # Language registry (25+ languages supported)
 LANGUAGE_ANALYZERS: Dict[str, Type[LanguageAnalyzer]] = {}
 
-if PythonAnalyzer and JavaScriptAnalyzer and JavaAnalyzer:
+# Register available analyzers (don't require all to be present)
+if LanguageAnalyzer:  # Base class is required
+    analyzers_to_register = {}
+
+    if PythonAnalyzer:
+        analyzers_to_register.update({
+            'python': PythonAnalyzer,
+        })
+
+    if JavaScriptAnalyzer:
+        analyzers_to_register.update({
+            'javascript': JavaScriptAnalyzer,
+            'typescript': JavaScriptAnalyzer,  # TypeScript uses same analyzer
+        })
+
+    if JavaAnalyzer:
+        analyzers_to_register.update({
+            'java': JavaAnalyzer,
+            'kotlin': JavaAnalyzer,  # Kotlin uses Java analyzer (JVM)
+            'scala': JavaAnalyzer,  # Scala uses Java analyzer (JVM)
+            'groovy': JavaAnalyzer,  # Groovy uses Java analyzer (JVM)
+        })
+
+    if GoAnalyzer:
+        analyzers_to_register.update({
+            'go': GoAnalyzer,
+        })
+
+    if RustAnalyzer:
+        analyzers_to_register.update({
+            'rust': RustAnalyzer,
+        })
+
+    if CppAnalyzer:
+        analyzers_to_register.update({
+            'cpp': CppAnalyzer,
+            'c': CppAnalyzer,  # C uses same analyzer as C++
+            'csharp': CppAnalyzer,  # C# uses C++ analyzer (similar syntax)
+            'fsharp': CppAnalyzer,  # F# uses C++ analyzer (fallback)
+            'vbnet': CppAnalyzer,  # VB.NET uses C++ analyzer (fallback)
+        })
+
+    if PHPAnalyzer:
+        analyzers_to_register.update({
+            'php': PHPAnalyzer,
+        })
+
+    LANGUAGE_ANALYZERS = analyzers_to_register
+    print(f"✅ Registered {len(LANGUAGE_ANALYZERS)} language analyzers: {list(LANGUAGE_ANALYZERS.keys())}")
+else:
+    print("❌ LanguageAnalyzer base class not available")
+
+# Legacy fallbacks for unsupported languages (only if no analyzers loaded)
+if not LANGUAGE_ANALYZERS and UniversalDetectors:
     LANGUAGE_ANALYZERS = {
-        # Core languages with dedicated analyzers
-        'python': PythonAnalyzer,
-        'javascript': JavaScriptAnalyzer,
-        'typescript': JavaScriptAnalyzer,  # TypeScript uses same analyzer
-        'java': JavaAnalyzer,
-        'kotlin': JavaAnalyzer,  # Kotlin uses Java analyzer (JVM)
-        'scala': JavaAnalyzer,  # Scala uses Java analyzer (JVM)
-        'groovy': JavaAnalyzer,  # Groovy uses Java analyzer (JVM)
-        'go': GoAnalyzer,
-        'rust': RustAnalyzer,
-        'cpp': CppAnalyzer,
-        'c': CppAnalyzer,  # C uses same analyzer as C++
-        'csharp': CppAnalyzer,  # C# uses C++ analyzer (similar syntax)
-        'fsharp': CppAnalyzer,  # F# uses C++ analyzer (fallback)
-        'vbnet': CppAnalyzer,  # VB.NET uses C++ analyzer (fallback)
-        'php': PHPAnalyzer,
-        'ruby': RubyAnalyzer,
-        'swift': CppAnalyzer,  # Swift uses C++ analyzer (similar syntax)
-        'perl': PHPAnalyzer,  # Perl uses PHP analyzer (similar syntax)
-        'lua': JavaScriptAnalyzer,  # Lua uses JS analyzer (similar syntax)
-        'haskell': CppAnalyzer,  # Haskell uses C++ analyzer (fallback)
-        'clojure': JavaScriptAnalyzer,  # Clojure uses JS analyzer (similar syntax)
-        'erlang': JavaScriptAnalyzer,  # Erlang uses JS analyzer (fallback)
+        'ruby': UniversalDetectors,  # Ruby uses universal detectors
+        'swift': UniversalDetectors,  # Swift uses universal detectors
+        'perl': UniversalDetectors,  # Perl uses universal detectors
+        'lua': UniversalDetectors,  # Lua uses universal detectors
+        'haskell': UniversalDetectors,  # Haskell uses universal detectors
+        'clojure': UniversalDetectors,  # Clojure uses universal detectors
+        'erlang': UniversalDetectors,  # Erlang uses universal detectors
 
         # Data/Configuration languages (universal detectors)
         'sql': UniversalDetectors,
@@ -82,6 +164,7 @@ if PythonAnalyzer and JavaScriptAnalyzer and JavaAnalyzer:
         'bash': UniversalDetectors,
         'powershell': UniversalDetectors,
     }
+    print(f"⚠️  Using universal detectors for {len(LANGUAGE_ANALYZERS)} languages")
 
 # File extension to language mapping (25+ languages)
 FILE_EXTENSIONS = {

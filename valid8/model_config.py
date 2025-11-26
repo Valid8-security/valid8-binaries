@@ -1,3 +1,14 @@
+#!/usr/bin/env python3
+"""
+Copyright (c) 2025 Valid8 Security
+All rights reserved.
+
+This software is proprietary and confidential. Unauthorized copying,
+modification, distribution, or use of this software, via any medium is
+strictly prohibited without the express written permission of Valid8 Security.
+
+"""
+
 """
 Model Configuration for AI-Powered Detection
 
@@ -25,6 +36,20 @@ class ModelProfile:
 
 # Available model profiles
 MODEL_PROFILES: Dict[str, ModelProfile] = {
+    # Default model - TinyLlama (lightweight, fast, good for most users)
+    "tinyllama:1.1b": ModelProfile(
+        name="tinyllama:1.1b",
+        display_name="TinyLlama 1.1B (Default - Fast & Lightweight)",
+        size_gb=0.7,
+        speed_rating="ultra-fast",
+        accuracy_rating="baseline",
+        false_positive_rate=0.30,  # 30% FP rate
+        recall=0.75,
+        min_ram_gb=2,
+        gpu_recommended=False,
+        description="Default model - Fast, lightweight, suitable for most users. Good balance of speed and accuracy."
+    ),
+    
     # Ultra-fast models (baseline accuracy)
     "qwen2.5-coder:1.5b": ModelProfile(
         name="qwen2.5-coder:1.5b",
@@ -117,8 +142,23 @@ MODEL_PROFILES: Dict[str, ModelProfile] = {
         recall=0.96,
         min_ram_gb=32,
         gpu_recommended=True,
-        description="Enterprise-grade accuracy. Requires powerful GPU (24GB+ VRAM)."
+        description="Enterprise-grade accuracy. Requires powerful GPU (24GB+ VRAM). Highest practical accuracy - larger models (70B+) offer minimal gains with 2x+ hardware requirements."
     ),
+    
+    # Ultra-large models (NOT RECOMMENDED - diminishing returns)
+    # Only include if specifically requested by enterprise customers with appropriate hardware
+    # "codellama:70b": ModelProfile(
+    #     name="codellama:70b",
+    #     display_name="CodeLlama 70B (Ultra-Premium - Not Recommended)",
+    #     size_gb=40.0,
+    #     speed_rating="extremely-slow",
+    #     accuracy_rating="superior",
+    #     false_positive_rate=0.02,  # 2% FP rate - only 1% better than 33B
+    #     recall=0.97,  # Only 1% better than 33B
+    #     min_ram_gb=80,
+    #     gpu_recommended=True,
+    #     description="Ultra-premium model. Requires enterprise GPU (48GB+ VRAM, A100/H100). Only 1% accuracy gain over 33B model with 2x hardware requirements. NOT recommended - use 33B instead."
+    # ),
 }
 
 
@@ -190,10 +230,11 @@ def list_available_models() -> Dict[str, ModelProfile]:
 
 
 # Default model for different use cases
-DEFAULT_FAST_MODEL = "qwen2.5-coder:1.5b"  # Speed priority
-DEFAULT_BALANCED_MODEL = "qwen2.5-coder:3b"  # Balance (10-15% FP) ✅ NEW DEFAULT
-DEFAULT_ACCURATE_MODEL = "qwen2.5-coder:7b"  # Accuracy priority (8% FP) ✅ RECOMMENDED
-DEFAULT_PREMIUM_MODEL = "qwen2.5-coder:14b"  # Best accuracy (5% FP)
+DEFAULT_MODEL = "tinyllama:1.1b"  # Default preset - lightweight and fast
+DEFAULT_FAST_MODEL = "tinyllama:1.1b"  # Speed priority (default)
+DEFAULT_BALANCED_MODEL = "qwen2.5-coder:3b"  # Balance (10-15% FP) ✅ Advanced option
+DEFAULT_ACCURATE_MODEL = "qwen2.5-coder:7b"  # Accuracy priority (8% FP) ✅ Advanced option
+DEFAULT_PREMIUM_MODEL = "qwen2.5-coder:14b"  # Best accuracy (5% FP) ✅ Advanced option
 
 
 

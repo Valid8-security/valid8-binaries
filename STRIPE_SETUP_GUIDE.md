@@ -1,435 +1,254 @@
-# Stripe Setup Guide for Valid8
+# 🎯 Valid8 Stripe Setup Guide - What You Need to Do on Stripe
 
-**Date:** 2025-01-27  
-**Product:** Valid8 Security Scanner  
-**Domain:** valid8code.ai
-
----
-
-## Overview
-
-This guide walks you through setting up Stripe payment processing for Valid8, including:
-- Creating Stripe account
-- Setting up products and prices
-- Configuring webhooks
-- Integrating with your application
-- Testing payments
+## 📋 Overview
+This guide tells you **exactly** what to set up in your Stripe dashboard and what information to copy. We'll create 3 pricing tiers: Free, Developer ($29/mo), and Professional ($59/mo).
 
 ---
 
-## Step 1: Create Stripe Account
+## 🔑 STEP 1: Get Your Stripe API Keys
 
-### 1.1 Sign Up
+### What to do in Stripe:
+1. Go to [Stripe Dashboard](https://dashboard.stripe.com/test/apikeys)
+2. You'll see two keys - copy both:
 
-1. **Go to Stripe:**
-   - Visit: https://stripe.com
-   - Click: **Sign up**
-
-2. **Create Account:**
-   - Use your business email
-   - Choose: **Business** account type
-   - Complete registration
-
-3. **Verify Email:**
-   - Check email for verification link
-   - Click to verify
-
-### 1.2 Complete Business Information
-
-1. **Dashboard → Settings → Business settings**
-2. **Fill in:**
-   - Business name: Valid8 Security
-   - Business type: Software/SaaS
-   - Website: https://valid8code.ai
-   - Business address
-   - Tax information (if applicable)
-
-3. **Save** all information
-
----
-
-## Step 2: Get API Keys
-
-### 2.1 Test Mode Keys (For Development)
-
-1. **Dashboard → Developers → API keys**
-2. **Test mode toggle:** Should be ON (default)
-3. **Copy keys:**
-   - **Publishable key:** `pk_test_...` (starts with pk_test_)
-   - **Secret key:** `sk_test_...` (starts with sk_test_)
-   - Click **Reveal** to see secret key
-
-### 2.2 Live Mode Keys (For Production)
-
-1. **Toggle:** Switch to **Live mode** (top right)
-2. **Copy keys:**
-   - **Publishable key:** `pk_live_...` (starts with pk_live_)
-   - **Secret key:** `sk_live_...` (starts with sk_live_)
-
-⚠️ **Important:** Never commit live keys to git!
-
----
-
-## Step 3: Create Products and Prices
-
-### 3.1 Using Stripe Dashboard (Manual)
-
-1. **Dashboard → Products → Add product**
-
-2. **Create Pro Monthly:**
-   - Name: `Valid8 Pro - Monthly`
-   - Description: `Professional security scanning with hosted LLM`
-   - Pricing: `$29.00 USD`
-   - Billing: `Recurring monthly`
-   - Click: **Save product**
-   - **Copy Product ID:** `prod_...`
-   - **Copy Price ID:** `price_...`
-
-3. **Create Pro Yearly:**
-   - Name: `Valid8 Pro - Yearly`
-   - Description: `Professional security scanning (annual)`
-   - Pricing: `$249.00 USD`
-   - Billing: `Recurring yearly`
-   - Click: **Save product**
-   - **Copy Product ID and Price ID**
-
-4. **Create Enterprise Monthly:**
-   - Name: `Valid8 Enterprise - Monthly`
-   - Description: `Enterprise security scanning with advanced features`
-   - Pricing: `$99.00 USD`
-   - Billing: `Recurring monthly`
-   - Click: **Save product**
-   - **Copy Product ID and Price ID**
-
-5. **Create Enterprise Yearly:**
-   - Name: `Valid8 Enterprise - Yearly`
-   - Description: `Enterprise security scanning (annual)`
-   - Pricing: `$990.00 USD` (or custom)
-   - Billing: `Recurring yearly`
-   - Click: **Save product**
-   - **Copy Product ID and Price ID**
-
-### 3.2 Using Setup Script (Automated)
-
-We have a setup script that creates all products automatically:
-
-```bash
-cd /Users/sathvikkurapati/Downloads/valid8-local
-python3 scripts/setup_stripe_products.py --api-key sk_test_xxxxx
+### Information you need to copy:
+```
+STRIPE_SECRET_KEY = sk_test_XXXXXXXXXXXXXXXXXXXXX
+STRIPE_PUBLISHABLE_KEY = pk_test_XXXXXXXXXXXXXXXXXXXXX
 ```
 
-This will:
-- Create all products
-- Create all prices
-- Display Product IDs and Price IDs
-- Save configuration
+**Important:** Use **test mode** for now (URLs start with `test`). Switch to live later.
 
 ---
 
-## Step 4: Configure Environment Variables
+## 💰 STEP 2: Create Products and Prices in Stripe
 
-### 4.1 For Local Development
+### What to do in Stripe:
+1. Go to [Products](https://dashboard.stripe.com/test/products) in your dashboard
+2. Click "Create product" for each tier below
 
-Create `.env` file (add to `.gitignore`):
+### Create These 5 Products:
 
-```bash
-# Stripe Test Keys
-STRIPE_SECRET_KEY=sk_test_...
-STRIPE_PUBLISHABLE_KEY=pk_test_...
-STRIPE_WEBHOOK_SECRET=whsec_...
-
-# Stripe Product IDs (from Step 3)
-STRIPE_PRODUCT_PRO_MONTHLY=prod_...
-STRIPE_PRODUCT_PRO_YEARLY=prod_...
-STRIPE_PRODUCT_ENT_MONTHLY=prod_...
-STRIPE_PRODUCT_ENT_YEARLY=prod_...
+#### Product 1: Valid8 Developer Monthly
+```
+Name: Valid8 Developer Monthly
+Description: Individual developer tier with hosted LLM, unlimited files, IDE extensions
+Pricing: 
+  - Price: $29.00
+  - Billing: Monthly
+  - Currency: USD
 ```
 
-### 4.2 For Vercel Deployment
+#### Product 2: Valid8 Developer Yearly  
+```
+Name: Valid8 Developer Yearly
+Description: Individual developer tier with hosted LLM, unlimited files, IDE extensions (Save 17%)
+Pricing:
+  - Price: $249.00
+  - Billing: Yearly
+  - Currency: USD
+```
 
-1. **Vercel Dashboard → Project → Settings → Environment Variables**
-2. **Add each variable:**
-   - `STRIPE_SECRET_KEY` → Your live secret key
-   - `STRIPE_PUBLISHABLE_KEY` → Your live publishable key
-   - `STRIPE_WEBHOOK_SECRET` → Your webhook secret (from Step 5)
-   - `STRIPE_PRODUCT_PRO_MONTHLY` → Product ID
-   - `STRIPE_PRODUCT_PRO_YEARLY` → Product ID
-   - `STRIPE_PRODUCT_ENT_MONTHLY` → Product ID
-   - `STRIPE_PRODUCT_ENT_YEARLY` → Product ID
+#### Product 3: Valid8 Professional Monthly
+```
+Name: Valid8 Professional Monthly
+Description: Team tier with GitHub Actions, API access, advanced compliance, priority support
+Pricing:
+  - Price: $59.00
+  - Billing: Monthly
+  - Currency: USD
+```
 
-3. **Select Environment:** Production (and Preview if needed)
-4. **Save** all variables
+#### Product 4: Valid8 Professional Yearly
+```
+Name: Valid8 Professional Yearly
+Description: Team tier with GitHub Actions, API access, advanced compliance, priority support (Save 25%)
+Pricing:
+  - Price: $549.00
+  - Billing: Yearly
+  - Currency: USD
+```
+
+#### Product 5: Valid8 Free (Optional - for reference)
+```
+Name: Valid8 Free
+Description: CLI tool with local Ollama, basic detectors, 100 files
+Pricing:
+  - Price: $0.00
+  - Billing: One-time (or leave blank)
+```
+
+### Information you need to copy after creating products:
+After creating each product, click on it and copy the **Price ID** from the pricing section:
+
+```
+STRIPE_PRODUCT_DEVELOPER_MONTHLY = price_XXXXXXXXXXXXXXXXXXXXX
+STRIPE_PRODUCT_DEVELOPER_YEARLY = price_XXXXXXXXXXXXXXXXXXXXX  
+STRIPE_PRODUCT_PROFESSIONAL_MONTHLY = price_XXXXXXXXXXXXXXXXXXXXX
+STRIPE_PRODUCT_PROFESSIONAL_YEARLY = price_XXXXXXXXXXXXXXXXXXXXX
+```
+
+**Where to find Price IDs:**
+1. Click on the product name in Products list
+2. Scroll down to "Pricing" section
+3. Click on the price amount
+4. Copy the ID that starts with `price_`
 
 ---
 
-## Step 5: Set Up Webhooks
+## 🌐 STEP 3: Set Up Webhook Endpoint
 
-### 5.1 Create Webhook Endpoint
+### What to do in Stripe:
+1. Go to [Webhooks](https://dashboard.stripe.com/test/webhooks)
+2. Click "Add endpoint"
+3. Fill in these details:
 
-1. **Stripe Dashboard → Developers → Webhooks**
-2. **Click:** Add endpoint
-3. **Endpoint URL:** 
+```
+Endpoint URL: https://your-domain.com/api/webhooks/stripe
+Description: Valid8 subscription webhooks
+Events to send:
+  ✓ checkout.session.completed
+  ✓ customer.subscription.created
+  ✓ customer.subscription.updated  
+  ✓ customer.subscription.deleted
+  ✓ invoice.payment_succeeded
+  ✓ invoice.payment_failed
+```
+
+### Information you need to copy:
+After creating the webhook, copy the **Signing secret**:
+
+```
+STRIPE_WEBHOOK_SECRET = whsec_XXXXXXXXXXXXXXXXXXXXX
+```
+
+**Where to find the signing secret:**
+- After creating the webhook, click the "reveal" button next to "Signing secret"
+- Copy the entire secret (starts with `whsec_`)
+
+---
+
+## 🔐 STEP 4: Create Your .env File
+
+### What to do locally:
+Create a file named `.env` in your project root with this content:
+
+```bash
+# Stripe Configuration
+STRIPE_SECRET_KEY=sk_test_XXXXXXXXXXXXXXXXXXXXX
+STRIPE_PUBLISHABLE_KEY=pk_test_XXXXXXXXXXXXXXXXXXXXX
+STRIPE_WEBHOOK_SECRET=whsec_XXXXXXXXXXXXXXXXXXXXX
+
+# Product IDs from Step 2
+STRIPE_PRODUCT_DEVELOPER_MONTHLY=price_XXXXXXXXXXXXXXXXXXXXX
+STRIPE_PRODUCT_DEVELOPER_YEARLY=price_XXXXXXXXXXXXXXXXXXXXX
+STRIPE_PRODUCT_PROFESSIONAL_MONTHLY=price_XXXXXXXXXXXXXXXXXXXXX
+STRIPE_PRODUCT_PROFESSIONAL_YEARLY=price_XXXXXXXXXXXXXXXXXXXXX
+
+# License Configuration
+PARRY_LICENSE_SECRET=your_secure_random_secret_here_32_chars_minimum
+PARRY_LICENSE_SERVER=https://api.valid8.dev
+
+# Web URLs (update with your domain)
+VALID8_SUCCESS_URL=https://your-domain.com/success
+VALID8_CANCEL_URL=https://your-domain.com/pricing
+```
+
+### What information you need to provide:
+Replace all the `XXXXXXXXXXXXXXXXXXXXX` placeholders with the actual values you copied from Stripe.
+
+---
+
+## 🧪 STEP 5: Test Your Setup
+
+### Run these commands to verify:
+
+```bash
+# Test Stripe integration
+python3 -c "from valid8.payment.stripe_integration import StripePaymentManager; pm = StripePaymentManager(); print('✅ Stripe connected!')"
+
+# Test checkout session creation
+python3 -c "
+from valid8.payment.stripe_integration import StripePaymentManager
+pm = StripePaymentManager()
+session = pm.create_checkout_session(
+    tier='developer',
+    billing_cycle='monthly', 
+    customer_email='test@example.com',
+    success_url='https://your-domain.com/success',
+    cancel_url='https://your-domain.com/pricing'
+)
+print('✅ Checkout URL:', session['url'])
+"
+```
+
+---
+
+## 📋 SUMMARY: What You Need From Stripe
+
+Here's a checklist of everything you need to copy from your Stripe dashboard:
+
+### ✅ Required Information:
+- [ ] **STRIPE_SECRET_KEY** (from API keys page)
+- [ ] **STRIPE_PUBLISHABLE_KEY** (from API keys page)  
+- [ ] **STRIPE_WEBHOOK_SECRET** (from webhook settings)
+- [ ] **STRIPE_PRODUCT_DEVELOPER_MONTHLY** (price ID)
+- [ ] **STRIPE_PRODUCT_DEVELOPER_YEARLY** (price ID)
+- [ ] **STRIPE_PRODUCT_PROFESSIONAL_MONTHLY** (price ID)
+- [ ] **STRIPE_PRODUCT_PROFESSIONAL_YEARLY** (price ID)
+
+### 🎯 Stripe Dashboard Actions:
+1. [ ] Get API keys from https://dashboard.stripe.com/test/apikeys
+2. [ ] Create 4 products with pricing at https://dashboard.stripe.com/test/products
+3. [ ] Set up webhook at https://dashboard.stripe.com/test/webhooks
+4. [ ] Copy all the IDs and secrets listed above
+
+### 📁 Files to Create/Update:
+- [ ] `.env` file with all the configuration above
+- [ ] Update your domain in the success/cancel URLs
+
+---
+
+## 🚀 Going Live (Later)
+
+When ready for real payments:
+
+1. **Switch to live mode:**
+   - Get live API keys (start with `sk_live_` and `pk_live_`)
+   - Recreate products in live mode
+   - Update webhook URL to your production domain
+
+2. **Update your .env file:**
+   ```bash
+   STRIPE_SECRET_KEY=sk_live_XXXXXXXXXXXXXXXXXXXXX
+   STRIPE_PUBLISHABLE_KEY=pk_live_XXXXXXXXXXXXXXXXXXXXX
    ```
-   https://valid8code.ai/api/webhooks/stripe
-   ```
-4. **Description:** Valid8 payment webhooks
-5. **Events to send:** Select:
-   - `checkout.session.completed`
-   - `customer.subscription.created`
-   - `customer.subscription.updated`
-   - `customer.subscription.deleted`
-   - `invoice.payment_succeeded`
-   - `invoice.payment_failed`
-6. **Click:** Add endpoint
 
-### 5.2 Get Webhook Secret
-
-1. **After creating endpoint:** Click on it
-2. **Signing secret:** Click **Reveal**
-3. **Copy secret:** `whsec_...`
-4. **Add to environment variables** (Step 4)
-
-### 5.3 Test Webhook Locally (Optional)
-
-Use Stripe CLI for local testing:
-
-```bash
-# Install Stripe CLI
-brew install stripe/stripe-cli/stripe
-
-# Login
-stripe login
-
-# Forward webhooks to local server
-stripe listen --forward-to localhost:3000/api/webhooks/stripe
-```
+3. **Test with live mode** (use small amounts first!)
 
 ---
 
-## Step 6: Integration Files
+## 🔧 Troubleshooting
 
-### 6.1 Webhook Handler
+**"Invalid API key" error:**
+- Make sure you're using test keys (start with `sk_test_`)
+- Check for typos in your .env file
 
-Created: `api/webhooks/stripe.py`
+**"Product not found" error:**  
+- Verify the price IDs are correct (start with `price_`)
+- Make sure products are created in test mode
 
-This handles all Stripe webhook events:
-- Checkout completion
-- Subscription creation/updates/deletion
-- Payment success/failure
+**Webhook not working:**
+- Check the endpoint URL is accessible
+- Verify the webhook secret is correct
+- Make sure all required events are selected
 
-### 6.2 Checkout Session API
-
-Created: `api/create-checkout-session.py`
-
-This creates Stripe Checkout sessions when users click "Subscribe" on your pricing page.
-
-### 6.3 Vercel Configuration
-
-Updated: `vercel.json`
-
-Added routes for:
-- `/api/webhooks/stripe` → Webhook handler
-- `/api/create-checkout-session` → Checkout creation
+**Need help?** Check the Stripe dashboard for detailed error messages in the Events section.
 
 ---
 
-## Step 7: Frontend Integration
+## 📞 That's It!
 
-### 7.1 Install Stripe.js
+Once you have those 7 pieces of information from Stripe and create the `.env` file, your payment system is ready! The rest is handled automatically by the Valid8 integration.
 
-```bash
-cd valid8-ui-prototype
-npm install @stripe/stripe-js @stripe/react-stripe-js
-```
-
-### 7.2 Update PricingSection.tsx
-
-Add Stripe Checkout integration:
-
-```typescript
-import { loadStripe } from '@stripe/stripe-js';
-
-const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY!);
-
-const handleCheckout = async (priceId: string) => {
-  const stripe = await stripePromise;
-  
-  // Call your API to create checkout session
-  const response = await fetch('/api/create-checkout-session', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      priceId: priceId,
-      successUrl: window.location.origin + '/success',
-      cancelUrl: window.location.origin + '/pricing'
-    })
-  });
-  
-  const { sessionId } = await response.json();
-  
-  // Redirect to Stripe Checkout
-  const result = await stripe?.redirectToCheckout({ sessionId });
-  
-  if (result?.error) {
-    console.error(result.error);
-  }
-};
-```
-
-### 7.3 Environment Variables for Frontend
-
-Add to `.env` (or Vercel environment variables):
-
-```
-REACT_APP_STRIPE_PUBLISHABLE_KEY=pk_test_... or pk_live_...
-```
-
----
-
-## Step 8: Testing
-
-### 8.1 Test Mode
-
-1. **Use test keys** (pk_test_ and sk_test_)
-2. **Test cards:**
-   - Success: `4242 4242 4242 4242`
-   - Decline: `4000 0000 0000 0002`
-   - 3D Secure: `4000 0025 0000 3155`
-   - Expiry: Any future date
-   - CVC: Any 3 digits
-
-3. **Test webhooks:**
-   - Use Stripe CLI: `stripe listen --forward-to localhost:3000/api/webhooks/stripe`
-   - Or use Stripe Dashboard → Webhooks → Send test webhook
-
-### 8.2 Go Live
-
-1. **Complete business verification** in Stripe Dashboard
-2. **Switch to live mode**
-3. **Update environment variables** with live keys
-4. **Test with real card** (small amount)
-5. **Monitor** Stripe Dashboard for transactions
-
----
-
-## Step 9: Pricing Configuration
-
-### Current Pricing Tiers
-
-**Free Tier:**
-- Price: $0
-- Features: Basic scanning, 100 files/month
-
-**Pro:**
-- Monthly: $29/month
-- Yearly: $249/year (save $99)
-- Features: Unlimited scans, hosted LLM, IDE extensions
-
-**Enterprise:**
-- Monthly: $99/month
-- Yearly: $990/year (or custom)
-- Features: Everything + SSO, API, priority support
-
-### Update Pricing
-
-Edit `valid8/payment/stripe_integration.py`:
-- Update `PaymentConfig.TIERS` with your pricing
-- Update `STRIPE_PRODUCTS` with your Product IDs
-
----
-
-## Step 10: Security Best Practices
-
-### 10.1 Never Commit Keys
-
-- ✅ Use environment variables
-- ✅ Add `.env` to `.gitignore`
-- ✅ Use Vercel environment variables for production
-
-### 10.2 Webhook Security
-
-- ✅ Always verify webhook signatures
-- ✅ Use HTTPS for webhook endpoints
-- ✅ Store webhook secret securely
-
-### 10.3 API Security
-
-- ✅ Validate all user input
-- ✅ Use Stripe's official libraries
-- ✅ Implement rate limiting
-- ✅ Log all payment events
-
----
-
-## Quick Reference
-
-### Stripe Dashboard Links
-
-- **Dashboard:** https://dashboard.stripe.com
-- **API Keys:** https://dashboard.stripe.com/apikeys
-- **Products:** https://dashboard.stripe.com/products
-- **Webhooks:** https://dashboard.stripe.com/webhooks
-- **Customers:** https://dashboard.stripe.com/customers
-- **Subscriptions:** https://dashboard.stripe.com/subscriptions
-
-### Environment Variables Needed
-
-```bash
-STRIPE_SECRET_KEY=sk_live_... or sk_test_...
-STRIPE_PUBLISHABLE_KEY=pk_live_... or pk_test_...
-STRIPE_WEBHOOK_SECRET=whsec_...
-STRIPE_PRODUCT_PRO_MONTHLY=prod_...
-STRIPE_PRODUCT_PRO_YEARLY=prod_...
-STRIPE_PRODUCT_ENT_MONTHLY=prod_...
-STRIPE_PRODUCT_ENT_YEARLY=prod_...
-```
-
-### Test Cards
-
-- **Success:** 4242 4242 4242 4242
-- **Decline:** 4000 0000 0000 0002
-- **3D Secure:** 4000 0025 0000 3155
-- **Expiry:** Any future date (e.g., 12/25)
-- **CVC:** Any 3 digits (e.g., 123)
-
----
-
-## Troubleshooting
-
-### Common Issues
-
-1. **"Invalid API Key"**
-   - Check you're using correct key (test vs live)
-   - Verify key is in environment variables
-   - Check for typos or extra spaces
-
-2. **"Webhook signature verification failed"**
-   - Verify webhook secret is correct
-   - Check webhook endpoint URL matches
-   - Ensure using raw request body (not parsed)
-
-3. **"Product not found"**
-   - Verify Product IDs in environment variables
-   - Check products exist in Stripe Dashboard
-   - Ensure using correct mode (test vs live)
-
----
-
-## Next Steps
-
-1. ✅ Create Stripe account
-2. ✅ Get API keys
-3. ✅ Create products and prices
-4. ✅ Set up webhooks
-5. ✅ Configure environment variables
-6. ✅ Test checkout flow
-7. ✅ Deploy to production
-8. ✅ Go live!
-
----
-
-**Support:**
-- Stripe Docs: https://stripe.com/docs
-- Stripe Support: https://support.stripe.com
-- Valid8 Payment Code: `valid8/payment/stripe_integration.py`
-
+**Questions?** The setup is designed to be copy-paste simple. Just follow the steps above in order.

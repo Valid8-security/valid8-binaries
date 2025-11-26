@@ -1,3 +1,14 @@
+#!/usr/bin/env python3
+"""
+Copyright (c) 2025 Valid8 Security
+All rights reserved.
+
+This software is proprietary and confidential. Unauthorized copying,
+modification, distribution, or use of this software, via any medium is
+strictly prohibited without the express written permission of Valid8 Security.
+
+"""
+
 # Parry (C) by Valid8 Security. Written by Andy Kurapati and Shreyan Mitra
 """
 Stripe Payment Integration for Parry Security Scanner
@@ -76,45 +87,64 @@ class PaymentConfig:
             file_limit=100,
             llm_mode='local'
         ),
-        'pro': SubscriptionTier(
-            name='Pro',
-            price_monthly=2900,  # $29.00 (competitive startup pricing)
+        'developer': SubscriptionTier(
+            name='Developer',
+            price_monthly=2900,  # $29.00 - Individual developer tier
             price_yearly=24900,  # $249.00 (save $129)
             features=[
                 'Everything in Free',
                 'Hosted LLM (GPT-4, Claude, Gemini)',
-                'AI-powered validation',
+                'AI-powered false positive reduction',
                 'IDE extensions (VS Code, JetBrains)',
-                'GitHub Actions integration',
                 'All security detectors (150+)',
-                'Deep + Hybrid modes',
-                'Compliance reports',
+                'Deep + Hybrid scanning modes',
+                'Basic compliance reports',
                 'Email support',
-                'Team collaboration (5 seats)',
-                'Basic API access (1000 scans/month)'
+                'Unlimited files',
+                'Priority scanning queue'
             ],
             file_limit=None,  # Unlimited
             llm_mode='hosted'
         ),
+        'professional': SubscriptionTier(
+            name='Professional',
+            price_monthly=5900,  # $59.00 - Team/professional tier
+            price_yearly=54900,  # $549.00 (save $249)
+            features=[
+                'Everything in Developer',
+                'GitHub Actions integration',
+                'Team collaboration (5 seats)',
+                'Advanced REST API (10,000 scans/month)',
+                'Custom security rules & policies',
+                'Container & IaC scanning',
+                'Priority support (24-hour SLA)',
+                'Advanced compliance (SOC2, GDPR)',
+                'Audit logs & team reports',
+                'Multi-organization support',
+                'Advanced integrations',
+                'Team management dashboard'
+            ],
+            file_limit=None,
+            llm_mode='hosted'
+        ),
         'enterprise': SubscriptionTier(
             name='Enterprise',
-            price_monthly=9900,  # $99.00/seat (volume discount)
-            price_yearly=89000,  # $890.00/seat (save $1,188)
+            price_monthly=29900,  # $299.00/seat - Organization tier
+            price_yearly=269100,  # $2,691.00/seat (save $3,588)
             features=[
-                'Everything in Pro',
-                'Advanced REST API (unlimited scans)',
-                'Custom security rules & policies',
-                'SSO integration (SAML, OAuth)',
+                'Everything in Professional',
+                'Unlimited API scans',
+                'SSO integration (SAML, OAuth, Okta)',
                 'On-premise & air-gapped deployment',
-                'Container & IaC scanning',
                 'Supply chain security analysis',
                 'Federated learning capabilities',
-                'Priority support (4-hour SLA)',
-                'Advanced compliance (SOC2, HIPAA, GDPR)',
-                'Audit logs & compliance reports',
+                'Dedicated support (4-hour SLA)',
+                'Advanced compliance (SOC2, HIPAA, GDPR, ISO27001)',
+                'White-label options',
                 'Unlimited organizations & seats',
                 'Custom integrations',
-                'Dedicated success manager'
+                'Dedicated success manager',
+                'Annual contract terms'
             ],
             file_limit=None,
             llm_mode='hosted'
@@ -140,8 +170,10 @@ class PaymentConfig:
     
     # Product IDs (set after creating Stripe products)
     STRIPE_PRODUCTS = {
-        'pro_monthly': os.environ.get('STRIPE_PRODUCT_PRO_MONTHLY', 'prod_...'),
-        'pro_yearly': os.environ.get('STRIPE_PRODUCT_PRO_YEARLY', 'prod_...'),
+        'developer_monthly': os.environ.get('STRIPE_PRODUCT_DEVELOPER_MONTHLY', 'prod_...'),
+        'developer_yearly': os.environ.get('STRIPE_PRODUCT_DEVELOPER_YEARLY', 'prod_...'),
+        'professional_monthly': os.environ.get('STRIPE_PRODUCT_PROFESSIONAL_MONTHLY', 'prod_...'),
+        'professional_yearly': os.environ.get('STRIPE_PRODUCT_PROFESSIONAL_YEARLY', 'prod_...'),
         'enterprise_monthly': os.environ.get('STRIPE_PRODUCT_ENT_MONTHLY', 'prod_...'),
         'enterprise_yearly': os.environ.get('STRIPE_PRODUCT_ENT_YEARLY', 'prod_...'),
         'enterprise_custom': os.environ.get('STRIPE_PRODUCT_ENT_CUSTOM', 'prod_...')  # For custom enterprise contracts
@@ -174,15 +206,15 @@ class StripePaymentManager:
     ) -> Dict[str, Any]:
         """
         Create Stripe checkout session for subscription
-        
+
         Args:
-            tier: 'pro' or 'enterprise'
+            tier: 'developer', 'professional', or 'enterprise'
             billing_cycle: 'monthly' or 'yearly'
             customer_email: Customer email
             success_url: Redirect URL on success
             cancel_url: Redirect URL on cancel
             metadata: Additional metadata (CLI version, machine ID, etc.)
-        
+
         Returns:
             Checkout session with URL
         """
@@ -576,6 +608,9 @@ class LicenseManager:
             
             # Valid license
             tier_name = license_data.get('tier', 'free')
+            # Handle legacy tier names
+            if tier_name == 'pro':
+                tier_name = 'developer'
             tier = PaymentConfig.TIERS[tier_name]
             
             return {

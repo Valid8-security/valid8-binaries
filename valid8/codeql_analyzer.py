@@ -1,3 +1,14 @@
+#!/usr/bin/env python3
+"""
+Copyright (c) 2025 Valid8 Security
+All rights reserved.
+
+This software is proprietary and confidential. Unauthorized copying,
+modification, distribution, or use of this software, via any medium is
+strictly prohibited without the express written permission of Valid8 Security.
+
+"""
+
 """
 CodeQL-inspired semantic query analyzer for advanced vulnerability detection.
 """
@@ -5,7 +16,14 @@ CodeQL-inspired semantic query analyzer for advanced vulnerability detection.
 import ast
 import re
 from typing import List, Dict, Any, Set, Tuple
-from ..models import Vulnerability
+# Robust import for Vulnerability
+try:
+    from ..models import Vulnerability
+except ImportError:
+    try:
+        from models import Vulnerability
+    except ImportError:
+        from .models import Vulnerability
 
 
 class CodeQLAnalyzer:

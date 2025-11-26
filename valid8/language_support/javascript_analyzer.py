@@ -1,3 +1,14 @@
+#!/usr/bin/env python3
+"""
+Copyright (c) 2025 Valid8 Security
+All rights reserved.
+
+This software is proprietary and confidential. Unauthorized copying,
+modification, distribution, or use of this software, via any medium is
+strictly prohibited without the express written permission of Valid8 Security.
+
+"""
+
 """
 JavaScript/TypeScript language security analyzer.
 """
@@ -106,60 +117,178 @@ class JavaScriptAnalyzer(LanguageAnalyzer, UniversalDetectors):
         return vulnerabilities
     
     def detect_sql_injection(self, code: str, filepath: str) -> List[Vulnerability]:
-        """Detect SQL injection in JavaScript."""
+        """ULTRA-PERMISSIVE SQL injection detection - catch everything that queries databases."""
+        # 🚀 ULTRA-PERMISSIVE: Catch ANY database operation that could involve user input
         patterns = [
+            # Original conservative patterns
             r'\.query\s*\(\s*["\'].*\+',
             r'\.query\s*\(\s*`.*\$\{',
             r'\.execute\s*\(\s*["\'].*\+',
             r'\.raw\s*\(\s*["\'].*\+',
             r'sequelize\.query\s*\(\s*`',
+
+            # 🚀 ULTRA-PERMISSIVE additions:
+            # Any database query method
+            r'\.query\s*\(',
+            r'\.execute\s*\(',
+            r'\.raw\s*\(',
+            r'\.run\s*\(',
+            r'\.all\s*\(',
+            r'\.get\s*\(',
+            r'\.find\s*\(',
+            r'\.findOne\s*\(',
+            r'\.findAll\s*\(',
+            r'\.create\s*\(',
+            r'\.update\s*\(',
+            r'\.delete\s*\(',
+
+            # ORM methods
+            r'sequelize\.query\s*\(',
+            r'mongoose\.model',
+            r'prisma\.',
+            r'typeorm\.',
+
+            # Any string concatenation near database calls
+            r'query\s*\(.*\+',
+            r'execute\s*\(.*\+',
+            r'\+\s*query',
+            r'\+\s*execute',
+
+            # Any user input near database calls
+            r'req\.query.*query',
+            r'req\.body.*query',
+            r'req\.params.*query',
+            r'req\.query.*execute',
+            r'req\.body.*execute',
+
+            # Any variable in SQL context
+            r'query\s*\(\s*\w+\s*\)',
+            r'execute\s*\(\s*\w+\s*\)',
+            r'raw\s*\(\s*\w+\s*\)',
+
+            # SQL keywords anywhere
+            r'SELECT.*FROM',
+            r'INSERT.*INTO',
+            r'UPDATE.*SET',
+            r'DELETE.*FROM',
+            r'WHERE.*=',
+            r'JOIN.*ON',
+            r'UNION.*SELECT',
+
+            # Database connection indicators
+            r'mysql\.createConnection',
+            r'pg\.connect',
+            r'sqlite',
+            r'mongodb',
+            r'redis',
         ]
-        
+
         vulnerabilities = []
         lines = code.split('\n')
-        
+
         for i, line in enumerate(lines, 1):
+            # Check each pattern
             for pattern in patterns:
                 if re.search(pattern, line, re.IGNORECASE):
                     vulnerabilities.append(self._create_vulnerability(
                         cwe='CWE-89',
                         severity='high',
-                        title='SQL Injection',
-                        description='Potential SQL injection. Use parameterized queries or ORM.',
+                        title='Potential SQL Injection',
+                        description='ULTRA-PERMISSIVE: Any database operation flagged for AI validation. May include false positives.',
                         code=code,
                         filepath=filepath,
                         line_number=i
                     ))
-        
+                    break  # Only one vuln per line
+
         return vulnerabilities
     
     def detect_xss(self, code: str, filepath: str) -> List[Vulnerability]:
-        """Detect XSS in JavaScript."""
+        """ULTRA-PERMISSIVE XSS detection - catch everything that outputs HTML/DOM content."""
+        # 🚀 ULTRA-PERMISSIVE: Catch ANY DOM manipulation that could involve user input
         patterns = [
+            # Original conservative patterns
             r'\.innerHTML\s*=',
             r'\.outerHTML\s*=',
             r'document\.write\s*\(',
             r'\.insertAdjacentHTML\s*\(',
             r'dangerouslySetInnerHTML',
             r'v-html\s*=',
+
+            # 🚀 ULTRA-PERMISSIVE additions:
+            # Any DOM manipulation
+            r'\.innerHTML',
+            r'\.outerHTML',
+            r'\.innerText',
+            r'\.textContent',
+            r'\.value\s*=',
+            r'\.src\s*=',
+            r'\.href\s*=',
+
+            # Any HTML insertion
+            r'\.html\s*\(',
+            r'\.append\s*\(',
+            r'\.prepend\s*\(',
+            r'\.after\s*\(',
+            r'\.before\s*\(',
+            r'\.html\s*=',
+            r'\$[\(\{].*\.html',  # jQuery .html()
+
+            # Any string concatenation near DOM
+            r'innerHTML\s*\+',
+            r'\+\s*innerHTML',
+            r'document\.write.*\+',
+            r'\+\s*document\.write',
+
+            # Any user input access
+            r'req\.query',
+            r'req\.body',
+            r'req\.params',
+            r'window\.location',
+            r'document\.cookie',
+            r'localStorage',
+            r'sessionStorage',
+
+            # Any variable in DOM context
+            r'innerHTML\s*=\s*\w+',
+            r'document\.write\s*\(\s*\w+\s*\)',
+            r'\.value\s*=\s*\w+',
+
+            # HTML/JS injection patterns
+            r'<script>',
+            r'</script>',
+            r'onclick',
+            r'onload',
+            r'onerror',
+            r'eval\s*\(',
+            r'Function\s*\(',
+            r'setTimeout.*\+',
+            r'setInterval.*\+',
+
+            # Template literal dangers
+            r'`.*\$\{.*req',
+            r'`.*\$\{.*query',
+            r'`.*\$\{.*body',
         ]
-        
+
         vulnerabilities = []
         lines = code.split('\n')
-        
+
         for i, line in enumerate(lines, 1):
+            # Check each pattern
             for pattern in patterns:
-                if re.search(pattern, line):
+                if re.search(pattern, line, re.IGNORECASE):
                     vulnerabilities.append(self._create_vulnerability(
                         cwe='CWE-79',
                         severity='high',
-                        title='Cross-Site Scripting (XSS)',
-                        description='Potential XSS. Sanitize user input or use textContent.',
+                        title='Potential XSS Vulnerability',
+                        description='ULTRA-PERMISSIVE: Any DOM manipulation or user input flagged for AI validation. May include false positives.',
                         code=code,
                         filepath=filepath,
                         line_number=i
                     ))
-        
+                    break  # Only one vuln per line
+
         return vulnerabilities
     
     def detect_path_traversal(self, code: str, filepath: str) -> List[Vulnerability]:

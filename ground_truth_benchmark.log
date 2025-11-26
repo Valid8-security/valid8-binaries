@@ -1,0 +1,1565 @@
+2025-11-26 09:34:14,128 - INFO - 🚀 VALID8 GROUND TRUTH BENCHMARK SUITE STARTED
+2025-11-26 09:34:14,129 - INFO - Testing against datasets with known vulnerabilities
+2025-11-26 09:34:14,130 - INFO - ============================================================
+2025-11-26 09:34:14,131 - INFO - 📂 Using test directory: /Users/sathvikkurapati/Downloads/valid8-local/comprehensive_test
+2025-11-26 09:34:14,132 - INFO - 📖 Loading ground truth data...
+2025-11-26 09:34:14,133 - INFO - 🔍 Scanning for ground truth files in comprehensive_test
+2025-11-26 09:34:14,136 - INFO - 📁 Found 12 ground truth files
+2025-11-26 09:34:14,136 - INFO - 📖 Loading ground truth file 1/12: comprehensive_test/javascript/large/ground_truth.json
+2025-11-26 09:34:14,137 - INFO - ✅ Loaded javascript/large: 100 files, 300 expected vulnerabilities
+2025-11-26 09:34:14,138 - INFO - 📖 Loading ground truth file 2/12: comprehensive_test/javascript/medium/ground_truth.json
+2025-11-26 09:34:14,139 - INFO - ✅ Loaded javascript/medium: 25 files, 75 expected vulnerabilities
+2025-11-26 09:34:14,139 - INFO - 📖 Loading ground truth file 3/12: comprehensive_test/kotlin/large/ground_truth.json
+2025-11-26 09:34:14,140 - INFO - ✅ Loaded kotlin/large: 100 files, 300 expected vulnerabilities
+2025-11-26 09:34:14,141 - INFO - 📖 Loading ground truth file 4/12: comprehensive_test/kotlin/medium/ground_truth.json
+2025-11-26 09:34:14,141 - INFO - ✅ Loaded kotlin/medium: 25 files, 75 expected vulnerabilities
+2025-11-26 09:34:14,142 - INFO - 📖 Loading ground truth file 5/12: comprehensive_test/kotlin/small/ground_truth.json
+2025-11-26 09:34:14,143 - INFO - ✅ Loaded kotlin/small: 5 files, 15 expected vulnerabilities
+2025-11-26 09:34:14,143 - INFO - 📖 Loading ground truth file 6/12: comprehensive_test/java/large/ground_truth.json
+2025-11-26 09:34:14,144 - INFO - ✅ Loaded java/large: 100 files, 300 expected vulnerabilities
+2025-11-26 09:34:14,145 - INFO - 📖 Loading ground truth file 7/12: comprehensive_test/java/medium/ground_truth.json
+2025-11-26 09:34:14,146 - INFO - ✅ Loaded java/medium: 25 files, 75 expected vulnerabilities
+2025-11-26 09:34:14,147 - INFO - 📖 Loading ground truth file 8/12: comprehensive_test/typescript/large/ground_truth.json
+2025-11-26 09:34:14,148 - INFO - ✅ Loaded typescript/large: 100 files, 300 expected vulnerabilities
+2025-11-26 09:34:14,148 - INFO - 📖 Loading ground truth file 9/12: comprehensive_test/typescript/medium/ground_truth.json
+2025-11-26 09:34:14,149 - INFO - ✅ Loaded typescript/medium: 25 files, 75 expected vulnerabilities
+2025-11-26 09:34:14,150 - INFO - 📖 Loading ground truth file 10/12: comprehensive_test/typescript/small/ground_truth.json
+2025-11-26 09:34:14,150 - INFO - ✅ Loaded typescript/small: 5 files, 15 expected vulnerabilities
+2025-11-26 09:34:14,151 - INFO - 📖 Loading ground truth file 11/12: comprehensive_test/python/large/ground_truth.json
+2025-11-26 09:34:14,153 - INFO - ✅ Loaded python/large: 100 files, 300 expected vulnerabilities
+2025-11-26 09:34:14,153 - INFO - 📖 Loading ground truth file 12/12: comprehensive_test/python/medium/ground_truth.json
+2025-11-26 09:34:14,154 - INFO - ✅ Loaded python/medium: 25 files, 75 expected vulnerabilities
+2025-11-26 09:34:14,155 - INFO - 📊 Ground truth loading complete: 12 datasets, 1905 total expected vulnerabilities
+2025-11-26 09:34:14,155 - INFO - 📋 Benchmark setup complete:
+2025-11-26 09:34:14,156 - INFO -    • Datasets loaded: 12
+2025-11-26 09:34:14,156 - INFO -    • Total expected vulnerabilities: 1905
+2025-11-26 09:34:14,157 - INFO -    • Valid8 mode: hybrid (all features enabled)
+2025-11-26 09:34:14,157 - INFO - 🏁 Starting benchmark execution...
+2025-11-26 09:34:14,158 - INFO - 🚀 Starting Valid8 ground truth benchmark...
+2025-11-26 09:34:14,159 - INFO - 📊 Processing 12 datasets
+2025-11-26 09:34:14,159 - INFO - 🔄 Dataset 1/12: javascript/large
+2025-11-26 09:34:14,160 - INFO - 📂 Dataset path: comprehensive_test/javascript/large
+2025-11-26 09:34:14,161 - INFO - 📄 Found 100 test files to scan
+2025-11-26 09:34:14,162 - INFO - 🎯 Ground truth: 300 expected vulnerabilities
+2025-11-26 09:34:14,162 - INFO - 🔍 Starting Valid8 scans in hybrid mode (all features enabled)...
+2025-11-26 09:34:14,163 - INFO - 📋 File 1/100: file_52.js
+2025-11-26 09:34:15,873 - ERROR - ❌ file_52.js: Scan failed (exit code 2)
+2025-11-26 09:34:15,873 - INFO - 📋 File 2/100: file_95.js
+2025-11-26 09:34:17,250 - ERROR - ❌ file_95.js: Scan failed (exit code 2)
+2025-11-26 09:34:17,250 - INFO - 📋 File 3/100: file_66.js
+2025-11-26 09:34:18,287 - ERROR - ❌ file_66.js: Scan failed (exit code 2)
+2025-11-26 09:34:18,288 - INFO - 📋 File 4/100: file_37.js
+2025-11-26 09:34:19,755 - ERROR - ❌ file_37.js: Scan failed (exit code 2)
+2025-11-26 09:34:19,756 - INFO - 📋 File 5/100: file_27.js
+2025-11-26 09:34:21,486 - ERROR - ❌ file_27.js: Scan failed (exit code 2)
+2025-11-26 09:34:21,487 - INFO - 📋 File 6/100: file_76.js
+2025-11-26 09:34:22,648 - ERROR - ❌ file_76.js: Scan failed (exit code 2)
+2025-11-26 09:34:22,648 - INFO - 📋 File 7/100: file_85.js
+2025-11-26 09:34:23,736 - ERROR - ❌ file_85.js: Scan failed (exit code 2)
+2025-11-26 09:34:23,737 - INFO - 📋 File 8/100: file_42.js
+2025-11-26 09:34:24,839 - ERROR - ❌ file_42.js: Scan failed (exit code 2)
+2025-11-26 09:34:24,839 - INFO - 📋 File 9/100: file_13.js
+2025-11-26 09:34:26,015 - ERROR - ❌ file_13.js: Scan failed (exit code 2)
+2025-11-26 09:34:26,016 - INFO - 📋 File 10/100: file_91.js
+2025-11-26 09:34:27,156 - ERROR - ❌ file_91.js: Scan failed (exit code 2)
+2025-11-26 09:34:27,158 - INFO - 📋 File 11/100: file_33.js
+2025-11-26 09:34:28,346 - ERROR - ❌ file_33.js: Scan failed (exit code 2)
+2025-11-26 09:34:28,347 - INFO - 📋 File 12/100: file_62.js
+2025-11-26 09:34:29,490 - ERROR - ❌ file_62.js: Scan failed (exit code 2)
+2025-11-26 09:34:29,491 - INFO - 📋 File 13/100: file_56.js
+2025-11-26 09:34:30,603 - ERROR - ❌ file_56.js: Scan failed (exit code 2)
+2025-11-26 09:34:30,604 - INFO - 📋 File 14/100: file_17.js
+2025-11-26 09:34:31,601 - ERROR - ❌ file_17.js: Scan failed (exit code 2)
+2025-11-26 09:34:31,601 - INFO - 📋 File 15/100: file_46.js
+2025-11-26 09:34:32,885 - ERROR - ❌ file_46.js: Scan failed (exit code 2)
+2025-11-26 09:34:32,886 - INFO - 📋 File 16/100: file_72.js
+2025-11-26 09:34:34,064 - ERROR - ❌ file_72.js: Scan failed (exit code 2)
+2025-11-26 09:34:34,066 - INFO - 📋 File 17/100: file_23.js
+2025-11-26 09:34:35,227 - ERROR - ❌ file_23.js: Scan failed (exit code 2)
+2025-11-26 09:34:35,228 - INFO - 📋 File 18/100: file_81.js
+2025-11-26 09:34:36,335 - ERROR - ❌ file_81.js: Scan failed (exit code 2)
+2025-11-26 09:34:36,336 - INFO - 📋 File 19/100: file_90.js
+2025-11-26 09:34:37,428 - ERROR - ❌ file_90.js: Scan failed (exit code 2)
+2025-11-26 09:34:37,429 - INFO - 📋 File 20/100: file_32.js
+2025-11-26 09:34:38,567 - ERROR - ❌ file_32.js: Scan failed (exit code 2)
+2025-11-26 09:34:38,568 - INFO - 📋 File 21/100: file_63.js
+2025-11-26 09:34:39,599 - ERROR - ❌ file_63.js: Scan failed (exit code 2)
+2025-11-26 09:34:39,600 - INFO - 📋 File 22/100: file_57.js
+2025-11-26 09:34:40,672 - ERROR - ❌ file_57.js: Scan failed (exit code 2)
+2025-11-26 09:34:40,672 - INFO - 📋 File 23/100: file_16.js
+2025-11-26 09:34:41,857 - ERROR - ❌ file_16.js: Scan failed (exit code 2)
+2025-11-26 09:34:41,858 - INFO - 📋 File 24/100: file_47.js
+2025-11-26 09:34:42,956 - ERROR - ❌ file_47.js: Scan failed (exit code 2)
+2025-11-26 09:34:42,957 - INFO - 📋 File 25/100: file_73.js
+2025-11-26 09:34:44,101 - ERROR - ❌ file_73.js: Scan failed (exit code 2)
+2025-11-26 09:34:44,101 - INFO - 📋 File 26/100: file_22.js
+2025-11-26 09:34:45,177 - ERROR - ❌ file_22.js: Scan failed (exit code 2)
+2025-11-26 09:34:45,178 - INFO - 📋 File 27/100: file_80.js
+2025-11-26 09:34:46,331 - ERROR - ❌ file_80.js: Scan failed (exit code 2)
+2025-11-26 09:34:46,332 - INFO - 📋 File 28/100: file_53.js
+2025-11-26 09:34:47,359 - ERROR - ❌ file_53.js: Scan failed (exit code 2)
+2025-11-26 09:34:47,360 - INFO - 📋 File 29/100: file_94.js
+2025-11-26 09:34:48,431 - ERROR - ❌ file_94.js: Scan failed (exit code 2)
+2025-11-26 09:34:48,432 - INFO - 📋 File 30/100: file_67.js
+2025-11-26 09:34:49,456 - ERROR - ❌ file_67.js: Scan failed (exit code 2)
+2025-11-26 09:34:49,457 - INFO - 📋 File 31/100: file_36.js
+2025-11-26 09:34:50,518 - ERROR - ❌ file_36.js: Scan failed (exit code 2)
+2025-11-26 09:34:50,519 - INFO - 📋 File 32/100: file_26.js
+2025-11-26 09:34:51,550 - ERROR - ❌ file_26.js: Scan failed (exit code 2)
+2025-11-26 09:34:51,551 - INFO - 📋 File 33/100: file_77.js
+2025-11-26 09:34:52,588 - ERROR - ❌ file_77.js: Scan failed (exit code 2)
+2025-11-26 09:34:52,589 - INFO - 📋 File 34/100: file_84.js
+2025-11-26 09:34:53,616 - ERROR - ❌ file_84.js: Scan failed (exit code 2)
+2025-11-26 09:34:53,617 - INFO - 📋 File 35/100: file_43.js
+2025-11-26 09:34:54,665 - ERROR - ❌ file_43.js: Scan failed (exit code 2)
+2025-11-26 09:34:54,666 - INFO - 📋 File 36/100: file_12.js
+2025-11-26 09:34:55,730 - ERROR - ❌ file_12.js: Scan failed (exit code 2)
+2025-11-26 09:34:55,731 - INFO - 📋 File 37/100: file_58.js
+2025-11-26 09:34:56,832 - ERROR - ❌ file_58.js: Scan failed (exit code 2)
+2025-11-26 09:34:56,833 - INFO - 📋 File 38/100: file_5.js
+2025-11-26 09:34:57,900 - ERROR - ❌ file_5.js: Scan failed (exit code 2)
+2025-11-26 09:34:57,901 - INFO - 📋 File 39/100: file_48.js
+2025-11-26 09:34:58,935 - ERROR - ❌ file_48.js: Scan failed (exit code 2)
+2025-11-26 09:34:58,936 - INFO - 📋 File 40/100: file_19.js
+2025-11-26 09:35:00,046 - ERROR - ❌ file_19.js: Scan failed (exit code 2)
+2025-11-26 09:35:00,047 - INFO - 📋 File 41/100: file_39.js
+2025-11-26 09:35:01,063 - ERROR - ❌ file_39.js: Scan failed (exit code 2)
+2025-11-26 09:35:01,064 - INFO - 📋 File 42/100: file_68.js
+2025-11-26 09:35:02,129 - ERROR - ❌ file_68.js: Scan failed (exit code 2)
+2025-11-26 09:35:02,130 - INFO - 📋 File 43/100: file_1.js
+2025-11-26 09:35:03,144 - ERROR - ❌ file_1.js: Scan failed (exit code 2)
+2025-11-26 09:35:03,145 - INFO - 📋 File 44/100: file_78.js
+2025-11-26 09:35:04,174 - ERROR - ❌ file_78.js: Scan failed (exit code 2)
+2025-11-26 09:35:04,175 - INFO - 📋 File 45/100: file_29.js
+2025-11-26 09:35:05,204 - ERROR - ❌ file_29.js: Scan failed (exit code 2)
+2025-11-26 09:35:05,205 - INFO - 📋 File 46/100: file_38.js
+2025-11-26 09:35:06,221 - ERROR - ❌ file_38.js: Scan failed (exit code 2)
+2025-11-26 09:35:06,222 - INFO - 📋 File 47/100: file_69.js
+2025-11-26 09:35:07,216 - ERROR - ❌ file_69.js: Scan failed (exit code 2)
+2025-11-26 09:35:07,217 - INFO - 📋 File 48/100: file_0.js
+2025-11-26 09:35:08,251 - ERROR - ❌ file_0.js: Scan failed (exit code 2)
+2025-11-26 09:35:08,252 - INFO - 📋 File 49/100: file_79.js
+2025-11-26 09:35:09,271 - ERROR - ❌ file_79.js: Scan failed (exit code 2)
+2025-11-26 09:35:09,271 - INFO - 📋 File 50/100: file_28.js
+2025-11-26 09:35:10,341 - ERROR - ❌ file_28.js: Scan failed (exit code 2)
+2025-11-26 09:35:10,342 - INFO - 📋 File 51/100: file_59.js
+2025-11-26 09:35:11,354 - ERROR - ❌ file_59.js: Scan failed (exit code 2)
+2025-11-26 09:35:11,355 - INFO - 📋 File 52/100: file_4.js
+2025-11-26 09:35:12,382 - ERROR - ❌ file_4.js: Scan failed (exit code 2)
+2025-11-26 09:35:12,383 - INFO - 📋 File 53/100: file_49.js
+2025-11-26 09:35:13,396 - ERROR - ❌ file_49.js: Scan failed (exit code 2)
+2025-11-26 09:35:13,396 - INFO - 📋 File 54/100: file_18.js
+2025-11-26 09:35:14,485 - ERROR - ❌ file_18.js: Scan failed (exit code 2)
+2025-11-26 09:35:14,486 - INFO - 📋 File 55/100: file_99.js
+2025-11-26 09:35:15,538 - ERROR - ❌ file_99.js: Scan failed (exit code 2)
+2025-11-26 09:35:15,539 - INFO - 📋 File 56/100: file_3.js
+2025-11-26 09:35:16,566 - ERROR - ❌ file_3.js: Scan failed (exit code 2)
+2025-11-26 09:35:16,567 - INFO - 📋 File 57/100: file_89.js
+2025-11-26 09:35:17,580 - ERROR - ❌ file_89.js: Scan failed (exit code 2)
+2025-11-26 09:35:17,581 - INFO - 📋 File 58/100: file_7.js
+2025-11-26 09:35:18,981 - ERROR - ❌ file_7.js: Scan failed (exit code 2)
+2025-11-26 09:35:18,982 - INFO - 📋 File 59/100: file_6.js
+2025-11-26 09:35:20,712 - ERROR - ❌ file_6.js: Scan failed (exit code 2)
+2025-11-26 09:35:20,714 - INFO - 📋 File 60/100: file_98.js
+2025-11-26 09:35:22,105 - ERROR - ❌ file_98.js: Scan failed (exit code 2)
+2025-11-26 09:35:22,105 - INFO - 📋 File 61/100: file_2.js
+2025-11-26 09:35:23,165 - ERROR - ❌ file_2.js: Scan failed (exit code 2)
+2025-11-26 09:35:23,166 - INFO - 📋 File 62/100: file_88.js
+2025-11-26 09:35:24,253 - ERROR - ❌ file_88.js: Scan failed (exit code 2)
+2025-11-26 09:35:24,254 - INFO - 📋 File 63/100: file_9.js
+2025-11-26 09:35:25,331 - ERROR - ❌ file_9.js: Scan failed (exit code 2)
+2025-11-26 09:35:25,332 - INFO - 📋 File 64/100: file_60.js
+2025-11-26 09:35:26,362 - ERROR - ❌ file_60.js: Scan failed (exit code 2)
+2025-11-26 09:35:26,363 - INFO - 📋 File 65/100: file_31.js
+2025-11-26 09:35:27,402 - ERROR - ❌ file_31.js: Scan failed (exit code 2)
+2025-11-26 09:35:27,403 - INFO - 📋 File 66/100: file_93.js
+2025-11-26 09:35:28,450 - ERROR - ❌ file_93.js: Scan failed (exit code 2)
+2025-11-26 09:35:28,451 - INFO - 📋 File 67/100: file_54.js
+2025-11-26 09:35:29,494 - ERROR - ❌ file_54.js: Scan failed (exit code 2)
+2025-11-26 09:35:29,495 - INFO - 📋 File 68/100: file_44.js
+2025-11-26 09:35:30,516 - ERROR - ❌ file_44.js: Scan failed (exit code 2)
+2025-11-26 09:35:30,516 - INFO - 📋 File 69/100: file_15.js
+2025-11-26 09:35:31,596 - ERROR - ❌ file_15.js: Scan failed (exit code 2)
+2025-11-26 09:35:31,597 - INFO - 📋 File 70/100: file_83.js
+2025-11-26 09:35:32,593 - ERROR - ❌ file_83.js: Scan failed (exit code 2)
+2025-11-26 09:35:32,594 - INFO - 📋 File 71/100: file_21.js
+2025-11-26 09:35:33,623 - ERROR - ❌ file_21.js: Scan failed (exit code 2)
+2025-11-26 09:35:33,624 - INFO - 📋 File 72/100: file_70.js
+2025-11-26 09:35:34,653 - ERROR - ❌ file_70.js: Scan failed (exit code 2)
+2025-11-26 09:35:34,654 - INFO - 📋 File 73/100: file_50.js
+2025-11-26 09:35:35,703 - ERROR - ❌ file_50.js: Scan failed (exit code 2)
+2025-11-26 09:35:35,704 - INFO - 📋 File 74/100: file_35.js
+2025-11-26 09:35:36,718 - ERROR - ❌ file_35.js: Scan failed (exit code 2)
+2025-11-26 09:35:36,719 - INFO - 📋 File 75/100: file_64.js
+2025-11-26 09:35:37,749 - ERROR - ❌ file_64.js: Scan failed (exit code 2)
+2025-11-26 09:35:37,750 - INFO - 📋 File 76/100: file_97.js
+2025-11-26 09:35:38,829 - ERROR - ❌ file_97.js: Scan failed (exit code 2)
+2025-11-26 09:35:38,830 - INFO - 📋 File 77/100: file_87.js
+2025-11-26 09:35:39,899 - ERROR - ❌ file_87.js: Scan failed (exit code 2)
+2025-11-26 09:35:39,899 - INFO - 📋 File 78/100: file_74.js
+2025-11-26 09:35:40,935 - ERROR - ❌ file_74.js: Scan failed (exit code 2)
+2025-11-26 09:35:40,935 - INFO - 📋 File 79/100: file_25.js
+2025-11-26 09:35:41,959 - ERROR - ❌ file_25.js: Scan failed (exit code 2)
+2025-11-26 09:35:41,960 - INFO - 📋 File 80/100: file_11.js
+2025-11-26 09:35:43,012 - ERROR - ❌ file_11.js: Scan failed (exit code 2)
+2025-11-26 09:35:43,013 - INFO - 📋 File 81/100: file_40.js
+2025-11-26 09:35:44,001 - ERROR - ❌ file_40.js: Scan failed (exit code 2)
+2025-11-26 09:35:44,002 - INFO - 📋 File 82/100: file_51.js
+2025-11-26 09:35:45,030 - ERROR - ❌ file_51.js: Scan failed (exit code 2)
+2025-11-26 09:35:45,031 - INFO - 📋 File 83/100: file_34.js
+2025-11-26 09:35:46,018 - ERROR - ❌ file_34.js: Scan failed (exit code 2)
+2025-11-26 09:35:46,018 - INFO - 📋 File 84/100: file_65.js
+2025-11-26 09:35:47,070 - ERROR - ❌ file_65.js: Scan failed (exit code 2)
+2025-11-26 09:35:47,071 - INFO - 📋 File 85/100: file_96.js
+2025-11-26 09:35:48,074 - ERROR - ❌ file_96.js: Scan failed (exit code 2)
+2025-11-26 09:35:48,074 - INFO - 📋 File 86/100: file_86.js
+2025-11-26 09:35:49,236 - ERROR - ❌ file_86.js: Scan failed (exit code 2)
+2025-11-26 09:35:49,237 - INFO - 📋 File 87/100: file_75.js
+2025-11-26 09:35:50,344 - ERROR - ❌ file_75.js: Scan failed (exit code 2)
+2025-11-26 09:35:50,345 - INFO - 📋 File 88/100: file_24.js
+2025-11-26 09:35:51,434 - ERROR - ❌ file_24.js: Scan failed (exit code 2)
+2025-11-26 09:35:51,435 - INFO - 📋 File 89/100: file_10.js
+2025-11-26 09:35:52,544 - ERROR - ❌ file_10.js: Scan failed (exit code 2)
+2025-11-26 09:35:52,545 - INFO - 📋 File 90/100: file_41.js
+2025-11-26 09:35:53,811 - ERROR - ❌ file_41.js: Scan failed (exit code 2)
+2025-11-26 09:35:53,812 - INFO - 📋 File 91/100: file_8.js
+2025-11-26 09:35:55,141 - ERROR - ❌ file_8.js: Scan failed (exit code 2)
+2025-11-26 09:35:55,142 - INFO - 📋 File 92/100: file_61.js
+2025-11-26 09:35:56,293 - ERROR - ❌ file_61.js: Scan failed (exit code 2)
+2025-11-26 09:35:56,295 - INFO - 📋 File 93/100: file_30.js
+2025-11-26 09:35:57,503 - ERROR - ❌ file_30.js: Scan failed (exit code 2)
+2025-11-26 09:35:57,505 - INFO - 📋 File 94/100: file_92.js
+2025-11-26 09:35:58,754 - ERROR - ❌ file_92.js: Scan failed (exit code 2)
+2025-11-26 09:35:58,755 - INFO - 📋 File 95/100: file_55.js
+2025-11-26 09:35:59,912 - ERROR - ❌ file_55.js: Scan failed (exit code 2)
+2025-11-26 09:35:59,913 - INFO - 📋 File 96/100: file_45.js
+2025-11-26 09:36:01,034 - ERROR - ❌ file_45.js: Scan failed (exit code 2)
+2025-11-26 09:36:01,035 - INFO - 📋 File 97/100: file_14.js
+2025-11-26 09:36:02,158 - ERROR - ❌ file_14.js: Scan failed (exit code 2)
+2025-11-26 09:36:02,159 - INFO - 📋 File 98/100: file_82.js
+2025-11-26 09:36:03,258 - ERROR - ❌ file_82.js: Scan failed (exit code 2)
+2025-11-26 09:36:03,259 - INFO - 📋 File 99/100: file_20.js
+2025-11-26 09:36:04,415 - ERROR - ❌ file_20.js: Scan failed (exit code 2)
+2025-11-26 09:36:04,415 - INFO - 📋 File 100/100: file_71.js
+2025-11-26 09:36:05,580 - ERROR - ❌ file_71.js: Scan failed (exit code 2)
+2025-11-26 09:36:05,580 - INFO - 📊 Dataset javascript/large scan complete:
+2025-11-26 09:36:05,581 - INFO -    ⏱️  Total time: 111.42 seconds
+2025-11-26 09:36:05,581 - INFO -    📈 Files processed: 0 successful, 100 failed
+2025-11-26 09:36:05,582 - INFO -    🔍 Total vulnerabilities detected: 0
+2025-11-26 09:36:05,583 - INFO - 🔍 Comparing 0 detected vs 300 expected vulnerabilities
+2025-11-26 09:36:05,583 - INFO - 🔎 Analyzing detected vulnerabilities for matches...
+2025-11-26 09:36:05,584 - INFO - 📊 Detection analysis complete: 0 true positives, 0 false positives
+2025-11-26 09:36:05,584 - INFO - 🔍 Checking for false negatives (expected vulnerabilities not found)...
+2025-11-26 09:36:05,585 - INFO - 📊 False negative analysis complete: 300 missed vulnerabilities
+2025-11-26 09:36:05,586 - INFO - 📊 Dataset javascript/large final results:
+2025-11-26 09:36:05,587 - INFO -    📈 Performance: Precision=0.0%, Recall=0.0%, F1=0.0%
+2025-11-26 09:36:05,587 - INFO -    ⏱️  Performance: 111.42s total (0.9 files/sec)
+2025-11-26 09:36:05,588 - INFO -    🎯 Accuracy: TP=0, FP=0, FN=300
+2025-11-26 09:36:05,588 - INFO -    📋 Coverage: 0/300 vulnerabilities detected
+2025-11-26 09:36:05,589 - INFO - 🔄 Dataset 2/12: javascript/medium
+2025-11-26 09:36:05,589 - INFO - 📂 Dataset path: comprehensive_test/javascript/medium
+2025-11-26 09:36:05,590 - INFO - 📄 Found 25 test files to scan
+2025-11-26 09:36:05,591 - INFO - 🎯 Ground truth: 75 expected vulnerabilities
+2025-11-26 09:36:05,591 - INFO - 🔍 Starting Valid8 scans in hybrid mode (all features enabled)...
+2025-11-26 09:36:05,592 - INFO - 📋 File 1/25: file_13.js
+2025-11-26 09:36:06,807 - ERROR - ❌ file_13.js: Scan failed (exit code 2)
+2025-11-26 09:36:06,808 - INFO - 📋 File 2/25: file_17.js
+2025-11-26 09:36:07,905 - ERROR - ❌ file_17.js: Scan failed (exit code 2)
+2025-11-26 09:36:07,906 - INFO - 📋 File 3/25: file_23.js
+2025-11-26 09:36:09,042 - ERROR - ❌ file_23.js: Scan failed (exit code 2)
+2025-11-26 09:36:09,043 - INFO - 📋 File 4/25: file_16.js
+2025-11-26 09:36:10,105 - ERROR - ❌ file_16.js: Scan failed (exit code 2)
+2025-11-26 09:36:10,106 - INFO - 📋 File 5/25: file_22.js
+2025-11-26 09:36:11,195 - ERROR - ❌ file_22.js: Scan failed (exit code 2)
+2025-11-26 09:36:11,196 - INFO - 📋 File 6/25: file_12.js
+2025-11-26 09:36:12,233 - ERROR - ❌ file_12.js: Scan failed (exit code 2)
+2025-11-26 09:36:12,234 - INFO - 📋 File 7/25: file_5.js
+2025-11-26 09:36:13,521 - ERROR - ❌ file_5.js: Scan failed (exit code 2)
+2025-11-26 09:36:13,522 - INFO - 📋 File 8/25: file_19.js
+2025-11-26 09:36:14,769 - ERROR - ❌ file_19.js: Scan failed (exit code 2)
+2025-11-26 09:36:14,770 - INFO - 📋 File 9/25: file_1.js
+2025-11-26 09:36:15,880 - ERROR - ❌ file_1.js: Scan failed (exit code 2)
+2025-11-26 09:36:15,881 - INFO - 📋 File 10/25: file_0.js
+2025-11-26 09:36:16,946 - ERROR - ❌ file_0.js: Scan failed (exit code 2)
+2025-11-26 09:36:16,946 - INFO - 📋 File 11/25: file_4.js
+2025-11-26 09:36:18,518 - ERROR - ❌ file_4.js: Scan failed (exit code 2)
+2025-11-26 09:36:18,519 - INFO - 📋 File 12/25: file_18.js
+2025-11-26 09:36:20,108 - ERROR - ❌ file_18.js: Scan failed (exit code 2)
+2025-11-26 09:36:20,110 - INFO - 📋 File 13/25: file_3.js
+2025-11-26 09:36:21,461 - ERROR - ❌ file_3.js: Scan failed (exit code 2)
+2025-11-26 09:36:21,461 - INFO - 📋 File 14/25: file_7.js
+2025-11-26 09:36:22,362 - ERROR - ❌ file_7.js: Scan failed (exit code 2)
+2025-11-26 09:36:22,363 - INFO - 📋 File 15/25: file_6.js
+2025-11-26 09:36:23,282 - ERROR - ❌ file_6.js: Scan failed (exit code 2)
+2025-11-26 09:36:23,283 - INFO - 📋 File 16/25: file_2.js
+2025-11-26 09:36:24,301 - ERROR - ❌ file_2.js: Scan failed (exit code 2)
+2025-11-26 09:36:24,302 - INFO - 📋 File 17/25: file_9.js
+2025-11-26 09:36:25,308 - ERROR - ❌ file_9.js: Scan failed (exit code 2)
+2025-11-26 09:36:25,309 - INFO - 📋 File 18/25: file_15.js
+2025-11-26 09:36:26,307 - ERROR - ❌ file_15.js: Scan failed (exit code 2)
+2025-11-26 09:36:26,308 - INFO - 📋 File 19/25: file_21.js
+2025-11-26 09:36:27,560 - ERROR - ❌ file_21.js: Scan failed (exit code 2)
+2025-11-26 09:36:27,562 - INFO - 📋 File 20/25: file_11.js
+2025-11-26 09:36:28,581 - ERROR - ❌ file_11.js: Scan failed (exit code 2)
+2025-11-26 09:36:28,581 - INFO - 📋 File 21/25: file_24.js
+2025-11-26 09:36:29,684 - ERROR - ❌ file_24.js: Scan failed (exit code 2)
+2025-11-26 09:36:29,685 - INFO - 📋 File 22/25: file_10.js
+2025-11-26 09:36:30,585 - ERROR - ❌ file_10.js: Scan failed (exit code 2)
+2025-11-26 09:36:30,586 - INFO - 📋 File 23/25: file_8.js
+2025-11-26 09:36:31,501 - ERROR - ❌ file_8.js: Scan failed (exit code 2)
+2025-11-26 09:36:31,502 - INFO - 📋 File 24/25: file_14.js
+2025-11-26 09:36:32,466 - ERROR - ❌ file_14.js: Scan failed (exit code 2)
+2025-11-26 09:36:32,466 - INFO - 📋 File 25/25: file_20.js
+2025-11-26 09:36:33,919 - ERROR - ❌ file_20.js: Scan failed (exit code 2)
+2025-11-26 09:36:33,920 - INFO - 📊 Dataset javascript/medium scan complete:
+2025-11-26 09:36:33,921 - INFO -    ⏱️  Total time: 28.33 seconds
+2025-11-26 09:36:33,921 - INFO -    📈 Files processed: 0 successful, 25 failed
+2025-11-26 09:36:33,922 - INFO -    🔍 Total vulnerabilities detected: 0
+2025-11-26 09:36:33,922 - INFO - 🔍 Comparing 0 detected vs 75 expected vulnerabilities
+2025-11-26 09:36:33,923 - INFO - 🔎 Analyzing detected vulnerabilities for matches...
+2025-11-26 09:36:33,924 - INFO - 📊 Detection analysis complete: 0 true positives, 0 false positives
+2025-11-26 09:36:33,924 - INFO - 🔍 Checking for false negatives (expected vulnerabilities not found)...
+2025-11-26 09:36:33,925 - INFO - 📊 False negative analysis complete: 75 missed vulnerabilities
+2025-11-26 09:36:33,926 - INFO - 📊 Dataset javascript/medium final results:
+2025-11-26 09:36:33,926 - INFO -    📈 Performance: Precision=0.0%, Recall=0.0%, F1=0.0%
+2025-11-26 09:36:33,927 - INFO -    ⏱️  Performance: 28.33s total (0.9 files/sec)
+2025-11-26 09:36:33,927 - INFO -    🎯 Accuracy: TP=0, FP=0, FN=75
+2025-11-26 09:36:33,928 - INFO -    📋 Coverage: 0/75 vulnerabilities detected
+2025-11-26 09:36:33,928 - INFO - 🔄 Dataset 3/12: kotlin/large
+2025-11-26 09:36:33,929 - INFO - 📂 Dataset path: comprehensive_test/kotlin/large
+2025-11-26 09:36:33,930 - INFO - 📄 Found 100 test files to scan
+2025-11-26 09:36:33,931 - INFO - 🎯 Ground truth: 300 expected vulnerabilities
+2025-11-26 09:36:33,931 - INFO - 🔍 Starting Valid8 scans in hybrid mode (all features enabled)...
+2025-11-26 09:36:33,932 - INFO - 📋 File 1/100: file_8.kt
+2025-11-26 09:36:35,479 - ERROR - ❌ file_8.kt: Scan failed (exit code 1)
+2025-11-26 09:36:35,480 - INFO - 📋 File 2/100: file_55.kt
+2025-11-26 09:36:36,484 - ERROR - ❌ file_55.kt: Scan failed (exit code 1)
+2025-11-26 09:36:36,484 - INFO - 📋 File 3/100: file_92.kt
+2025-11-26 09:36:37,551 - ERROR - ❌ file_92.kt: Scan failed (exit code 1)
+2025-11-26 09:36:37,552 - INFO - 📋 File 4/100: file_61.kt
+2025-11-26 09:36:38,622 - ERROR - ❌ file_61.kt: Scan failed (exit code 1)
+2025-11-26 09:36:38,623 - INFO - 📋 File 5/100: file_30.kt
+2025-11-26 09:36:39,720 - ERROR - ❌ file_30.kt: Scan failed (exit code 1)
+2025-11-26 09:36:39,722 - INFO - 📋 File 6/100: file_20.kt
+2025-11-26 09:36:41,168 - ERROR - ❌ file_20.kt: Scan failed (exit code 1)
+2025-11-26 09:36:41,168 - INFO - 📋 File 7/100: file_71.kt
+2025-11-26 09:36:42,670 - ERROR - ❌ file_71.kt: Scan failed (exit code 1)
+2025-11-26 09:36:42,671 - INFO - 📋 File 8/100: file_82.kt
+2025-11-26 09:36:44,311 - ERROR - ❌ file_82.kt: Scan failed (exit code 1)
+2025-11-26 09:36:44,312 - INFO - 📋 File 9/100: file_45.kt
+2025-11-26 09:36:45,238 - ERROR - ❌ file_45.kt: Scan failed (exit code 1)
+2025-11-26 09:36:45,239 - INFO - 📋 File 10/100: file_14.kt
+2025-11-26 09:36:46,109 - ERROR - ❌ file_14.kt: Scan failed (exit code 1)
+2025-11-26 09:36:46,110 - INFO - 📋 File 11/100: file_96.kt
+2025-11-26 09:36:47,007 - ERROR - ❌ file_96.kt: Scan failed (exit code 1)
+2025-11-26 09:36:47,008 - INFO - 📋 File 12/100: file_34.kt
+2025-11-26 09:36:47,837 - ERROR - ❌ file_34.kt: Scan failed (exit code 1)
+2025-11-26 09:36:47,838 - INFO - 📋 File 13/100: file_65.kt
+2025-11-26 09:36:48,673 - ERROR - ❌ file_65.kt: Scan failed (exit code 1)
+2025-11-26 09:36:48,674 - INFO - 📋 File 14/100: file_51.kt
+2025-11-26 09:36:49,494 - ERROR - ❌ file_51.kt: Scan failed (exit code 1)
+2025-11-26 09:36:49,495 - INFO - 📋 File 15/100: file_10.kt
+2025-11-26 09:36:50,310 - ERROR - ❌ file_10.kt: Scan failed (exit code 1)
+2025-11-26 09:36:50,310 - INFO - 📋 File 16/100: file_41.kt
+2025-11-26 09:36:51,158 - ERROR - ❌ file_41.kt: Scan failed (exit code 1)
+2025-11-26 09:36:51,159 - INFO - 📋 File 17/100: file_75.kt
+2025-11-26 09:36:52,129 - ERROR - ❌ file_75.kt: Scan failed (exit code 1)
+2025-11-26 09:36:52,132 - INFO - 📋 File 18/100: file_24.kt
+2025-11-26 09:36:53,059 - ERROR - ❌ file_24.kt: Scan failed (exit code 1)
+2025-11-26 09:36:53,060 - INFO - 📋 File 19/100: file_86.kt
+2025-11-26 09:36:53,901 - ERROR - ❌ file_86.kt: Scan failed (exit code 1)
+2025-11-26 09:36:53,902 - INFO - 📋 File 20/100: file_97.kt
+2025-11-26 09:36:54,809 - ERROR - ❌ file_97.kt: Scan failed (exit code 1)
+2025-11-26 09:36:54,810 - INFO - 📋 File 21/100: file_35.kt
+2025-11-26 09:36:55,664 - ERROR - ❌ file_35.kt: Scan failed (exit code 1)
+2025-11-26 09:36:55,664 - INFO - 📋 File 22/100: file_64.kt
+2025-11-26 09:36:56,500 - ERROR - ❌ file_64.kt: Scan failed (exit code 1)
+2025-11-26 09:36:56,500 - INFO - 📋 File 23/100: file_50.kt
+2025-11-26 09:36:57,325 - ERROR - ❌ file_50.kt: Scan failed (exit code 1)
+2025-11-26 09:36:57,326 - INFO - 📋 File 24/100: file_11.kt
+2025-11-26 09:36:58,276 - ERROR - ❌ file_11.kt: Scan failed (exit code 1)
+2025-11-26 09:36:58,277 - INFO - 📋 File 25/100: file_40.kt
+2025-11-26 09:36:59,147 - ERROR - ❌ file_40.kt: Scan failed (exit code 1)
+2025-11-26 09:36:59,148 - INFO - 📋 File 26/100: file_74.kt
+2025-11-26 09:36:59,972 - ERROR - ❌ file_74.kt: Scan failed (exit code 1)
+2025-11-26 09:36:59,973 - INFO - 📋 File 27/100: file_25.kt
+2025-11-26 09:37:00,880 - ERROR - ❌ file_25.kt: Scan failed (exit code 1)
+2025-11-26 09:37:00,881 - INFO - 📋 File 28/100: file_87.kt
+2025-11-26 09:37:01,811 - ERROR - ❌ file_87.kt: Scan failed (exit code 1)
+2025-11-26 09:37:01,811 - INFO - 📋 File 29/100: file_9.kt
+2025-11-26 09:37:02,670 - ERROR - ❌ file_9.kt: Scan failed (exit code 1)
+2025-11-26 09:37:02,670 - INFO - 📋 File 30/100: file_54.kt
+2025-11-26 09:37:03,644 - ERROR - ❌ file_54.kt: Scan failed (exit code 1)
+2025-11-26 09:37:03,645 - INFO - 📋 File 31/100: file_93.kt
+2025-11-26 09:37:04,891 - ERROR - ❌ file_93.kt: Scan failed (exit code 1)
+2025-11-26 09:37:04,892 - INFO - 📋 File 32/100: file_60.kt
+2025-11-26 09:37:06,208 - ERROR - ❌ file_60.kt: Scan failed (exit code 1)
+2025-11-26 09:37:06,209 - INFO - 📋 File 33/100: file_31.kt
+2025-11-26 09:37:07,148 - ERROR - ❌ file_31.kt: Scan failed (exit code 1)
+2025-11-26 09:37:07,148 - INFO - 📋 File 34/100: file_21.kt
+2025-11-26 09:37:08,000 - ERROR - ❌ file_21.kt: Scan failed (exit code 1)
+2025-11-26 09:37:08,001 - INFO - 📋 File 35/100: file_70.kt
+2025-11-26 09:37:08,834 - ERROR - ❌ file_70.kt: Scan failed (exit code 1)
+2025-11-26 09:37:08,835 - INFO - 📋 File 36/100: file_83.kt
+2025-11-26 09:37:09,679 - ERROR - ❌ file_83.kt: Scan failed (exit code 1)
+2025-11-26 09:37:09,679 - INFO - 📋 File 37/100: file_44.kt
+2025-11-26 09:37:10,537 - ERROR - ❌ file_44.kt: Scan failed (exit code 1)
+2025-11-26 09:37:10,537 - INFO - 📋 File 38/100: file_15.kt
+2025-11-26 09:37:11,426 - ERROR - ❌ file_15.kt: Scan failed (exit code 1)
+2025-11-26 09:37:11,427 - INFO - 📋 File 39/100: file_98.kt
+2025-11-26 09:37:12,320 - ERROR - ❌ file_98.kt: Scan failed (exit code 1)
+2025-11-26 09:37:12,321 - INFO - 📋 File 40/100: file_2.kt
+2025-11-26 09:37:13,176 - ERROR - ❌ file_2.kt: Scan failed (exit code 1)
+2025-11-26 09:37:13,177 - INFO - 📋 File 41/100: file_88.kt
+2025-11-26 09:37:14,008 - ERROR - ❌ file_88.kt: Scan failed (exit code 1)
+2025-11-26 09:37:14,009 - INFO - 📋 File 42/100: file_6.kt
+2025-11-26 09:37:14,837 - ERROR - ❌ file_6.kt: Scan failed (exit code 1)
+2025-11-26 09:37:14,838 - INFO - 📋 File 43/100: file_7.kt
+2025-11-26 09:37:15,659 - ERROR - ❌ file_7.kt: Scan failed (exit code 1)
+2025-11-26 09:37:15,660 - INFO - 📋 File 44/100: file_99.kt
+2025-11-26 09:37:16,490 - ERROR - ❌ file_99.kt: Scan failed (exit code 1)
+2025-11-26 09:37:16,491 - INFO - 📋 File 45/100: file_3.kt
+2025-11-26 09:37:17,325 - ERROR - ❌ file_3.kt: Scan failed (exit code 1)
+2025-11-26 09:37:17,326 - INFO - 📋 File 46/100: file_89.kt
+2025-11-26 09:37:18,143 - ERROR - ❌ file_89.kt: Scan failed (exit code 1)
+2025-11-26 09:37:18,144 - INFO - 📋 File 47/100: file_59.kt
+2025-11-26 09:37:19,197 - ERROR - ❌ file_59.kt: Scan failed (exit code 1)
+2025-11-26 09:37:19,198 - INFO - 📋 File 48/100: file_4.kt
+2025-11-26 09:37:20,418 - ERROR - ❌ file_4.kt: Scan failed (exit code 1)
+2025-11-26 09:37:20,419 - INFO - 📋 File 49/100: file_49.kt
+2025-11-26 09:37:21,375 - ERROR - ❌ file_49.kt: Scan failed (exit code 1)
+2025-11-26 09:37:21,376 - INFO - 📋 File 50/100: file_18.kt
+2025-11-26 09:37:22,185 - ERROR - ❌ file_18.kt: Scan failed (exit code 1)
+2025-11-26 09:37:22,186 - INFO - 📋 File 51/100: file_38.kt
+2025-11-26 09:37:23,008 - ERROR - ❌ file_38.kt: Scan failed (exit code 1)
+2025-11-26 09:37:23,008 - INFO - 📋 File 52/100: file_69.kt
+2025-11-26 09:37:23,829 - ERROR - ❌ file_69.kt: Scan failed (exit code 1)
+2025-11-26 09:37:23,830 - INFO - 📋 File 53/100: file_0.kt
+2025-11-26 09:37:24,667 - ERROR - ❌ file_0.kt: Scan failed (exit code 1)
+2025-11-26 09:37:24,668 - INFO - 📋 File 54/100: file_79.kt
+2025-11-26 09:37:25,526 - ERROR - ❌ file_79.kt: Scan failed (exit code 1)
+2025-11-26 09:37:25,527 - INFO - 📋 File 55/100: file_28.kt
+2025-11-26 09:37:26,411 - ERROR - ❌ file_28.kt: Scan failed (exit code 1)
+2025-11-26 09:37:26,411 - INFO - 📋 File 56/100: file_39.kt
+2025-11-26 09:37:27,232 - ERROR - ❌ file_39.kt: Scan failed (exit code 1)
+2025-11-26 09:37:27,233 - INFO - 📋 File 57/100: file_68.kt
+2025-11-26 09:37:28,063 - ERROR - ❌ file_68.kt: Scan failed (exit code 1)
+2025-11-26 09:37:28,064 - INFO - 📋 File 58/100: file_1.kt
+2025-11-26 09:37:28,883 - ERROR - ❌ file_1.kt: Scan failed (exit code 1)
+2025-11-26 09:37:28,884 - INFO - 📋 File 59/100: file_78.kt
+2025-11-26 09:37:29,706 - ERROR - ❌ file_78.kt: Scan failed (exit code 1)
+2025-11-26 09:37:29,706 - INFO - 📋 File 60/100: file_29.kt
+2025-11-26 09:37:30,522 - ERROR - ❌ file_29.kt: Scan failed (exit code 1)
+2025-11-26 09:37:30,523 - INFO - 📋 File 61/100: file_58.kt
+2025-11-26 09:37:31,343 - ERROR - ❌ file_58.kt: Scan failed (exit code 1)
+2025-11-26 09:37:31,344 - INFO - 📋 File 62/100: file_5.kt
+2025-11-26 09:37:32,216 - ERROR - ❌ file_5.kt: Scan failed (exit code 1)
+2025-11-26 09:37:32,217 - INFO - 📋 File 63/100: file_48.kt
+2025-11-26 09:37:33,031 - ERROR - ❌ file_48.kt: Scan failed (exit code 1)
+2025-11-26 09:37:33,032 - INFO - 📋 File 64/100: file_19.kt
+2025-11-26 09:37:33,861 - ERROR - ❌ file_19.kt: Scan failed (exit code 1)
+2025-11-26 09:37:33,862 - INFO - 📋 File 65/100: file_67.kt
+2025-11-26 09:37:34,690 - ERROR - ❌ file_67.kt: Scan failed (exit code 1)
+2025-11-26 09:37:34,691 - INFO - 📋 File 66/100: file_36.kt
+2025-11-26 09:37:35,513 - ERROR - ❌ file_36.kt: Scan failed (exit code 1)
+2025-11-26 09:37:35,514 - INFO - 📋 File 67/100: file_94.kt
+2025-11-26 09:37:36,358 - ERROR - ❌ file_94.kt: Scan failed (exit code 1)
+2025-11-26 09:37:36,359 - INFO - 📋 File 68/100: file_53.kt
+2025-11-26 09:37:37,191 - ERROR - ❌ file_53.kt: Scan failed (exit code 1)
+2025-11-26 09:37:37,192 - INFO - 📋 File 69/100: file_43.kt
+2025-11-26 09:37:38,027 - ERROR - ❌ file_43.kt: Scan failed (exit code 1)
+2025-11-26 09:37:38,027 - INFO - 📋 File 70/100: file_12.kt
+2025-11-26 09:37:38,851 - ERROR - ❌ file_12.kt: Scan failed (exit code 1)
+2025-11-26 09:37:38,851 - INFO - 📋 File 71/100: file_84.kt
+2025-11-26 09:37:39,722 - ERROR - ❌ file_84.kt: Scan failed (exit code 1)
+2025-11-26 09:37:39,723 - INFO - 📋 File 72/100: file_26.kt
+2025-11-26 09:37:40,567 - ERROR - ❌ file_26.kt: Scan failed (exit code 1)
+2025-11-26 09:37:40,568 - INFO - 📋 File 73/100: file_77.kt
+2025-11-26 09:37:41,496 - ERROR - ❌ file_77.kt: Scan failed (exit code 1)
+2025-11-26 09:37:41,497 - INFO - 📋 File 74/100: file_57.kt
+2025-11-26 09:37:42,330 - ERROR - ❌ file_57.kt: Scan failed (exit code 1)
+2025-11-26 09:37:42,331 - INFO - 📋 File 75/100: file_32.kt
+2025-11-26 09:37:43,153 - ERROR - ❌ file_32.kt: Scan failed (exit code 1)
+2025-11-26 09:37:43,154 - INFO - 📋 File 76/100: file_63.kt
+2025-11-26 09:37:44,033 - ERROR - ❌ file_63.kt: Scan failed (exit code 1)
+2025-11-26 09:37:44,034 - INFO - 📋 File 77/100: file_90.kt
+2025-11-26 09:37:44,862 - ERROR - ❌ file_90.kt: Scan failed (exit code 1)
+2025-11-26 09:37:44,862 - INFO - 📋 File 78/100: file_80.kt
+2025-11-26 09:37:45,763 - ERROR - ❌ file_80.kt: Scan failed (exit code 1)
+2025-11-26 09:37:45,764 - INFO - 📋 File 79/100: file_73.kt
+2025-11-26 09:37:46,680 - ERROR - ❌ file_73.kt: Scan failed (exit code 1)
+2025-11-26 09:37:46,681 - INFO - 📋 File 80/100: file_22.kt
+2025-11-26 09:37:47,518 - ERROR - ❌ file_22.kt: Scan failed (exit code 1)
+2025-11-26 09:37:47,519 - INFO - 📋 File 81/100: file_16.kt
+2025-11-26 09:37:48,354 - ERROR - ❌ file_16.kt: Scan failed (exit code 1)
+2025-11-26 09:37:48,355 - INFO - 📋 File 82/100: file_47.kt
+2025-11-26 09:37:49,206 - ERROR - ❌ file_47.kt: Scan failed (exit code 1)
+2025-11-26 09:37:49,207 - INFO - 📋 File 83/100: file_56.kt
+2025-11-26 09:37:50,077 - ERROR - ❌ file_56.kt: Scan failed (exit code 1)
+2025-11-26 09:37:50,078 - INFO - 📋 File 84/100: file_33.kt
+2025-11-26 09:37:50,917 - ERROR - ❌ file_33.kt: Scan failed (exit code 1)
+2025-11-26 09:37:50,917 - INFO - 📋 File 85/100: file_62.kt
+2025-11-26 09:37:51,761 - ERROR - ❌ file_62.kt: Scan failed (exit code 1)
+2025-11-26 09:37:51,762 - INFO - 📋 File 86/100: file_91.kt
+2025-11-26 09:37:52,590 - ERROR - ❌ file_91.kt: Scan failed (exit code 1)
+2025-11-26 09:37:52,591 - INFO - 📋 File 87/100: file_81.kt
+2025-11-26 09:37:53,441 - ERROR - ❌ file_81.kt: Scan failed (exit code 1)
+2025-11-26 09:37:53,442 - INFO - 📋 File 88/100: file_72.kt
+2025-11-26 09:37:54,291 - ERROR - ❌ file_72.kt: Scan failed (exit code 1)
+2025-11-26 09:37:54,292 - INFO - 📋 File 89/100: file_23.kt
+2025-11-26 09:37:55,134 - ERROR - ❌ file_23.kt: Scan failed (exit code 1)
+2025-11-26 09:37:55,135 - INFO - 📋 File 90/100: file_17.kt
+2025-11-26 09:37:55,987 - ERROR - ❌ file_17.kt: Scan failed (exit code 1)
+2025-11-26 09:37:55,988 - INFO - 📋 File 91/100: file_46.kt
+2025-11-26 09:37:56,815 - ERROR - ❌ file_46.kt: Scan failed (exit code 1)
+2025-11-26 09:37:56,816 - INFO - 📋 File 92/100: file_66.kt
+2025-11-26 09:37:57,635 - ERROR - ❌ file_66.kt: Scan failed (exit code 1)
+2025-11-26 09:37:57,636 - INFO - 📋 File 93/100: file_37.kt
+2025-11-26 09:37:58,464 - ERROR - ❌ file_37.kt: Scan failed (exit code 1)
+2025-11-26 09:37:58,464 - INFO - 📋 File 94/100: file_95.kt
+2025-11-26 09:37:59,323 - ERROR - ❌ file_95.kt: Scan failed (exit code 1)
+2025-11-26 09:37:59,323 - INFO - 📋 File 95/100: file_52.kt
+2025-11-26 09:38:00,175 - ERROR - ❌ file_52.kt: Scan failed (exit code 1)
+2025-11-26 09:38:00,176 - INFO - 📋 File 96/100: file_42.kt
+2025-11-26 09:38:01,016 - ERROR - ❌ file_42.kt: Scan failed (exit code 1)
+2025-11-26 09:38:01,017 - INFO - 📋 File 97/100: file_13.kt
+2025-11-26 09:38:01,851 - ERROR - ❌ file_13.kt: Scan failed (exit code 1)
+2025-11-26 09:38:01,852 - INFO - 📋 File 98/100: file_85.kt
+2025-11-26 09:38:02,718 - ERROR - ❌ file_85.kt: Scan failed (exit code 1)
+2025-11-26 09:38:02,719 - INFO - 📋 File 99/100: file_27.kt
+2025-11-26 09:38:03,555 - ERROR - ❌ file_27.kt: Scan failed (exit code 1)
+2025-11-26 09:38:03,556 - INFO - 📋 File 100/100: file_76.kt
+2025-11-26 09:38:04,385 - ERROR - ❌ file_76.kt: Scan failed (exit code 1)
+2025-11-26 09:38:04,385 - INFO - 📊 Dataset kotlin/large scan complete:
+2025-11-26 09:38:04,386 - INFO -    ⏱️  Total time: 90.46 seconds
+2025-11-26 09:38:04,386 - INFO -    📈 Files processed: 0 successful, 100 failed
+2025-11-26 09:38:04,387 - INFO -    🔍 Total vulnerabilities detected: 0
+2025-11-26 09:38:04,387 - INFO - 🔍 Comparing 0 detected vs 300 expected vulnerabilities
+2025-11-26 09:38:04,388 - INFO - 🔎 Analyzing detected vulnerabilities for matches...
+2025-11-26 09:38:04,388 - INFO - 📊 Detection analysis complete: 0 true positives, 0 false positives
+2025-11-26 09:38:04,389 - INFO - 🔍 Checking for false negatives (expected vulnerabilities not found)...
+2025-11-26 09:38:04,389 - INFO - 📊 False negative analysis complete: 300 missed vulnerabilities
+2025-11-26 09:38:04,390 - INFO - 📊 Dataset kotlin/large final results:
+2025-11-26 09:38:04,391 - INFO -    📈 Performance: Precision=0.0%, Recall=0.0%, F1=0.0%
+2025-11-26 09:38:04,391 - INFO -    ⏱️  Performance: 90.46s total (1.1 files/sec)
+2025-11-26 09:38:04,392 - INFO -    🎯 Accuracy: TP=0, FP=0, FN=300
+2025-11-26 09:38:04,392 - INFO -    📋 Coverage: 0/300 vulnerabilities detected
+2025-11-26 09:38:04,393 - INFO - 🔄 Dataset 4/12: kotlin/medium
+2025-11-26 09:38:04,393 - INFO - 📂 Dataset path: comprehensive_test/kotlin/medium
+2025-11-26 09:38:04,395 - INFO - 📄 Found 25 test files to scan
+2025-11-26 09:38:04,395 - INFO - 🎯 Ground truth: 75 expected vulnerabilities
+2025-11-26 09:38:04,396 - INFO - 🔍 Starting Valid8 scans in hybrid mode (all features enabled)...
+2025-11-26 09:38:04,396 - INFO - 📋 File 1/25: file_8.kt
+2025-11-26 09:38:05,219 - ERROR - ❌ file_8.kt: Scan failed (exit code 1)
+2025-11-26 09:38:05,220 - INFO - 📋 File 2/25: file_20.kt
+2025-11-26 09:38:06,060 - ERROR - ❌ file_20.kt: Scan failed (exit code 1)
+2025-11-26 09:38:06,061 - INFO - 📋 File 3/25: file_14.kt
+2025-11-26 09:38:07,126 - ERROR - ❌ file_14.kt: Scan failed (exit code 1)
+2025-11-26 09:38:07,127 - INFO - 📋 File 4/25: file_10.kt
+2025-11-26 09:38:08,401 - ERROR - ❌ file_10.kt: Scan failed (exit code 1)
+2025-11-26 09:38:08,402 - INFO - 📋 File 5/25: file_24.kt
+2025-11-26 09:38:09,501 - ERROR - ❌ file_24.kt: Scan failed (exit code 1)
+2025-11-26 09:38:09,502 - INFO - 📋 File 6/25: file_11.kt
+2025-11-26 09:38:10,727 - ERROR - ❌ file_11.kt: Scan failed (exit code 1)
+2025-11-26 09:38:10,729 - INFO - 📋 File 7/25: file_9.kt
+2025-11-26 09:38:11,748 - ERROR - ❌ file_9.kt: Scan failed (exit code 1)
+2025-11-26 09:38:11,748 - INFO - 📋 File 8/25: file_21.kt
+2025-11-26 09:38:13,308 - ERROR - ❌ file_21.kt: Scan failed (exit code 1)
+2025-11-26 09:38:13,309 - INFO - 📋 File 9/25: file_15.kt
+2025-11-26 09:38:15,876 - ERROR - ❌ file_15.kt: Scan failed (exit code 1)
+2025-11-26 09:38:15,877 - INFO - 📋 File 10/25: file_2.kt
+2025-11-26 09:38:16,963 - ERROR - ❌ file_2.kt: Scan failed (exit code 1)
+2025-11-26 09:38:16,964 - INFO - 📋 File 11/25: file_6.kt
+2025-11-26 09:38:18,032 - ERROR - ❌ file_6.kt: Scan failed (exit code 1)
+2025-11-26 09:38:18,034 - INFO - 📋 File 12/25: file_7.kt
+2025-11-26 09:38:19,309 - ERROR - ❌ file_7.kt: Scan failed (exit code 1)
+2025-11-26 09:38:19,310 - INFO - 📋 File 13/25: file_3.kt
+2025-11-26 09:38:21,431 - ERROR - ❌ file_3.kt: Scan failed (exit code 1)
+2025-11-26 09:38:21,442 - INFO - 📋 File 14/25: file_4.kt
+2025-11-26 09:38:22,630 - ERROR - ❌ file_4.kt: Scan failed (exit code 1)
+2025-11-26 09:38:22,630 - INFO - 📋 File 15/25: file_18.kt
+2025-11-26 09:38:24,640 - ERROR - ❌ file_18.kt: Scan failed (exit code 1)
+2025-11-26 09:38:24,642 - INFO - 📋 File 16/25: file_0.kt
+2025-11-26 09:38:26,291 - ERROR - ❌ file_0.kt: Scan failed (exit code 1)
+2025-11-26 09:38:26,292 - INFO - 📋 File 17/25: file_1.kt
+2025-11-26 09:38:27,799 - ERROR - ❌ file_1.kt: Scan failed (exit code 1)
+2025-11-26 09:38:27,800 - INFO - 📋 File 18/25: file_5.kt
+2025-11-26 09:38:29,298 - ERROR - ❌ file_5.kt: Scan failed (exit code 1)
+2025-11-26 09:38:29,299 - INFO - 📋 File 19/25: file_19.kt
+2025-11-26 09:38:30,713 - ERROR - ❌ file_19.kt: Scan failed (exit code 1)
+2025-11-26 09:38:30,714 - INFO - 📋 File 20/25: file_12.kt
+2025-11-26 09:38:31,694 - ERROR - ❌ file_12.kt: Scan failed (exit code 1)
+2025-11-26 09:38:31,695 - INFO - 📋 File 21/25: file_22.kt
+2025-11-26 09:38:32,663 - ERROR - ❌ file_22.kt: Scan failed (exit code 1)
+2025-11-26 09:38:32,664 - INFO - 📋 File 22/25: file_16.kt
+2025-11-26 09:38:33,628 - ERROR - ❌ file_16.kt: Scan failed (exit code 1)
+2025-11-26 09:38:33,629 - INFO - 📋 File 23/25: file_23.kt
+2025-11-26 09:38:34,590 - ERROR - ❌ file_23.kt: Scan failed (exit code 1)
+2025-11-26 09:38:34,591 - INFO - 📋 File 24/25: file_17.kt
+2025-11-26 09:38:35,562 - ERROR - ❌ file_17.kt: Scan failed (exit code 1)
+2025-11-26 09:38:35,563 - INFO - 📋 File 25/25: file_13.kt
+2025-11-26 09:38:36,547 - ERROR - ❌ file_13.kt: Scan failed (exit code 1)
+2025-11-26 09:38:36,547 - INFO - 📊 Dataset kotlin/medium scan complete:
+2025-11-26 09:38:36,548 - INFO -    ⏱️  Total time: 32.15 seconds
+2025-11-26 09:38:36,548 - INFO -    📈 Files processed: 0 successful, 25 failed
+2025-11-26 09:38:36,549 - INFO -    🔍 Total vulnerabilities detected: 0
+2025-11-26 09:38:36,550 - INFO - 🔍 Comparing 0 detected vs 75 expected vulnerabilities
+2025-11-26 09:38:36,550 - INFO - 🔎 Analyzing detected vulnerabilities for matches...
+2025-11-26 09:38:36,551 - INFO - 📊 Detection analysis complete: 0 true positives, 0 false positives
+2025-11-26 09:38:36,551 - INFO - 🔍 Checking for false negatives (expected vulnerabilities not found)...
+2025-11-26 09:38:36,552 - INFO - 📊 False negative analysis complete: 75 missed vulnerabilities
+2025-11-26 09:38:36,552 - INFO - 📊 Dataset kotlin/medium final results:
+2025-11-26 09:38:36,553 - INFO -    📈 Performance: Precision=0.0%, Recall=0.0%, F1=0.0%
+2025-11-26 09:38:36,553 - INFO -    ⏱️  Performance: 32.15s total (0.8 files/sec)
+2025-11-26 09:38:36,554 - INFO -    🎯 Accuracy: TP=0, FP=0, FN=75
+2025-11-26 09:38:36,554 - INFO -    📋 Coverage: 0/75 vulnerabilities detected
+2025-11-26 09:38:36,555 - INFO - 🔄 Dataset 5/12: kotlin/small
+2025-11-26 09:38:36,555 - INFO - 📂 Dataset path: comprehensive_test/kotlin/small
+2025-11-26 09:38:36,556 - INFO - 📄 Found 5 test files to scan
+2025-11-26 09:38:36,557 - INFO - 🎯 Ground truth: 15 expected vulnerabilities
+2025-11-26 09:38:36,557 - INFO - 🔍 Starting Valid8 scans in hybrid mode (all features enabled)...
+2025-11-26 09:38:36,558 - INFO - 📋 File 1/5: file_2.kt
+2025-11-26 09:38:37,579 - ERROR - ❌ file_2.kt: Scan failed (exit code 1)
+2025-11-26 09:38:37,580 - INFO - 📋 File 2/5: file_3.kt
+2025-11-26 09:38:38,547 - ERROR - ❌ file_3.kt: Scan failed (exit code 1)
+2025-11-26 09:38:38,548 - INFO - 📋 File 3/5: file_4.kt
+2025-11-26 09:38:39,564 - ERROR - ❌ file_4.kt: Scan failed (exit code 1)
+2025-11-26 09:38:39,565 - INFO - 📋 File 4/5: file_0.kt
+2025-11-26 09:38:40,512 - ERROR - ❌ file_0.kt: Scan failed (exit code 1)
+2025-11-26 09:38:40,512 - INFO - 📋 File 5/5: file_1.kt
+2025-11-26 09:38:41,475 - ERROR - ❌ file_1.kt: Scan failed (exit code 1)
+2025-11-26 09:38:41,476 - INFO - 📊 Dataset kotlin/small scan complete:
+2025-11-26 09:38:41,476 - INFO -    ⏱️  Total time: 4.92 seconds
+2025-11-26 09:38:41,477 - INFO -    📈 Files processed: 0 successful, 5 failed
+2025-11-26 09:38:41,477 - INFO -    🔍 Total vulnerabilities detected: 0
+2025-11-26 09:38:41,478 - INFO - 🔍 Comparing 0 detected vs 15 expected vulnerabilities
+2025-11-26 09:38:41,478 - INFO - 🔎 Analyzing detected vulnerabilities for matches...
+2025-11-26 09:38:41,479 - INFO - 📊 Detection analysis complete: 0 true positives, 0 false positives
+2025-11-26 09:38:41,479 - INFO - 🔍 Checking for false negatives (expected vulnerabilities not found)...
+2025-11-26 09:38:41,480 - INFO - 📊 False negative analysis complete: 15 missed vulnerabilities
+2025-11-26 09:38:41,481 - INFO - 📊 Dataset kotlin/small final results:
+2025-11-26 09:38:41,481 - INFO -    📈 Performance: Precision=0.0%, Recall=0.0%, F1=0.0%
+2025-11-26 09:38:41,482 - INFO -    ⏱️  Performance: 4.92s total (1.0 files/sec)
+2025-11-26 09:38:41,482 - INFO -    🎯 Accuracy: TP=0, FP=0, FN=15
+2025-11-26 09:38:41,483 - INFO -    📋 Coverage: 0/15 vulnerabilities detected
+2025-11-26 09:38:41,483 - INFO - 🔄 Dataset 6/12: java/large
+2025-11-26 09:38:41,484 - INFO - 📂 Dataset path: comprehensive_test/java/large
+2025-11-26 09:38:41,485 - INFO - 📄 Found 100 test files to scan
+2025-11-26 09:38:41,486 - INFO - 🎯 Ground truth: 300 expected vulnerabilities
+2025-11-26 09:38:41,486 - INFO - 🔍 Starting Valid8 scans in hybrid mode (all features enabled)...
+2025-11-26 09:38:41,487 - INFO - 📋 File 1/100: file_96.java
+2025-11-26 09:38:42,443 - ERROR - ❌ file_96.java: Scan failed (exit code 2)
+2025-11-26 09:38:42,443 - INFO - 📋 File 2/100: file_79.java
+2025-11-26 09:38:43,402 - ERROR - ❌ file_79.java: Scan failed (exit code 2)
+2025-11-26 09:38:43,402 - INFO - 📋 File 3/100: file_80.java
+2025-11-26 09:38:45,077 - ERROR - ❌ file_80.java: Scan failed (exit code 2)
+2025-11-26 09:38:45,078 - INFO - 📋 File 4/100: file_38.java
+2025-11-26 09:38:46,591 - ERROR - ❌ file_38.java: Scan failed (exit code 2)
+2025-11-26 09:38:46,592 - INFO - 📋 File 5/100: file_43.java
+2025-11-26 09:38:47,802 - ERROR - ❌ file_43.java: Scan failed (exit code 2)
+2025-11-26 09:38:47,803 - INFO - 📋 File 6/100: file_14.java
+2025-11-26 09:38:48,808 - ERROR - ❌ file_14.java: Scan failed (exit code 2)
+2025-11-26 09:38:48,809 - INFO - 📋 File 7/100: file_6.java
+2025-11-26 09:38:49,814 - ERROR - ❌ file_6.java: Scan failed (exit code 2)
+2025-11-26 09:38:49,815 - INFO - 📋 File 8/100: file_55.java
+2025-11-26 09:38:50,941 - ERROR - ❌ file_55.java: Scan failed (exit code 2)
+2025-11-26 09:38:50,942 - INFO - 📋 File 9/100: file_22.java
+2025-11-26 09:38:51,935 - ERROR - ❌ file_22.java: Scan failed (exit code 2)
+2025-11-26 09:38:51,936 - INFO - 📋 File 10/100: file_75.java
+2025-11-26 09:38:52,922 - ERROR - ❌ file_75.java: Scan failed (exit code 2)
+2025-11-26 09:38:52,923 - INFO - 📋 File 11/100: file_63.java
+2025-11-26 09:38:53,896 - ERROR - ❌ file_63.java: Scan failed (exit code 2)
+2025-11-26 09:38:53,897 - INFO - 📋 File 12/100: file_34.java
+2025-11-26 09:38:56,620 - ERROR - ❌ file_34.java: Scan failed (exit code 2)
+2025-11-26 09:38:56,621 - INFO - 📋 File 13/100: file_18.java
+2025-11-26 09:38:57,733 - ERROR - ❌ file_18.java: Scan failed (exit code 2)
+2025-11-26 09:38:57,733 - INFO - 📋 File 14/100: file_59.java
+2025-11-26 09:38:58,691 - ERROR - ❌ file_59.java: Scan failed (exit code 2)
+2025-11-26 09:38:58,692 - INFO - 📋 File 15/100: file_58.java
+2025-11-26 09:38:59,754 - ERROR - ❌ file_58.java: Scan failed (exit code 2)
+2025-11-26 09:38:59,755 - INFO - 📋 File 16/100: file_19.java
+2025-11-26 09:39:00,752 - ERROR - ❌ file_19.java: Scan failed (exit code 2)
+2025-11-26 09:39:00,752 - INFO - 📋 File 17/100: file_35.java
+2025-11-26 09:39:01,721 - ERROR - ❌ file_35.java: Scan failed (exit code 2)
+2025-11-26 09:39:01,722 - INFO - 📋 File 18/100: file_62.java
+2025-11-26 09:39:02,671 - ERROR - ❌ file_62.java: Scan failed (exit code 2)
+2025-11-26 09:39:02,672 - INFO - 📋 File 19/100: file_74.java
+2025-11-26 09:39:03,856 - ERROR - ❌ file_74.java: Scan failed (exit code 2)
+2025-11-26 09:39:03,856 - INFO - 📋 File 20/100: file_23.java
+2025-11-26 09:39:04,819 - ERROR - ❌ file_23.java: Scan failed (exit code 2)
+2025-11-26 09:39:04,820 - INFO - 📋 File 21/100: file_54.java
+2025-11-26 09:39:05,905 - ERROR - ❌ file_54.java: Scan failed (exit code 2)
+2025-11-26 09:39:05,906 - INFO - 📋 File 22/100: file_7.java
+2025-11-26 09:39:06,889 - ERROR - ❌ file_7.java: Scan failed (exit code 2)
+2025-11-26 09:39:06,890 - INFO - 📋 File 23/100: file_15.java
+2025-11-26 09:39:07,850 - ERROR - ❌ file_15.java: Scan failed (exit code 2)
+2025-11-26 09:39:07,850 - INFO - 📋 File 24/100: file_42.java
+2025-11-26 09:39:08,835 - ERROR - ❌ file_42.java: Scan failed (exit code 2)
+2025-11-26 09:39:08,836 - INFO - 📋 File 25/100: file_39.java
+2025-11-26 09:39:09,844 - ERROR - ❌ file_39.java: Scan failed (exit code 2)
+2025-11-26 09:39:09,845 - INFO - 📋 File 26/100: file_81.java
+2025-11-26 09:39:11,099 - ERROR - ❌ file_81.java: Scan failed (exit code 2)
+2025-11-26 09:39:11,100 - INFO - 📋 File 27/100: file_97.java
+2025-11-26 09:39:12,136 - ERROR - ❌ file_97.java: Scan failed (exit code 2)
+2025-11-26 09:39:12,137 - INFO - 📋 File 28/100: file_78.java
+2025-11-26 09:39:13,178 - ERROR - ❌ file_78.java: Scan failed (exit code 2)
+2025-11-26 09:39:13,178 - INFO - 📋 File 29/100: file_24.java
+2025-11-26 09:39:14,214 - ERROR - ❌ file_24.java: Scan failed (exit code 2)
+2025-11-26 09:39:14,215 - INFO - 📋 File 30/100: file_73.java
+2025-11-26 09:39:15,250 - ERROR - ❌ file_73.java: Scan failed (exit code 2)
+2025-11-26 09:39:15,251 - INFO - 📋 File 31/100: file_65.java
+2025-11-26 09:39:16,226 - ERROR - ❌ file_65.java: Scan failed (exit code 2)
+2025-11-26 09:39:16,227 - INFO - 📋 File 32/100: file_32.java
+2025-11-26 09:39:17,265 - ERROR - ❌ file_32.java: Scan failed (exit code 2)
+2025-11-26 09:39:17,265 - INFO - 📋 File 33/100: file_49.java
+2025-11-26 09:39:18,265 - ERROR - ❌ file_49.java: Scan failed (exit code 2)
+2025-11-26 09:39:18,265 - INFO - 📋 File 34/100: file_28.java
+2025-11-26 09:39:19,559 - ERROR - ❌ file_28.java: Scan failed (exit code 2)
+2025-11-26 09:39:19,560 - INFO - 📋 File 35/100: file_90.java
+2025-11-26 09:39:20,867 - ERROR - ❌ file_90.java: Scan failed (exit code 2)
+2025-11-26 09:39:20,868 - INFO - 📋 File 36/100: file_86.java
+2025-11-26 09:39:22,625 - ERROR - ❌ file_86.java: Scan failed (exit code 2)
+2025-11-26 09:39:22,626 - INFO - 📋 File 37/100: file_69.java
+2025-11-26 09:39:24,238 - ERROR - ❌ file_69.java: Scan failed (exit code 2)
+2025-11-26 09:39:24,239 - INFO - 📋 File 38/100: file_45.java
+2025-11-26 09:39:25,254 - ERROR - ❌ file_45.java: Scan failed (exit code 2)
+2025-11-26 09:39:25,255 - INFO - 📋 File 39/100: file_12.java
+2025-11-26 09:39:26,248 - ERROR - ❌ file_12.java: Scan failed (exit code 2)
+2025-11-26 09:39:26,249 - INFO - 📋 File 40/100: file_0.java
+2025-11-26 09:39:27,458 - ERROR - ❌ file_0.java: Scan failed (exit code 2)
+2025-11-26 09:39:27,459 - INFO - 📋 File 41/100: file_53.java
+2025-11-26 09:39:28,495 - ERROR - ❌ file_53.java: Scan failed (exit code 2)
+2025-11-26 09:39:28,496 - INFO - 📋 File 42/100: file_52.java
+2025-11-26 09:39:29,866 - ERROR - ❌ file_52.java: Scan failed (exit code 2)
+2025-11-26 09:39:29,867 - INFO - 📋 File 43/100: file_1.java
+2025-11-26 09:39:30,972 - ERROR - ❌ file_1.java: Scan failed (exit code 2)
+2025-11-26 09:39:30,973 - INFO - 📋 File 44/100: file_13.java
+2025-11-26 09:39:32,099 - ERROR - ❌ file_13.java: Scan failed (exit code 2)
+2025-11-26 09:39:32,100 - INFO - 📋 File 45/100: file_44.java
+2025-11-26 09:39:33,179 - ERROR - ❌ file_44.java: Scan failed (exit code 2)
+2025-11-26 09:39:33,179 - INFO - 📋 File 46/100: file_87.java
+2025-11-26 09:39:34,186 - ERROR - ❌ file_87.java: Scan failed (exit code 2)
+2025-11-26 09:39:34,187 - INFO - 📋 File 47/100: file_68.java
+2025-11-26 09:39:35,174 - ERROR - ❌ file_68.java: Scan failed (exit code 2)
+2025-11-26 09:39:35,175 - INFO - 📋 File 48/100: file_91.java
+2025-11-26 09:39:36,466 - ERROR - ❌ file_91.java: Scan failed (exit code 2)
+2025-11-26 09:39:36,468 - INFO - 📋 File 49/100: file_29.java
+2025-11-26 09:39:37,804 - ERROR - ❌ file_29.java: Scan failed (exit code 2)
+2025-11-26 09:39:37,805 - INFO - 📋 File 50/100: file_48.java
+2025-11-26 09:39:39,396 - ERROR - ❌ file_48.java: Scan failed (exit code 2)
+2025-11-26 09:39:39,397 - INFO - 📋 File 51/100: file_33.java
+2025-11-26 09:39:40,361 - ERROR - ❌ file_33.java: Scan failed (exit code 2)
+2025-11-26 09:39:40,362 - INFO - 📋 File 52/100: file_64.java
+2025-11-26 09:39:41,322 - ERROR - ❌ file_64.java: Scan failed (exit code 2)
+2025-11-26 09:39:41,323 - INFO - 📋 File 53/100: file_72.java
+2025-11-26 09:39:42,345 - ERROR - ❌ file_72.java: Scan failed (exit code 2)
+2025-11-26 09:39:42,346 - INFO - 📋 File 54/100: file_25.java
+2025-11-26 09:39:43,417 - ERROR - ❌ file_25.java: Scan failed (exit code 2)
+2025-11-26 09:39:43,418 - INFO - 📋 File 55/100: file_30.java
+2025-11-26 09:39:44,387 - ERROR - ❌ file_30.java: Scan failed (exit code 2)
+2025-11-26 09:39:44,388 - INFO - 📋 File 56/100: file_67.java
+2025-11-26 09:39:45,389 - ERROR - ❌ file_67.java: Scan failed (exit code 2)
+2025-11-26 09:39:45,390 - INFO - 📋 File 57/100: file_88.java
+2025-11-26 09:39:46,384 - ERROR - ❌ file_88.java: Scan failed (exit code 2)
+2025-11-26 09:39:46,385 - INFO - 📋 File 58/100: file_71.java
+2025-11-26 09:39:48,132 - ERROR - ❌ file_71.java: Scan failed (exit code 2)
+2025-11-26 09:39:48,133 - INFO - 📋 File 59/100: file_26.java
+2025-11-26 09:39:50,136 - ERROR - ❌ file_26.java: Scan failed (exit code 2)
+2025-11-26 09:39:50,137 - INFO - 📋 File 60/100: file_51.java
+2025-11-26 09:39:51,391 - ERROR - ❌ file_51.java: Scan failed (exit code 2)
+2025-11-26 09:39:51,392 - INFO - 📋 File 61/100: file_2.java
+2025-11-26 09:39:52,499 - ERROR - ❌ file_2.java: Scan failed (exit code 2)
+2025-11-26 09:39:52,500 - INFO - 📋 File 62/100: file_10.java
+2025-11-26 09:39:53,661 - ERROR - ❌ file_10.java: Scan failed (exit code 2)
+2025-11-26 09:39:53,662 - INFO - 📋 File 63/100: file_47.java
+2025-11-26 09:39:54,760 - ERROR - ❌ file_47.java: Scan failed (exit code 2)
+2025-11-26 09:39:54,760 - INFO - 📋 File 64/100: file_84.java
+2025-11-26 09:39:55,793 - ERROR - ❌ file_84.java: Scan failed (exit code 2)
+2025-11-26 09:39:55,793 - INFO - 📋 File 65/100: file_92.java
+2025-11-26 09:39:56,975 - ERROR - ❌ file_92.java: Scan failed (exit code 2)
+2025-11-26 09:39:56,977 - INFO - 📋 File 66/100: file_93.java
+2025-11-26 09:39:57,913 - ERROR - ❌ file_93.java: Scan failed (exit code 2)
+2025-11-26 09:39:57,913 - INFO - 📋 File 67/100: file_85.java
+2025-11-26 09:39:58,875 - ERROR - ❌ file_85.java: Scan failed (exit code 2)
+2025-11-26 09:39:58,876 - INFO - 📋 File 68/100: file_46.java
+2025-11-26 09:39:59,738 - ERROR - ❌ file_46.java: Scan failed (exit code 2)
+2025-11-26 09:39:59,738 - INFO - 📋 File 69/100: file_11.java
+2025-11-26 09:40:00,611 - ERROR - ❌ file_11.java: Scan failed (exit code 2)
+2025-11-26 09:40:00,611 - INFO - 📋 File 70/100: file_3.java
+2025-11-26 09:40:01,441 - ERROR - ❌ file_3.java: Scan failed (exit code 2)
+2025-11-26 09:40:01,441 - INFO - 📋 File 71/100: file_50.java
+2025-11-26 09:40:02,301 - ERROR - ❌ file_50.java: Scan failed (exit code 2)
+2025-11-26 09:40:02,301 - INFO - 📋 File 72/100: file_27.java
+2025-11-26 09:40:03,137 - ERROR - ❌ file_27.java: Scan failed (exit code 2)
+2025-11-26 09:40:03,138 - INFO - 📋 File 73/100: file_70.java
+2025-11-26 09:40:04,060 - ERROR - ❌ file_70.java: Scan failed (exit code 2)
+2025-11-26 09:40:04,060 - INFO - 📋 File 74/100: file_66.java
+2025-11-26 09:40:04,978 - ERROR - ❌ file_66.java: Scan failed (exit code 2)
+2025-11-26 09:40:04,979 - INFO - 📋 File 75/100: file_89.java
+2025-11-26 09:40:06,161 - ERROR - ❌ file_89.java: Scan failed (exit code 2)
+2025-11-26 09:40:06,162 - INFO - 📋 File 76/100: file_31.java
+2025-11-26 09:40:07,163 - ERROR - ❌ file_31.java: Scan failed (exit code 2)
+2025-11-26 09:40:07,163 - INFO - 📋 File 77/100: file_57.java
+2025-11-26 09:40:08,044 - ERROR - ❌ file_57.java: Scan failed (exit code 2)
+2025-11-26 09:40:08,045 - INFO - 📋 File 78/100: file_4.java
+2025-11-26 09:40:08,949 - ERROR - ❌ file_4.java: Scan failed (exit code 2)
+2025-11-26 09:40:08,949 - INFO - 📋 File 79/100: file_16.java
+2025-11-26 09:40:09,860 - ERROR - ❌ file_16.java: Scan failed (exit code 2)
+2025-11-26 09:40:09,861 - INFO - 📋 File 80/100: file_41.java
+2025-11-26 09:40:10,738 - ERROR - ❌ file_41.java: Scan failed (exit code 2)
+2025-11-26 09:40:10,738 - INFO - 📋 File 81/100: file_82.java
+2025-11-26 09:40:11,587 - ERROR - ❌ file_82.java: Scan failed (exit code 2)
+2025-11-26 09:40:11,587 - INFO - 📋 File 82/100: file_94.java
+2025-11-26 09:40:12,426 - ERROR - ❌ file_94.java: Scan failed (exit code 2)
+2025-11-26 09:40:12,427 - INFO - 📋 File 83/100: file_8.java
+2025-11-26 09:40:13,274 - ERROR - ❌ file_8.java: Scan failed (exit code 2)
+2025-11-26 09:40:13,275 - INFO - 📋 File 84/100: file_36.java
+2025-11-26 09:40:14,105 - ERROR - ❌ file_36.java: Scan failed (exit code 2)
+2025-11-26 09:40:14,106 - INFO - 📋 File 85/100: file_61.java
+2025-11-26 09:40:15,009 - ERROR - ❌ file_61.java: Scan failed (exit code 2)
+2025-11-26 09:40:15,010 - INFO - 📋 File 86/100: file_77.java
+2025-11-26 09:40:15,836 - ERROR - ❌ file_77.java: Scan failed (exit code 2)
+2025-11-26 09:40:15,836 - INFO - 📋 File 87/100: file_98.java
+2025-11-26 09:40:16,662 - ERROR - ❌ file_98.java: Scan failed (exit code 2)
+2025-11-26 09:40:16,663 - INFO - 📋 File 88/100: file_20.java
+2025-11-26 09:40:17,493 - ERROR - ❌ file_20.java: Scan failed (exit code 2)
+2025-11-26 09:40:17,494 - INFO - 📋 File 89/100: file_21.java
+2025-11-26 09:40:18,358 - ERROR - ❌ file_21.java: Scan failed (exit code 2)
+2025-11-26 09:40:18,358 - INFO - 📋 File 90/100: file_76.java
+2025-11-26 09:40:19,576 - ERROR - ❌ file_76.java: Scan failed (exit code 2)
+2025-11-26 09:40:19,577 - INFO - 📋 File 91/100: file_99.java
+2025-11-26 09:40:20,911 - ERROR - ❌ file_99.java: Scan failed (exit code 2)
+2025-11-26 09:40:20,912 - INFO - 📋 File 92/100: file_60.java
+2025-11-26 09:40:21,802 - ERROR - ❌ file_60.java: Scan failed (exit code 2)
+2025-11-26 09:40:21,803 - INFO - 📋 File 93/100: file_37.java
+2025-11-26 09:40:22,626 - ERROR - ❌ file_37.java: Scan failed (exit code 2)
+2025-11-26 09:40:22,627 - INFO - 📋 File 94/100: file_9.java
+2025-11-26 09:40:25,347 - ERROR - ❌ file_9.java: Scan failed (exit code 2)
+2025-11-26 09:40:25,348 - INFO - 📋 File 95/100: file_95.java
+2025-11-26 09:40:27,160 - ERROR - ❌ file_95.java: Scan failed (exit code 2)
+2025-11-26 09:40:27,161 - INFO - 📋 File 96/100: file_83.java
+2025-11-26 09:40:28,253 - ERROR - ❌ file_83.java: Scan failed (exit code 2)
+2025-11-26 09:40:28,254 - INFO - 📋 File 97/100: file_40.java
+2025-11-26 09:40:29,355 - ERROR - ❌ file_40.java: Scan failed (exit code 2)
+2025-11-26 09:40:29,355 - INFO - 📋 File 98/100: file_17.java
+2025-11-26 09:40:30,684 - ERROR - ❌ file_17.java: Scan failed (exit code 2)
+2025-11-26 09:40:30,684 - INFO - 📋 File 99/100: file_5.java
+2025-11-26 09:40:31,747 - ERROR - ❌ file_5.java: Scan failed (exit code 2)
+2025-11-26 09:40:31,748 - INFO - 📋 File 100/100: file_56.java
+2025-11-26 09:40:32,741 - ERROR - ❌ file_56.java: Scan failed (exit code 2)
+2025-11-26 09:40:32,742 - INFO - 📊 Dataset java/large scan complete:
+2025-11-26 09:40:32,742 - INFO -    ⏱️  Total time: 111.26 seconds
+2025-11-26 09:40:32,743 - INFO -    📈 Files processed: 0 successful, 100 failed
+2025-11-26 09:40:32,743 - INFO -    🔍 Total vulnerabilities detected: 0
+2025-11-26 09:40:32,744 - INFO - 🔍 Comparing 0 detected vs 300 expected vulnerabilities
+2025-11-26 09:40:32,744 - INFO - 🔎 Analyzing detected vulnerabilities for matches...
+2025-11-26 09:40:32,745 - INFO - 📊 Detection analysis complete: 0 true positives, 0 false positives
+2025-11-26 09:40:32,745 - INFO - 🔍 Checking for false negatives (expected vulnerabilities not found)...
+2025-11-26 09:40:32,746 - INFO - 📊 False negative analysis complete: 300 missed vulnerabilities
+2025-11-26 09:40:32,747 - INFO - 📊 Dataset java/large final results:
+2025-11-26 09:40:32,747 - INFO -    📈 Performance: Precision=0.0%, Recall=0.0%, F1=0.0%
+2025-11-26 09:40:32,748 - INFO -    ⏱️  Performance: 111.26s total (0.9 files/sec)
+2025-11-26 09:40:32,748 - INFO -    🎯 Accuracy: TP=0, FP=0, FN=300
+2025-11-26 09:40:32,749 - INFO -    📋 Coverage: 0/300 vulnerabilities detected
+2025-11-26 09:40:32,750 - INFO - 🔄 Dataset 7/12: java/medium
+2025-11-26 09:40:32,750 - INFO - 📂 Dataset path: comprehensive_test/java/medium
+2025-11-26 09:40:32,752 - INFO - 📄 Found 25 test files to scan
+2025-11-26 09:40:32,752 - INFO - 🎯 Ground truth: 75 expected vulnerabilities
+2025-11-26 09:40:32,753 - INFO - 🔍 Starting Valid8 scans in hybrid mode (all features enabled)...
+2025-11-26 09:40:32,753 - INFO - 📋 File 1/25: file_14.java
+2025-11-26 09:40:33,724 - ERROR - ❌ file_14.java: Scan failed (exit code 2)
+2025-11-26 09:40:33,725 - INFO - 📋 File 2/25: file_6.java
+2025-11-26 09:40:34,626 - ERROR - ❌ file_6.java: Scan failed (exit code 2)
+2025-11-26 09:40:34,627 - INFO - 📋 File 3/25: file_22.java
+2025-11-26 09:40:35,569 - ERROR - ❌ file_22.java: Scan failed (exit code 2)
+2025-11-26 09:40:35,570 - INFO - 📋 File 4/25: file_18.java
+2025-11-26 09:40:36,518 - ERROR - ❌ file_18.java: Scan failed (exit code 2)
+2025-11-26 09:40:36,519 - INFO - 📋 File 5/25: file_19.java
+2025-11-26 09:40:37,474 - ERROR - ❌ file_19.java: Scan failed (exit code 2)
+2025-11-26 09:40:37,475 - INFO - 📋 File 6/25: file_23.java
+2025-11-26 09:40:38,384 - ERROR - ❌ file_23.java: Scan failed (exit code 2)
+2025-11-26 09:40:38,384 - INFO - 📋 File 7/25: file_7.java
+2025-11-26 09:40:39,319 - ERROR - ❌ file_7.java: Scan failed (exit code 2)
+2025-11-26 09:40:39,319 - INFO - 📋 File 8/25: file_15.java
+2025-11-26 09:40:40,275 - ERROR - ❌ file_15.java: Scan failed (exit code 2)
+2025-11-26 09:40:40,276 - INFO - 📋 File 9/25: file_24.java
+2025-11-26 09:40:41,236 - ERROR - ❌ file_24.java: Scan failed (exit code 2)
+2025-11-26 09:40:41,237 - INFO - 📋 File 10/25: file_12.java
+2025-11-26 09:40:42,215 - ERROR - ❌ file_12.java: Scan failed (exit code 2)
+2025-11-26 09:40:42,216 - INFO - 📋 File 11/25: file_0.java
+2025-11-26 09:40:43,177 - ERROR - ❌ file_0.java: Scan failed (exit code 2)
+2025-11-26 09:40:43,178 - INFO - 📋 File 12/25: file_1.java
+2025-11-26 09:40:44,154 - ERROR - ❌ file_1.java: Scan failed (exit code 2)
+2025-11-26 09:40:44,155 - INFO - 📋 File 13/25: file_13.java
+2025-11-26 09:40:45,061 - ERROR - ❌ file_13.java: Scan failed (exit code 2)
+2025-11-26 09:40:45,062 - INFO - 📋 File 14/25: file_2.java
+2025-11-26 09:40:46,050 - ERROR - ❌ file_2.java: Scan failed (exit code 2)
+2025-11-26 09:40:46,050 - INFO - 📋 File 15/25: file_10.java
+2025-11-26 09:40:46,971 - ERROR - ❌ file_10.java: Scan failed (exit code 2)
+2025-11-26 09:40:46,972 - INFO - 📋 File 16/25: file_11.java
+2025-11-26 09:40:47,937 - ERROR - ❌ file_11.java: Scan failed (exit code 2)
+2025-11-26 09:40:47,938 - INFO - 📋 File 17/25: file_3.java
+2025-11-26 09:40:48,953 - ERROR - ❌ file_3.java: Scan failed (exit code 2)
+2025-11-26 09:40:48,954 - INFO - 📋 File 18/25: file_4.java
+2025-11-26 09:40:49,832 - ERROR - ❌ file_4.java: Scan failed (exit code 2)
+2025-11-26 09:40:49,833 - INFO - 📋 File 19/25: file_16.java
+2025-11-26 09:40:50,710 - ERROR - ❌ file_16.java: Scan failed (exit code 2)
+2025-11-26 09:40:50,711 - INFO - 📋 File 20/25: file_8.java
+2025-11-26 09:40:51,589 - ERROR - ❌ file_8.java: Scan failed (exit code 2)
+2025-11-26 09:40:51,590 - INFO - 📋 File 21/25: file_20.java
+2025-11-26 09:40:52,445 - ERROR - ❌ file_20.java: Scan failed (exit code 2)
+2025-11-26 09:40:52,446 - INFO - 📋 File 22/25: file_21.java
+2025-11-26 09:40:53,348 - ERROR - ❌ file_21.java: Scan failed (exit code 2)
+2025-11-26 09:40:53,348 - INFO - 📋 File 23/25: file_9.java
+2025-11-26 09:40:54,288 - ERROR - ❌ file_9.java: Scan failed (exit code 2)
+2025-11-26 09:40:54,289 - INFO - 📋 File 24/25: file_17.java
+2025-11-26 09:40:55,171 - ERROR - ❌ file_17.java: Scan failed (exit code 2)
+2025-11-26 09:40:55,172 - INFO - 📋 File 25/25: file_5.java
+2025-11-26 09:40:56,160 - ERROR - ❌ file_5.java: Scan failed (exit code 2)
+2025-11-26 09:40:56,160 - INFO - 📊 Dataset java/medium scan complete:
+2025-11-26 09:40:56,161 - INFO -    ⏱️  Total time: 23.41 seconds
+2025-11-26 09:40:56,161 - INFO -    📈 Files processed: 0 successful, 25 failed
+2025-11-26 09:40:56,162 - INFO -    🔍 Total vulnerabilities detected: 0
+2025-11-26 09:40:56,162 - INFO - 🔍 Comparing 0 detected vs 75 expected vulnerabilities
+2025-11-26 09:40:56,163 - INFO - 🔎 Analyzing detected vulnerabilities for matches...
+2025-11-26 09:40:56,163 - INFO - 📊 Detection analysis complete: 0 true positives, 0 false positives
+2025-11-26 09:40:56,164 - INFO - 🔍 Checking for false negatives (expected vulnerabilities not found)...
+2025-11-26 09:40:56,164 - INFO - 📊 False negative analysis complete: 75 missed vulnerabilities
+2025-11-26 09:40:56,165 - INFO - 📊 Dataset java/medium final results:
+2025-11-26 09:40:56,166 - INFO -    📈 Performance: Precision=0.0%, Recall=0.0%, F1=0.0%
+2025-11-26 09:40:56,166 - INFO -    ⏱️  Performance: 23.41s total (1.1 files/sec)
+2025-11-26 09:40:56,167 - INFO -    🎯 Accuracy: TP=0, FP=0, FN=75
+2025-11-26 09:40:56,167 - INFO -    📋 Coverage: 0/75 vulnerabilities detected
+2025-11-26 09:40:56,168 - INFO - 🔄 Dataset 8/12: typescript/large
+2025-11-26 09:40:56,168 - INFO - 📂 Dataset path: comprehensive_test/typescript/large
+2025-11-26 09:40:56,170 - INFO - 📄 Found 100 test files to scan
+2025-11-26 09:40:56,170 - INFO - 🎯 Ground truth: 300 expected vulnerabilities
+2025-11-26 09:40:56,171 - INFO - 🔍 Starting Valid8 scans in hybrid mode (all features enabled)...
+2025-11-26 09:40:56,171 - INFO - 📋 File 1/100: file_6.ts
+2025-11-26 09:40:57,055 - ERROR - ❌ file_6.ts: Scan failed (exit code 1)
+2025-11-26 09:40:57,056 - INFO - 📋 File 2/100: file_98.ts
+2025-11-26 09:40:57,951 - ERROR - ❌ file_98.ts: Scan failed (exit code 1)
+2025-11-26 09:40:57,952 - INFO - 📋 File 3/100: file_2.ts
+2025-11-26 09:40:58,915 - ERROR - ❌ file_2.ts: Scan failed (exit code 1)
+2025-11-26 09:40:58,916 - INFO - 📋 File 4/100: file_88.ts
+2025-11-26 09:40:59,856 - ERROR - ❌ file_88.ts: Scan failed (exit code 1)
+2025-11-26 09:40:59,857 - INFO - 📋 File 5/100: file_99.ts
+2025-11-26 09:41:00,734 - ERROR - ❌ file_99.ts: Scan failed (exit code 1)
+2025-11-26 09:41:00,735 - INFO - 📋 File 6/100: file_3.ts
+2025-11-26 09:41:01,672 - ERROR - ❌ file_3.ts: Scan failed (exit code 1)
+2025-11-26 09:41:01,673 - INFO - 📋 File 7/100: file_89.ts
+2025-11-26 09:41:02,551 - ERROR - ❌ file_89.ts: Scan failed (exit code 1)
+2025-11-26 09:41:02,551 - INFO - 📋 File 8/100: file_7.ts
+2025-11-26 09:41:03,393 - ERROR - ❌ file_7.ts: Scan failed (exit code 1)
+2025-11-26 09:41:03,394 - INFO - 📋 File 9/100: file_51.ts
+2025-11-26 09:41:04,203 - ERROR - ❌ file_51.ts: Scan failed (exit code 1)
+2025-11-26 09:41:04,204 - INFO - 📋 File 10/100: file_96.ts
+2025-11-26 09:41:05,067 - ERROR - ❌ file_96.ts: Scan failed (exit code 1)
+2025-11-26 09:41:05,068 - INFO - 📋 File 11/100: file_65.ts
+2025-11-26 09:41:06,099 - ERROR - ❌ file_65.ts: Scan failed (exit code 1)
+2025-11-26 09:41:06,099 - INFO - 📋 File 12/100: file_34.ts
+2025-11-26 09:41:07,005 - ERROR - ❌ file_34.ts: Scan failed (exit code 1)
+2025-11-26 09:41:07,006 - INFO - 📋 File 13/100: file_24.ts
+2025-11-26 09:41:07,877 - ERROR - ❌ file_24.ts: Scan failed (exit code 1)
+2025-11-26 09:41:07,878 - INFO - 📋 File 14/100: file_75.ts
+2025-11-26 09:41:08,930 - ERROR - ❌ file_75.ts: Scan failed (exit code 1)
+2025-11-26 09:41:08,931 - INFO - 📋 File 15/100: file_86.ts
+2025-11-26 09:41:09,902 - ERROR - ❌ file_86.ts: Scan failed (exit code 1)
+2025-11-26 09:41:09,903 - INFO - 📋 File 16/100: file_41.ts
+2025-11-26 09:41:10,750 - ERROR - ❌ file_41.ts: Scan failed (exit code 1)
+2025-11-26 09:41:10,751 - INFO - 📋 File 17/100: file_10.ts
+2025-11-26 09:41:11,590 - ERROR - ❌ file_10.ts: Scan failed (exit code 1)
+2025-11-26 09:41:11,591 - INFO - 📋 File 18/100: file_8.ts
+2025-11-26 09:41:12,436 - ERROR - ❌ file_8.ts: Scan failed (exit code 1)
+2025-11-26 09:41:12,436 - INFO - 📋 File 19/100: file_92.ts
+2025-11-26 09:41:13,255 - ERROR - ❌ file_92.ts: Scan failed (exit code 1)
+2025-11-26 09:41:13,256 - INFO - 📋 File 20/100: file_30.ts
+2025-11-26 09:41:14,356 - ERROR - ❌ file_30.ts: Scan failed (exit code 1)
+2025-11-26 09:41:14,357 - INFO - 📋 File 21/100: file_61.ts
+2025-11-26 09:41:15,232 - ERROR - ❌ file_61.ts: Scan failed (exit code 1)
+2025-11-26 09:41:15,233 - INFO - 📋 File 22/100: file_55.ts
+2025-11-26 09:41:16,055 - ERROR - ❌ file_55.ts: Scan failed (exit code 1)
+2025-11-26 09:41:16,056 - INFO - 📋 File 23/100: file_14.ts
+2025-11-26 09:41:17,160 - ERROR - ❌ file_14.ts: Scan failed (exit code 1)
+2025-11-26 09:41:17,163 - INFO - 📋 File 24/100: file_45.ts
+2025-11-26 09:41:18,526 - ERROR - ❌ file_45.ts: Scan failed (exit code 1)
+2025-11-26 09:41:18,527 - INFO - 📋 File 25/100: file_71.ts
+2025-11-26 09:41:19,718 - ERROR - ❌ file_71.ts: Scan failed (exit code 1)
+2025-11-26 09:41:19,718 - INFO - 📋 File 26/100: file_20.ts
+2025-11-26 09:41:21,324 - ERROR - ❌ file_20.ts: Scan failed (exit code 1)
+2025-11-26 09:41:21,325 - INFO - 📋 File 27/100: file_82.ts
+2025-11-26 09:41:22,365 - ERROR - ❌ file_82.ts: Scan failed (exit code 1)
+2025-11-26 09:41:22,365 - INFO - 📋 File 28/100: file_9.ts
+2025-11-26 09:41:23,322 - ERROR - ❌ file_9.ts: Scan failed (exit code 1)
+2025-11-26 09:41:23,323 - INFO - 📋 File 29/100: file_93.ts
+2025-11-26 09:41:24,213 - ERROR - ❌ file_93.ts: Scan failed (exit code 1)
+2025-11-26 09:41:24,213 - INFO - 📋 File 30/100: file_31.ts
+2025-11-26 09:41:25,093 - ERROR - ❌ file_31.ts: Scan failed (exit code 1)
+2025-11-26 09:41:25,093 - INFO - 📋 File 31/100: file_60.ts
+2025-11-26 09:41:26,174 - ERROR - ❌ file_60.ts: Scan failed (exit code 1)
+2025-11-26 09:41:26,175 - INFO - 📋 File 32/100: file_54.ts
+2025-11-26 09:41:27,073 - ERROR - ❌ file_54.ts: Scan failed (exit code 1)
+2025-11-26 09:41:27,074 - INFO - 📋 File 33/100: file_15.ts
+2025-11-26 09:41:27,984 - ERROR - ❌ file_15.ts: Scan failed (exit code 1)
+2025-11-26 09:41:27,985 - INFO - 📋 File 34/100: file_44.ts
+2025-11-26 09:41:28,819 - ERROR - ❌ file_44.ts: Scan failed (exit code 1)
+2025-11-26 09:41:28,820 - INFO - 📋 File 35/100: file_70.ts
+2025-11-26 09:41:29,652 - ERROR - ❌ file_70.ts: Scan failed (exit code 1)
+2025-11-26 09:41:29,653 - INFO - 📋 File 36/100: file_21.ts
+2025-11-26 09:41:30,501 - ERROR - ❌ file_21.ts: Scan failed (exit code 1)
+2025-11-26 09:41:30,502 - INFO - 📋 File 37/100: file_83.ts
+2025-11-26 09:41:31,357 - ERROR - ❌ file_83.ts: Scan failed (exit code 1)
+2025-11-26 09:41:31,357 - INFO - 📋 File 38/100: file_50.ts
+2025-11-26 09:41:32,195 - ERROR - ❌ file_50.ts: Scan failed (exit code 1)
+2025-11-26 09:41:32,195 - INFO - 📋 File 39/100: file_97.ts
+2025-11-26 09:41:33,037 - ERROR - ❌ file_97.ts: Scan failed (exit code 1)
+2025-11-26 09:41:33,038 - INFO - 📋 File 40/100: file_64.ts
+2025-11-26 09:41:34,014 - ERROR - ❌ file_64.ts: Scan failed (exit code 1)
+2025-11-26 09:41:34,015 - INFO - 📋 File 41/100: file_35.ts
+2025-11-26 09:41:35,315 - ERROR - ❌ file_35.ts: Scan failed (exit code 1)
+2025-11-26 09:41:35,316 - INFO - 📋 File 42/100: file_25.ts
+2025-11-26 09:41:36,420 - ERROR - ❌ file_25.ts: Scan failed (exit code 1)
+2025-11-26 09:41:36,420 - INFO - 📋 File 43/100: file_74.ts
+2025-11-26 09:41:37,384 - ERROR - ❌ file_74.ts: Scan failed (exit code 1)
+2025-11-26 09:41:37,385 - INFO - 📋 File 44/100: file_87.ts
+2025-11-26 09:41:38,465 - ERROR - ❌ file_87.ts: Scan failed (exit code 1)
+2025-11-26 09:41:38,466 - INFO - 📋 File 45/100: file_40.ts
+2025-11-26 09:41:39,499 - ERROR - ❌ file_40.ts: Scan failed (exit code 1)
+2025-11-26 09:41:39,499 - INFO - 📋 File 46/100: file_11.ts
+2025-11-26 09:41:40,752 - ERROR - ❌ file_11.ts: Scan failed (exit code 1)
+2025-11-26 09:41:40,752 - INFO - 📋 File 47/100: file_63.ts
+2025-11-26 09:41:41,686 - ERROR - ❌ file_63.ts: Scan failed (exit code 1)
+2025-11-26 09:41:41,687 - INFO - 📋 File 48/100: file_32.ts
+2025-11-26 09:41:42,701 - ERROR - ❌ file_32.ts: Scan failed (exit code 1)
+2025-11-26 09:41:42,701 - INFO - 📋 File 49/100: file_90.ts
+2025-11-26 09:41:43,694 - ERROR - ❌ file_90.ts: Scan failed (exit code 1)
+2025-11-26 09:41:43,695 - INFO - 📋 File 50/100: file_57.ts
+2025-11-26 09:41:44,689 - ERROR - ❌ file_57.ts: Scan failed (exit code 1)
+2025-11-26 09:41:44,690 - INFO - 📋 File 51/100: file_47.ts
+2025-11-26 09:41:45,682 - ERROR - ❌ file_47.ts: Scan failed (exit code 1)
+2025-11-26 09:41:45,682 - INFO - 📋 File 52/100: file_16.ts
+2025-11-26 09:41:46,730 - ERROR - ❌ file_16.ts: Scan failed (exit code 1)
+2025-11-26 09:41:46,731 - INFO - 📋 File 53/100: file_80.ts
+2025-11-26 09:41:47,761 - ERROR - ❌ file_80.ts: Scan failed (exit code 1)
+2025-11-26 09:41:47,762 - INFO - 📋 File 54/100: file_22.ts
+2025-11-26 09:41:48,717 - ERROR - ❌ file_22.ts: Scan failed (exit code 1)
+2025-11-26 09:41:48,718 - INFO - 📋 File 55/100: file_73.ts
+2025-11-26 09:41:49,746 - ERROR - ❌ file_73.ts: Scan failed (exit code 1)
+2025-11-26 09:41:49,747 - INFO - 📋 File 56/100: file_53.ts
+2025-11-26 09:41:50,881 - ERROR - ❌ file_53.ts: Scan failed (exit code 1)
+2025-11-26 09:41:50,882 - INFO - 📋 File 57/100: file_36.ts
+2025-11-26 09:41:51,941 - ERROR - ❌ file_36.ts: Scan failed (exit code 1)
+2025-11-26 09:41:51,941 - INFO - 📋 File 58/100: file_67.ts
+2025-11-26 09:41:52,913 - ERROR - ❌ file_67.ts: Scan failed (exit code 1)
+2025-11-26 09:41:52,914 - INFO - 📋 File 59/100: file_94.ts
+2025-11-26 09:41:53,960 - ERROR - ❌ file_94.ts: Scan failed (exit code 1)
+2025-11-26 09:41:53,961 - INFO - 📋 File 60/100: file_84.ts
+2025-11-26 09:41:58,161 - ERROR - ❌ file_84.ts: Scan failed (exit code 1)
+2025-11-26 09:41:58,168 - INFO - 📋 File 61/100: file_77.ts
+2025-11-26 09:42:00,207 - ERROR - ❌ file_77.ts: Scan failed (exit code 1)
+2025-11-26 09:42:00,208 - INFO - 📋 File 62/100: file_26.ts
+2025-11-26 09:42:01,268 - ERROR - ❌ file_26.ts: Scan failed (exit code 1)
+2025-11-26 09:42:01,269 - INFO - 📋 File 63/100: file_12.ts
+2025-11-26 09:42:02,135 - ERROR - ❌ file_12.ts: Scan failed (exit code 1)
+2025-11-26 09:42:02,136 - INFO - 📋 File 64/100: file_43.ts
+2025-11-26 09:42:02,980 - ERROR - ❌ file_43.ts: Scan failed (exit code 1)
+2025-11-26 09:42:02,981 - INFO - 📋 File 65/100: file_52.ts
+2025-11-26 09:42:03,825 - ERROR - ❌ file_52.ts: Scan failed (exit code 1)
+2025-11-26 09:42:03,825 - INFO - 📋 File 66/100: file_37.ts
+2025-11-26 09:42:04,706 - ERROR - ❌ file_37.ts: Scan failed (exit code 1)
+2025-11-26 09:42:04,707 - INFO - 📋 File 67/100: file_66.ts
+2025-11-26 09:42:05,844 - ERROR - ❌ file_66.ts: Scan failed (exit code 1)
+2025-11-26 09:42:05,845 - INFO - 📋 File 68/100: file_95.ts
+2025-11-26 09:42:06,834 - ERROR - ❌ file_95.ts: Scan failed (exit code 1)
+2025-11-26 09:42:06,835 - INFO - 📋 File 69/100: file_85.ts
+2025-11-26 09:42:07,796 - ERROR - ❌ file_85.ts: Scan failed (exit code 1)
+2025-11-26 09:42:07,797 - INFO - 📋 File 70/100: file_76.ts
+2025-11-26 09:42:08,612 - ERROR - ❌ file_76.ts: Scan failed (exit code 1)
+2025-11-26 09:42:08,612 - INFO - 📋 File 71/100: file_27.ts
+2025-11-26 09:42:09,423 - ERROR - ❌ file_27.ts: Scan failed (exit code 1)
+2025-11-26 09:42:09,424 - INFO - 📋 File 72/100: file_13.ts
+2025-11-26 09:42:10,353 - ERROR - ❌ file_13.ts: Scan failed (exit code 1)
+2025-11-26 09:42:10,354 - INFO - 📋 File 73/100: file_42.ts
+2025-11-26 09:42:11,222 - ERROR - ❌ file_42.ts: Scan failed (exit code 1)
+2025-11-26 09:42:11,222 - INFO - 📋 File 74/100: file_62.ts
+2025-11-26 09:42:12,087 - ERROR - ❌ file_62.ts: Scan failed (exit code 1)
+2025-11-26 09:42:12,088 - INFO - 📋 File 75/100: file_33.ts
+2025-11-26 09:42:12,982 - ERROR - ❌ file_33.ts: Scan failed (exit code 1)
+2025-11-26 09:42:12,983 - INFO - 📋 File 76/100: file_91.ts
+2025-11-26 09:42:13,888 - ERROR - ❌ file_91.ts: Scan failed (exit code 1)
+2025-11-26 09:42:13,888 - INFO - 📋 File 77/100: file_56.ts
+2025-11-26 09:42:14,893 - ERROR - ❌ file_56.ts: Scan failed (exit code 1)
+2025-11-26 09:42:14,894 - INFO - 📋 File 78/100: file_46.ts
+2025-11-26 09:42:15,803 - ERROR - ❌ file_46.ts: Scan failed (exit code 1)
+2025-11-26 09:42:15,803 - INFO - 📋 File 79/100: file_17.ts
+2025-11-26 09:42:16,654 - ERROR - ❌ file_17.ts: Scan failed (exit code 1)
+2025-11-26 09:42:16,655 - INFO - 📋 File 80/100: file_81.ts
+2025-11-26 09:42:17,508 - ERROR - ❌ file_81.ts: Scan failed (exit code 1)
+2025-11-26 09:42:17,509 - INFO - 📋 File 81/100: file_23.ts
+2025-11-26 09:42:19,235 - ERROR - ❌ file_23.ts: Scan failed (exit code 1)
+2025-11-26 09:42:19,237 - INFO - 📋 File 82/100: file_72.ts
+2025-11-26 09:42:20,657 - ERROR - ❌ file_72.ts: Scan failed (exit code 1)
+2025-11-26 09:42:20,658 - INFO - 📋 File 83/100: file_69.ts
+2025-11-26 09:42:22,350 - ERROR - ❌ file_69.ts: Scan failed (exit code 1)
+2025-11-26 09:42:22,351 - INFO - 📋 File 84/100: file_38.ts
+2025-11-26 09:42:23,738 - ERROR - ❌ file_38.ts: Scan failed (exit code 1)
+2025-11-26 09:42:23,739 - INFO - 📋 File 85/100: file_0.ts
+2025-11-26 09:42:24,572 - ERROR - ❌ file_0.ts: Scan failed (exit code 1)
+2025-11-26 09:42:24,573 - INFO - 📋 File 86/100: file_28.ts
+2025-11-26 09:42:25,381 - ERROR - ❌ file_28.ts: Scan failed (exit code 1)
+2025-11-26 09:42:25,382 - INFO - 📋 File 87/100: file_79.ts
+2025-11-26 09:42:26,214 - ERROR - ❌ file_79.ts: Scan failed (exit code 1)
+2025-11-26 09:42:26,214 - INFO - 📋 File 88/100: file_59.ts
+2025-11-26 09:42:27,077 - ERROR - ❌ file_59.ts: Scan failed (exit code 1)
+2025-11-26 09:42:27,078 - INFO - 📋 File 89/100: file_4.ts
+2025-11-26 09:42:27,917 - ERROR - ❌ file_4.ts: Scan failed (exit code 1)
+2025-11-26 09:42:27,918 - INFO - 📋 File 90/100: file_18.ts
+2025-11-26 09:42:28,775 - ERROR - ❌ file_18.ts: Scan failed (exit code 1)
+2025-11-26 09:42:28,776 - INFO - 📋 File 91/100: file_49.ts
+2025-11-26 09:42:29,731 - ERROR - ❌ file_49.ts: Scan failed (exit code 1)
+2025-11-26 09:42:29,732 - INFO - 📋 File 92/100: file_58.ts
+2025-11-26 09:42:30,614 - ERROR - ❌ file_58.ts: Scan failed (exit code 1)
+2025-11-26 09:42:30,615 - INFO - 📋 File 93/100: file_5.ts
+2025-11-26 09:42:31,482 - ERROR - ❌ file_5.ts: Scan failed (exit code 1)
+2025-11-26 09:42:31,483 - INFO - 📋 File 94/100: file_19.ts
+2025-11-26 09:42:32,336 - ERROR - ❌ file_19.ts: Scan failed (exit code 1)
+2025-11-26 09:42:32,336 - INFO - 📋 File 95/100: file_48.ts
+2025-11-26 09:42:33,149 - ERROR - ❌ file_48.ts: Scan failed (exit code 1)
+2025-11-26 09:42:33,150 - INFO - 📋 File 96/100: file_68.ts
+2025-11-26 09:42:33,963 - ERROR - ❌ file_68.ts: Scan failed (exit code 1)
+2025-11-26 09:42:33,963 - INFO - 📋 File 97/100: file_39.ts
+2025-11-26 09:42:34,792 - ERROR - ❌ file_39.ts: Scan failed (exit code 1)
+2025-11-26 09:42:34,793 - INFO - 📋 File 98/100: file_1.ts
+2025-11-26 09:42:35,599 - ERROR - ❌ file_1.ts: Scan failed (exit code 1)
+2025-11-26 09:42:35,600 - INFO - 📋 File 99/100: file_29.ts
+2025-11-26 09:42:36,418 - ERROR - ❌ file_29.ts: Scan failed (exit code 1)
+2025-11-26 09:42:36,418 - INFO - 📋 File 100/100: file_78.ts
+2025-11-26 09:42:37,233 - ERROR - ❌ file_78.ts: Scan failed (exit code 1)
+2025-11-26 09:42:37,233 - INFO - 📊 Dataset typescript/large scan complete:
+2025-11-26 09:42:37,234 - INFO -    ⏱️  Total time: 101.07 seconds
+2025-11-26 09:42:37,234 - INFO -    📈 Files processed: 0 successful, 100 failed
+2025-11-26 09:42:37,235 - INFO -    🔍 Total vulnerabilities detected: 0
+2025-11-26 09:42:37,235 - INFO - 🔍 Comparing 0 detected vs 300 expected vulnerabilities
+2025-11-26 09:42:37,236 - INFO - 🔎 Analyzing detected vulnerabilities for matches...
+2025-11-26 09:42:37,236 - INFO - 📊 Detection analysis complete: 0 true positives, 0 false positives
+2025-11-26 09:42:37,237 - INFO - 🔍 Checking for false negatives (expected vulnerabilities not found)...
+2025-11-26 09:42:37,238 - INFO - 📊 False negative analysis complete: 300 missed vulnerabilities
+2025-11-26 09:42:37,238 - INFO - 📊 Dataset typescript/large final results:
+2025-11-26 09:42:37,239 - INFO -    📈 Performance: Precision=0.0%, Recall=0.0%, F1=0.0%
+2025-11-26 09:42:37,239 - INFO -    ⏱️  Performance: 101.07s total (1.0 files/sec)
+2025-11-26 09:42:37,240 - INFO -    🎯 Accuracy: TP=0, FP=0, FN=300
+2025-11-26 09:42:37,240 - INFO -    📋 Coverage: 0/300 vulnerabilities detected
+2025-11-26 09:42:37,241 - INFO - 🔄 Dataset 9/12: typescript/medium
+2025-11-26 09:42:37,241 - INFO - 📂 Dataset path: comprehensive_test/typescript/medium
+2025-11-26 09:42:37,243 - INFO - 📄 Found 25 test files to scan
+2025-11-26 09:42:37,243 - INFO - 🎯 Ground truth: 75 expected vulnerabilities
+2025-11-26 09:42:37,244 - INFO - 🔍 Starting Valid8 scans in hybrid mode (all features enabled)...
+2025-11-26 09:42:37,244 - INFO - 📋 File 1/25: file_6.ts
+2025-11-26 09:42:38,049 - ERROR - ❌ file_6.ts: Scan failed (exit code 1)
+2025-11-26 09:42:38,050 - INFO - 📋 File 2/25: file_2.ts
+2025-11-26 09:42:38,858 - ERROR - ❌ file_2.ts: Scan failed (exit code 1)
+2025-11-26 09:42:38,859 - INFO - 📋 File 3/25: file_3.ts
+2025-11-26 09:42:39,742 - ERROR - ❌ file_3.ts: Scan failed (exit code 1)
+2025-11-26 09:42:39,743 - INFO - 📋 File 4/25: file_7.ts
+2025-11-26 09:42:40,555 - ERROR - ❌ file_7.ts: Scan failed (exit code 1)
+2025-11-26 09:42:40,556 - INFO - 📋 File 5/25: file_24.ts
+2025-11-26 09:42:41,373 - ERROR - ❌ file_24.ts: Scan failed (exit code 1)
+2025-11-26 09:42:41,373 - INFO - 📋 File 6/25: file_10.ts
+2025-11-26 09:42:42,218 - ERROR - ❌ file_10.ts: Scan failed (exit code 1)
+2025-11-26 09:42:42,218 - INFO - 📋 File 7/25: file_8.ts
+2025-11-26 09:42:43,036 - ERROR - ❌ file_8.ts: Scan failed (exit code 1)
+2025-11-26 09:42:43,037 - INFO - 📋 File 8/25: file_14.ts
+2025-11-26 09:42:43,853 - ERROR - ❌ file_14.ts: Scan failed (exit code 1)
+2025-11-26 09:42:43,854 - INFO - 📋 File 9/25: file_20.ts
+2025-11-26 09:42:44,731 - ERROR - ❌ file_20.ts: Scan failed (exit code 1)
+2025-11-26 09:42:44,732 - INFO - 📋 File 10/25: file_9.ts
+2025-11-26 09:42:45,558 - ERROR - ❌ file_9.ts: Scan failed (exit code 1)
+2025-11-26 09:42:45,559 - INFO - 📋 File 11/25: file_15.ts
+2025-11-26 09:42:46,377 - ERROR - ❌ file_15.ts: Scan failed (exit code 1)
+2025-11-26 09:42:46,378 - INFO - 📋 File 12/25: file_21.ts
+2025-11-26 09:42:47,222 - ERROR - ❌ file_21.ts: Scan failed (exit code 1)
+2025-11-26 09:42:47,223 - INFO - 📋 File 13/25: file_11.ts
+2025-11-26 09:42:48,051 - ERROR - ❌ file_11.ts: Scan failed (exit code 1)
+2025-11-26 09:42:48,051 - INFO - 📋 File 14/25: file_16.ts
+2025-11-26 09:42:48,922 - ERROR - ❌ file_16.ts: Scan failed (exit code 1)
+2025-11-26 09:42:48,923 - INFO - 📋 File 15/25: file_22.ts
+2025-11-26 09:42:49,826 - ERROR - ❌ file_22.ts: Scan failed (exit code 1)
+2025-11-26 09:42:49,828 - INFO - 📋 File 16/25: file_12.ts
+2025-11-26 09:42:50,695 - ERROR - ❌ file_12.ts: Scan failed (exit code 1)
+2025-11-26 09:42:50,696 - INFO - 📋 File 17/25: file_13.ts
+2025-11-26 09:42:51,603 - ERROR - ❌ file_13.ts: Scan failed (exit code 1)
+2025-11-26 09:42:51,604 - INFO - 📋 File 18/25: file_17.ts
+2025-11-26 09:42:52,480 - ERROR - ❌ file_17.ts: Scan failed (exit code 1)
+2025-11-26 09:42:52,480 - INFO - 📋 File 19/25: file_23.ts
+2025-11-26 09:42:53,285 - ERROR - ❌ file_23.ts: Scan failed (exit code 1)
+2025-11-26 09:42:53,286 - INFO - 📋 File 20/25: file_0.ts
+2025-11-26 09:42:54,101 - ERROR - ❌ file_0.ts: Scan failed (exit code 1)
+2025-11-26 09:42:54,102 - INFO - 📋 File 21/25: file_4.ts
+2025-11-26 09:42:54,960 - ERROR - ❌ file_4.ts: Scan failed (exit code 1)
+2025-11-26 09:42:54,961 - INFO - 📋 File 22/25: file_18.ts
+2025-11-26 09:42:55,771 - ERROR - ❌ file_18.ts: Scan failed (exit code 1)
+2025-11-26 09:42:55,771 - INFO - 📋 File 23/25: file_5.ts
+2025-11-26 09:42:56,573 - ERROR - ❌ file_5.ts: Scan failed (exit code 1)
+2025-11-26 09:42:56,574 - INFO - 📋 File 24/25: file_19.ts
+2025-11-26 09:42:57,416 - ERROR - ❌ file_19.ts: Scan failed (exit code 1)
+2025-11-26 09:42:57,417 - INFO - 📋 File 25/25: file_1.ts
+2025-11-26 09:42:58,305 - ERROR - ❌ file_1.ts: Scan failed (exit code 1)
+2025-11-26 09:42:58,306 - INFO - 📊 Dataset typescript/medium scan complete:
+2025-11-26 09:42:58,306 - INFO -    ⏱️  Total time: 21.07 seconds
+2025-11-26 09:42:58,307 - INFO -    📈 Files processed: 0 successful, 25 failed
+2025-11-26 09:42:58,307 - INFO -    🔍 Total vulnerabilities detected: 0
+2025-11-26 09:42:58,308 - INFO - 🔍 Comparing 0 detected vs 75 expected vulnerabilities
+2025-11-26 09:42:58,308 - INFO - 🔎 Analyzing detected vulnerabilities for matches...
+2025-11-26 09:42:58,309 - INFO - 📊 Detection analysis complete: 0 true positives, 0 false positives
+2025-11-26 09:42:58,309 - INFO - 🔍 Checking for false negatives (expected vulnerabilities not found)...
+2025-11-26 09:42:58,310 - INFO - 📊 False negative analysis complete: 75 missed vulnerabilities
+2025-11-26 09:42:58,311 - INFO - 📊 Dataset typescript/medium final results:
+2025-11-26 09:42:58,311 - INFO -    📈 Performance: Precision=0.0%, Recall=0.0%, F1=0.0%
+2025-11-26 09:42:58,312 - INFO -    ⏱️  Performance: 21.07s total (1.2 files/sec)
+2025-11-26 09:42:58,312 - INFO -    🎯 Accuracy: TP=0, FP=0, FN=75
+2025-11-26 09:42:58,313 - INFO -    📋 Coverage: 0/75 vulnerabilities detected
+2025-11-26 09:42:58,313 - INFO - 🔄 Dataset 10/12: typescript/small
+2025-11-26 09:42:58,314 - INFO - 📂 Dataset path: comprehensive_test/typescript/small
+2025-11-26 09:42:58,315 - INFO - 📄 Found 5 test files to scan
+2025-11-26 09:42:58,315 - INFO - 🎯 Ground truth: 15 expected vulnerabilities
+2025-11-26 09:42:58,316 - INFO - 🔍 Starting Valid8 scans in hybrid mode (all features enabled)...
+2025-11-26 09:42:58,316 - INFO - 📋 File 1/5: file_2.ts
+2025-11-26 09:42:59,212 - ERROR - ❌ file_2.ts: Scan failed (exit code 1)
+2025-11-26 09:42:59,213 - INFO - 📋 File 2/5: file_3.ts
+2025-11-26 09:43:00,045 - ERROR - ❌ file_3.ts: Scan failed (exit code 1)
+2025-11-26 09:43:00,046 - INFO - 📋 File 3/5: file_0.ts
+2025-11-26 09:43:00,901 - ERROR - ❌ file_0.ts: Scan failed (exit code 1)
+2025-11-26 09:43:00,902 - INFO - 📋 File 4/5: file_4.ts
+2025-11-26 09:43:01,798 - ERROR - ❌ file_4.ts: Scan failed (exit code 1)
+2025-11-26 09:43:01,799 - INFO - 📋 File 5/5: file_1.ts
+2025-11-26 09:43:02,750 - ERROR - ❌ file_1.ts: Scan failed (exit code 1)
+2025-11-26 09:43:02,751 - INFO - 📊 Dataset typescript/small scan complete:
+2025-11-26 09:43:02,751 - INFO -    ⏱️  Total time: 4.44 seconds
+2025-11-26 09:43:02,752 - INFO -    📈 Files processed: 0 successful, 5 failed
+2025-11-26 09:43:02,752 - INFO -    🔍 Total vulnerabilities detected: 0
+2025-11-26 09:43:02,753 - INFO - 🔍 Comparing 0 detected vs 15 expected vulnerabilities
+2025-11-26 09:43:02,753 - INFO - 🔎 Analyzing detected vulnerabilities for matches...
+2025-11-26 09:43:02,754 - INFO - 📊 Detection analysis complete: 0 true positives, 0 false positives
+2025-11-26 09:43:02,754 - INFO - 🔍 Checking for false negatives (expected vulnerabilities not found)...
+2025-11-26 09:43:02,755 - INFO - 📊 False negative analysis complete: 15 missed vulnerabilities
+2025-11-26 09:43:02,756 - INFO - 📊 Dataset typescript/small final results:
+2025-11-26 09:43:02,756 - INFO -    📈 Performance: Precision=0.0%, Recall=0.0%, F1=0.0%
+2025-11-26 09:43:02,757 - INFO -    ⏱️  Performance: 4.44s total (1.1 files/sec)
+2025-11-26 09:43:02,757 - INFO -    🎯 Accuracy: TP=0, FP=0, FN=15
+2025-11-26 09:43:02,758 - INFO -    📋 Coverage: 0/15 vulnerabilities detected
+2025-11-26 09:43:02,758 - INFO - 🔄 Dataset 11/12: python/large
+2025-11-26 09:43:02,759 - INFO - 📂 Dataset path: comprehensive_test/python/large
+2025-11-26 09:43:02,760 - INFO - 📄 Found 100 test files to scan
+2025-11-26 09:43:02,761 - INFO - 🎯 Ground truth: 300 expected vulnerabilities
+2025-11-26 09:43:02,761 - INFO - 🔍 Starting Valid8 scans in hybrid mode (all features enabled)...
+2025-11-26 09:43:02,762 - INFO - 📋 File 1/100: file_29.py
+2025-11-26 09:43:03,656 - ERROR - ❌ file_29.py: Scan failed (exit code 2)
+2025-11-26 09:43:03,657 - INFO - 📋 File 2/100: file_78.py
+2025-11-26 09:43:04,543 - ERROR - ❌ file_78.py: Scan failed (exit code 2)
+2025-11-26 09:43:04,544 - INFO - 📋 File 3/100: file_68.py
+2025-11-26 09:43:05,388 - ERROR - ❌ file_68.py: Scan failed (exit code 2)
+2025-11-26 09:43:05,389 - INFO - 📋 File 4/100: file_39.py
+2025-11-26 09:43:06,209 - ERROR - ❌ file_39.py: Scan failed (exit code 2)
+2025-11-26 09:43:06,210 - INFO - 📋 File 5/100: file_1.py
+2025-11-26 09:43:07,043 - ERROR - ❌ file_1.py: Scan failed (exit code 2)
+2025-11-26 09:43:07,044 - INFO - 📋 File 6/100: file_19.py
+2025-11-26 09:43:07,877 - ERROR - ❌ file_19.py: Scan failed (exit code 2)
+2025-11-26 09:43:07,877 - INFO - 📋 File 7/100: file_48.py
+2025-11-26 09:43:08,703 - ERROR - ❌ file_48.py: Scan failed (exit code 2)
+2025-11-26 09:43:08,704 - INFO - 📋 File 8/100: file_58.py
+2025-11-26 09:43:09,580 - ERROR - ❌ file_58.py: Scan failed (exit code 2)
+2025-11-26 09:43:09,581 - INFO - 📋 File 9/100: file_5.py
+2025-11-26 09:43:10,443 - ERROR - ❌ file_5.py: Scan failed (exit code 2)
+2025-11-26 09:43:10,444 - INFO - 📋 File 10/100: file_18.py
+2025-11-26 09:43:11,299 - ERROR - ❌ file_18.py: Scan failed (exit code 2)
+2025-11-26 09:43:11,300 - INFO - 📋 File 11/100: file_49.py
+2025-11-26 09:43:12,115 - ERROR - ❌ file_49.py: Scan failed (exit code 2)
+2025-11-26 09:43:12,115 - INFO - 📋 File 12/100: file_59.py
+2025-11-26 09:43:12,955 - ERROR - ❌ file_59.py: Scan failed (exit code 2)
+2025-11-26 09:43:12,956 - INFO - 📋 File 13/100: file_4.py
+2025-11-26 09:43:13,789 - ERROR - ❌ file_4.py: Scan failed (exit code 2)
+2025-11-26 09:43:13,790 - INFO - 📋 File 14/100: file_28.py
+2025-11-26 09:43:14,672 - ERROR - ❌ file_28.py: Scan failed (exit code 2)
+2025-11-26 09:43:14,673 - INFO - 📋 File 15/100: file_79.py
+2025-11-26 09:43:15,511 - ERROR - ❌ file_79.py: Scan failed (exit code 2)
+2025-11-26 09:43:15,512 - INFO - 📋 File 16/100: file_69.py
+2025-11-26 09:43:16,487 - ERROR - ❌ file_69.py: Scan failed (exit code 2)
+2025-11-26 09:43:16,488 - INFO - 📋 File 17/100: file_38.py
+2025-11-26 09:43:17,400 - ERROR - ❌ file_38.py: Scan failed (exit code 2)
+2025-11-26 09:43:17,401 - INFO - 📋 File 18/100: file_0.py
+2025-11-26 09:43:18,819 - ERROR - ❌ file_0.py: Scan failed (exit code 2)
+2025-11-26 09:43:18,819 - INFO - 📋 File 19/100: file_23.py
+2025-11-26 09:43:20,358 - ERROR - ❌ file_23.py: Scan failed (exit code 2)
+2025-11-26 09:43:20,359 - INFO - 📋 File 20/100: file_72.py
+2025-11-26 09:43:22,006 - ERROR - ❌ file_72.py: Scan failed (exit code 2)
+2025-11-26 09:43:22,007 - INFO - 📋 File 21/100: file_81.py
+2025-11-26 09:43:22,907 - ERROR - ❌ file_81.py: Scan failed (exit code 2)
+2025-11-26 09:43:22,908 - INFO - 📋 File 22/100: file_46.py
+2025-11-26 09:43:23,773 - ERROR - ❌ file_46.py: Scan failed (exit code 2)
+2025-11-26 09:43:23,773 - INFO - 📋 File 23/100: file_17.py
+2025-11-26 09:43:24,695 - ERROR - ❌ file_17.py: Scan failed (exit code 2)
+2025-11-26 09:43:24,696 - INFO - 📋 File 24/100: file_56.py
+2025-11-26 09:43:25,517 - ERROR - ❌ file_56.py: Scan failed (exit code 2)
+2025-11-26 09:43:25,518 - INFO - 📋 File 25/100: file_91.py
+2025-11-26 09:43:26,402 - ERROR - ❌ file_91.py: Scan failed (exit code 2)
+2025-11-26 09:43:26,403 - INFO - 📋 File 26/100: file_62.py
+2025-11-26 09:43:27,238 - ERROR - ❌ file_62.py: Scan failed (exit code 2)
+2025-11-26 09:43:27,239 - INFO - 📋 File 27/100: file_33.py
+2025-11-26 09:43:28,072 - ERROR - ❌ file_33.py: Scan failed (exit code 2)
+2025-11-26 09:43:28,072 - INFO - 📋 File 28/100: file_13.py
+2025-11-26 09:43:28,967 - ERROR - ❌ file_13.py: Scan failed (exit code 2)
+2025-11-26 09:43:28,967 - INFO - 📋 File 29/100: file_42.py
+2025-11-26 09:43:29,868 - ERROR - ❌ file_42.py: Scan failed (exit code 2)
+2025-11-26 09:43:29,869 - INFO - 📋 File 30/100: file_76.py
+2025-11-26 09:43:30,782 - ERROR - ❌ file_76.py: Scan failed (exit code 2)
+2025-11-26 09:43:30,782 - INFO - 📋 File 31/100: file_27.py
+2025-11-26 09:43:31,623 - ERROR - ❌ file_27.py: Scan failed (exit code 2)
+2025-11-26 09:43:31,624 - INFO - 📋 File 32/100: file_85.py
+2025-11-26 09:43:32,448 - ERROR - ❌ file_85.py: Scan failed (exit code 2)
+2025-11-26 09:43:32,449 - INFO - 📋 File 33/100: file_95.py
+2025-11-26 09:43:33,289 - ERROR - ❌ file_95.py: Scan failed (exit code 2)
+2025-11-26 09:43:33,290 - INFO - 📋 File 34/100: file_37.py
+2025-11-26 09:43:34,137 - ERROR - ❌ file_37.py: Scan failed (exit code 2)
+2025-11-26 09:43:34,137 - INFO - 📋 File 35/100: file_66.py
+2025-11-26 09:43:35,011 - ERROR - ❌ file_66.py: Scan failed (exit code 2)
+2025-11-26 09:43:35,012 - INFO - 📋 File 36/100: file_52.py
+2025-11-26 09:43:36,033 - ERROR - ❌ file_52.py: Scan failed (exit code 2)
+2025-11-26 09:43:36,034 - INFO - 📋 File 37/100: file_12.py
+2025-11-26 09:43:37,000 - ERROR - ❌ file_12.py: Scan failed (exit code 2)
+2025-11-26 09:43:37,001 - INFO - 📋 File 38/100: file_43.py
+2025-11-26 09:43:37,922 - ERROR - ❌ file_43.py: Scan failed (exit code 2)
+2025-11-26 09:43:37,923 - INFO - 📋 File 39/100: file_77.py
+2025-11-26 09:43:38,746 - ERROR - ❌ file_77.py: Scan failed (exit code 2)
+2025-11-26 09:43:38,747 - INFO - 📋 File 40/100: file_26.py
+2025-11-26 09:43:39,583 - ERROR - ❌ file_26.py: Scan failed (exit code 2)
+2025-11-26 09:43:39,584 - INFO - 📋 File 41/100: file_84.py
+2025-11-26 09:43:40,820 - ERROR - ❌ file_84.py: Scan failed (exit code 2)
+2025-11-26 09:43:40,821 - INFO - 📋 File 42/100: file_94.py
+2025-11-26 09:43:41,862 - ERROR - ❌ file_94.py: Scan failed (exit code 2)
+2025-11-26 09:43:41,863 - INFO - 📋 File 43/100: file_36.py
+2025-11-26 09:43:42,854 - ERROR - ❌ file_36.py: Scan failed (exit code 2)
+2025-11-26 09:43:42,855 - INFO - 📋 File 44/100: file_67.py
+2025-11-26 09:43:44,421 - ERROR - ❌ file_67.py: Scan failed (exit code 2)
+2025-11-26 09:43:44,422 - INFO - 📋 File 45/100: file_53.py
+2025-11-26 09:43:46,170 - ERROR - ❌ file_53.py: Scan failed (exit code 2)
+2025-11-26 09:43:46,171 - INFO - 📋 File 46/100: file_22.py
+2025-11-26 09:43:47,193 - ERROR - ❌ file_22.py: Scan failed (exit code 2)
+2025-11-26 09:43:47,194 - INFO - 📋 File 47/100: file_73.py
+2025-11-26 09:43:48,554 - ERROR - ❌ file_73.py: Scan failed (exit code 2)
+2025-11-26 09:43:48,555 - INFO - 📋 File 48/100: file_80.py
+2025-11-26 09:43:49,657 - ERROR - ❌ file_80.py: Scan failed (exit code 2)
+2025-11-26 09:43:49,658 - INFO - 📋 File 49/100: file_47.py
+2025-11-26 09:43:50,707 - ERROR - ❌ file_47.py: Scan failed (exit code 2)
+2025-11-26 09:43:50,708 - INFO - 📋 File 50/100: file_16.py
+2025-11-26 09:43:51,823 - ERROR - ❌ file_16.py: Scan failed (exit code 2)
+2025-11-26 09:43:51,823 - INFO - 📋 File 51/100: file_57.py
+2025-11-26 09:43:52,858 - ERROR - ❌ file_57.py: Scan failed (exit code 2)
+2025-11-26 09:43:52,859 - INFO - 📋 File 52/100: file_90.py
+2025-11-26 09:43:53,877 - ERROR - ❌ file_90.py: Scan failed (exit code 2)
+2025-11-26 09:43:53,877 - INFO - 📋 File 53/100: file_63.py
+2025-11-26 09:43:54,841 - ERROR - ❌ file_63.py: Scan failed (exit code 2)
+2025-11-26 09:43:54,842 - INFO - 📋 File 54/100: file_32.py
+2025-11-26 09:43:55,873 - ERROR - ❌ file_32.py: Scan failed (exit code 2)
+2025-11-26 09:43:55,874 - INFO - 📋 File 55/100: file_40.py
+2025-11-26 09:43:56,862 - ERROR - ❌ file_40.py: Scan failed (exit code 2)
+2025-11-26 09:43:56,862 - INFO - 📋 File 56/100: file_11.py
+2025-11-26 09:43:57,914 - ERROR - ❌ file_11.py: Scan failed (exit code 2)
+2025-11-26 09:43:57,915 - INFO - 📋 File 57/100: file_87.py
+2025-11-26 09:43:58,865 - ERROR - ❌ file_87.py: Scan failed (exit code 2)
+2025-11-26 09:43:58,866 - INFO - 📋 File 58/100: file_25.py
+2025-11-26 09:43:59,830 - ERROR - ❌ file_25.py: Scan failed (exit code 2)
+2025-11-26 09:43:59,831 - INFO - 📋 File 59/100: file_74.py
+2025-11-26 09:44:00,768 - ERROR - ❌ file_74.py: Scan failed (exit code 2)
+2025-11-26 09:44:00,769 - INFO - 📋 File 60/100: file_64.py
+2025-11-26 09:44:01,650 - ERROR - ❌ file_64.py: Scan failed (exit code 2)
+2025-11-26 09:44:01,651 - INFO - 📋 File 61/100: file_35.py
+2025-11-26 09:44:02,510 - ERROR - ❌ file_35.py: Scan failed (exit code 2)
+2025-11-26 09:44:02,511 - INFO - 📋 File 62/100: file_97.py
+2025-11-26 09:44:03,422 - ERROR - ❌ file_97.py: Scan failed (exit code 2)
+2025-11-26 09:44:03,423 - INFO - 📋 File 63/100: file_50.py
+2025-11-26 09:44:04,362 - ERROR - ❌ file_50.py: Scan failed (exit code 2)
+2025-11-26 09:44:04,363 - INFO - 📋 File 64/100: file_83.py
+2025-11-26 09:44:05,229 - ERROR - ❌ file_83.py: Scan failed (exit code 2)
+2025-11-26 09:44:05,230 - INFO - 📋 File 65/100: file_70.py
+2025-11-26 09:44:06,073 - ERROR - ❌ file_70.py: Scan failed (exit code 2)
+2025-11-26 09:44:06,074 - INFO - 📋 File 66/100: file_21.py
+2025-11-26 09:44:06,931 - ERROR - ❌ file_21.py: Scan failed (exit code 2)
+2025-11-26 09:44:06,932 - INFO - 📋 File 67/100: file_15.py
+2025-11-26 09:44:07,786 - ERROR - ❌ file_15.py: Scan failed (exit code 2)
+2025-11-26 09:44:07,786 - INFO - 📋 File 68/100: file_44.py
+2025-11-26 09:44:09,193 - ERROR - ❌ file_44.py: Scan failed (exit code 2)
+2025-11-26 09:44:09,196 - INFO - 📋 File 69/100: file_9.py
+2025-11-26 09:44:10,201 - ERROR - ❌ file_9.py: Scan failed (exit code 2)
+2025-11-26 09:44:10,202 - INFO - 📋 File 70/100: file_54.py
+2025-11-26 09:44:11,080 - ERROR - ❌ file_54.py: Scan failed (exit code 2)
+2025-11-26 09:44:11,081 - INFO - 📋 File 71/100: file_31.py
+2025-11-26 09:44:11,905 - ERROR - ❌ file_31.py: Scan failed (exit code 2)
+2025-11-26 09:44:11,905 - INFO - 📋 File 72/100: file_60.py
+2025-11-26 09:44:12,720 - ERROR - ❌ file_60.py: Scan failed (exit code 2)
+2025-11-26 09:44:12,720 - INFO - 📋 File 73/100: file_93.py
+2025-11-26 09:44:13,532 - ERROR - ❌ file_93.py: Scan failed (exit code 2)
+2025-11-26 09:44:13,533 - INFO - 📋 File 74/100: file_82.py
+2025-11-26 09:44:14,399 - ERROR - ❌ file_82.py: Scan failed (exit code 2)
+2025-11-26 09:44:14,400 - INFO - 📋 File 75/100: file_71.py
+2025-11-26 09:44:15,338 - ERROR - ❌ file_71.py: Scan failed (exit code 2)
+2025-11-26 09:44:15,339 - INFO - 📋 File 76/100: file_20.py
+2025-11-26 09:44:16,160 - ERROR - ❌ file_20.py: Scan failed (exit code 2)
+2025-11-26 09:44:16,161 - INFO - 📋 File 77/100: file_14.py
+2025-11-26 09:44:16,982 - ERROR - ❌ file_14.py: Scan failed (exit code 2)
+2025-11-26 09:44:16,983 - INFO - 📋 File 78/100: file_45.py
+2025-11-26 09:44:17,855 - ERROR - ❌ file_45.py: Scan failed (exit code 2)
+2025-11-26 09:44:17,857 - INFO - 📋 File 79/100: file_8.py
+2025-11-26 09:44:18,727 - ERROR - ❌ file_8.py: Scan failed (exit code 2)
+2025-11-26 09:44:18,728 - INFO - 📋 File 80/100: file_55.py
+2025-11-26 09:44:20,009 - ERROR - ❌ file_55.py: Scan failed (exit code 2)
+2025-11-26 09:44:20,010 - INFO - 📋 File 81/100: file_30.py
+2025-11-26 09:44:21,215 - ERROR - ❌ file_30.py: Scan failed (exit code 2)
+2025-11-26 09:44:21,216 - INFO - 📋 File 82/100: file_61.py
+2025-11-26 09:44:22,033 - ERROR - ❌ file_61.py: Scan failed (exit code 2)
+2025-11-26 09:44:22,034 - INFO - 📋 File 83/100: file_92.py
+2025-11-26 09:44:22,852 - ERROR - ❌ file_92.py: Scan failed (exit code 2)
+2025-11-26 09:44:22,853 - INFO - 📋 File 84/100: file_41.py
+2025-11-26 09:44:23,676 - ERROR - ❌ file_41.py: Scan failed (exit code 2)
+2025-11-26 09:44:23,677 - INFO - 📋 File 85/100: file_10.py
+2025-11-26 09:44:24,954 - ERROR - ❌ file_10.py: Scan failed (exit code 2)
+2025-11-26 09:44:24,955 - INFO - 📋 File 86/100: file_86.py
+2025-11-26 09:44:26,077 - ERROR - ❌ file_86.py: Scan failed (exit code 2)
+2025-11-26 09:44:26,077 - INFO - 📋 File 87/100: file_24.py
+2025-11-26 09:44:28,175 - ERROR - ❌ file_24.py: Scan failed (exit code 2)
+2025-11-26 09:44:28,176 - INFO - 📋 File 88/100: file_75.py
+2025-11-26 09:44:29,465 - ERROR - ❌ file_75.py: Scan failed (exit code 2)
+2025-11-26 09:44:29,466 - INFO - 📋 File 89/100: file_65.py
+2025-11-26 09:44:30,402 - ERROR - ❌ file_65.py: Scan failed (exit code 2)
+2025-11-26 09:44:30,403 - INFO - 📋 File 90/100: file_34.py
+2025-11-26 09:44:31,279 - ERROR - ❌ file_34.py: Scan failed (exit code 2)
+2025-11-26 09:44:31,280 - INFO - 📋 File 91/100: file_96.py
+2025-11-26 09:44:32,261 - ERROR - ❌ file_96.py: Scan failed (exit code 2)
+2025-11-26 09:44:32,262 - INFO - 📋 File 92/100: file_51.py
+2025-11-26 09:44:34,072 - ERROR - ❌ file_51.py: Scan failed (exit code 2)
+2025-11-26 09:44:34,073 - INFO - 📋 File 93/100: file_7.py
+2025-11-26 09:44:35,745 - ERROR - ❌ file_7.py: Scan failed (exit code 2)
+2025-11-26 09:44:35,746 - INFO - 📋 File 94/100: file_89.py
+2025-11-26 09:44:36,789 - ERROR - ❌ file_89.py: Scan failed (exit code 2)
+2025-11-26 09:44:36,790 - INFO - 📋 File 95/100: file_99.py
+2025-11-26 09:44:37,797 - ERROR - ❌ file_99.py: Scan failed (exit code 2)
+2025-11-26 09:44:37,797 - INFO - 📋 File 96/100: file_3.py
+2025-11-26 09:44:38,730 - ERROR - ❌ file_3.py: Scan failed (exit code 2)
+2025-11-26 09:44:38,731 - INFO - 📋 File 97/100: file_88.py
+2025-11-26 09:44:39,676 - ERROR - ❌ file_88.py: Scan failed (exit code 2)
+2025-11-26 09:44:39,677 - INFO - 📋 File 98/100: file_98.py
+2025-11-26 09:44:40,853 - ERROR - ❌ file_98.py: Scan failed (exit code 2)
+2025-11-26 09:44:40,854 - INFO - 📋 File 99/100: file_2.py
+2025-11-26 09:44:41,708 - ERROR - ❌ file_2.py: Scan failed (exit code 2)
+2025-11-26 09:44:41,709 - INFO - 📋 File 100/100: file_6.py
+2025-11-26 09:44:42,531 - ERROR - ❌ file_6.py: Scan failed (exit code 2)
+2025-11-26 09:44:42,531 - INFO - 📊 Dataset python/large scan complete:
+2025-11-26 09:44:42,532 - INFO -    ⏱️  Total time: 99.77 seconds
+2025-11-26 09:44:42,532 - INFO -    📈 Files processed: 0 successful, 100 failed
+2025-11-26 09:44:42,533 - INFO -    🔍 Total vulnerabilities detected: 0
+2025-11-26 09:44:42,533 - INFO - 🔍 Comparing 0 detected vs 300 expected vulnerabilities
+2025-11-26 09:44:42,534 - INFO - 🔎 Analyzing detected vulnerabilities for matches...
+2025-11-26 09:44:42,534 - INFO - 📊 Detection analysis complete: 0 true positives, 0 false positives
+2025-11-26 09:44:42,535 - INFO - 🔍 Checking for false negatives (expected vulnerabilities not found)...
+2025-11-26 09:44:42,536 - INFO - 📊 False negative analysis complete: 300 missed vulnerabilities
+2025-11-26 09:44:42,537 - INFO - 📊 Dataset python/large final results:
+2025-11-26 09:44:42,538 - INFO -    📈 Performance: Precision=0.0%, Recall=0.0%, F1=0.0%
+2025-11-26 09:44:42,538 - INFO -    ⏱️  Performance: 99.77s total (1.0 files/sec)
+2025-11-26 09:44:42,539 - INFO -    🎯 Accuracy: TP=0, FP=0, FN=300
+2025-11-26 09:44:42,539 - INFO -    📋 Coverage: 0/300 vulnerabilities detected
+2025-11-26 09:44:42,540 - INFO - 🔄 Dataset 12/12: python/medium
+2025-11-26 09:44:42,540 - INFO - 📂 Dataset path: comprehensive_test/python/medium
+2025-11-26 09:44:42,541 - INFO - 📄 Found 25 test files to scan
+2025-11-26 09:44:42,542 - INFO - 🎯 Ground truth: 75 expected vulnerabilities
+2025-11-26 09:44:42,543 - INFO - 🔍 Starting Valid8 scans in hybrid mode (all features enabled)...
+2025-11-26 09:44:42,543 - INFO - 📋 File 1/25: file_1.py
+2025-11-26 09:44:43,370 - ERROR - ❌ file_1.py: Scan failed (exit code 2)
+2025-11-26 09:44:43,371 - INFO - 📋 File 2/25: file_19.py
+2025-11-26 09:44:44,188 - ERROR - ❌ file_19.py: Scan failed (exit code 2)
+2025-11-26 09:44:44,189 - INFO - 📋 File 3/25: file_5.py
+2025-11-26 09:44:45,037 - ERROR - ❌ file_5.py: Scan failed (exit code 2)
+2025-11-26 09:44:45,037 - INFO - 📋 File 4/25: file_18.py
+2025-11-26 09:44:45,859 - ERROR - ❌ file_18.py: Scan failed (exit code 2)
+2025-11-26 09:44:45,859 - INFO - 📋 File 5/25: file_4.py
+2025-11-26 09:44:46,676 - ERROR - ❌ file_4.py: Scan failed (exit code 2)
+2025-11-26 09:44:46,677 - INFO - 📋 File 6/25: file_0.py
+2025-11-26 09:44:47,490 - ERROR - ❌ file_0.py: Scan failed (exit code 2)
+2025-11-26 09:44:47,491 - INFO - 📋 File 7/25: file_23.py
+2025-11-26 09:44:48,312 - ERROR - ❌ file_23.py: Scan failed (exit code 2)
+2025-11-26 09:44:48,313 - INFO - 📋 File 8/25: file_17.py
+2025-11-26 09:44:49,169 - ERROR - ❌ file_17.py: Scan failed (exit code 2)
+2025-11-26 09:44:49,170 - INFO - 📋 File 9/25: file_13.py
+2025-11-26 09:44:50,438 - ERROR - ❌ file_13.py: Scan failed (exit code 2)
+2025-11-26 09:44:50,439 - INFO - 📋 File 10/25: file_12.py
+2025-11-26 09:44:51,597 - ERROR - ❌ file_12.py: Scan failed (exit code 2)
+2025-11-26 09:44:51,598 - INFO - 📋 File 11/25: file_22.py
+2025-11-26 09:44:53,199 - ERROR - ❌ file_22.py: Scan failed (exit code 2)
+2025-11-26 09:44:53,200 - INFO - 📋 File 12/25: file_16.py
+2025-11-26 09:44:54,766 - ERROR - ❌ file_16.py: Scan failed (exit code 2)
+2025-11-26 09:44:54,767 - INFO - 📋 File 13/25: file_11.py
+2025-11-26 09:44:55,737 - ERROR - ❌ file_11.py: Scan failed (exit code 2)
+2025-11-26 09:44:55,738 - INFO - 📋 File 14/25: file_21.py
+2025-11-26 09:44:56,704 - ERROR - ❌ file_21.py: Scan failed (exit code 2)
+2025-11-26 09:44:56,705 - INFO - 📋 File 15/25: file_15.py
+2025-11-26 09:44:57,667 - ERROR - ❌ file_15.py: Scan failed (exit code 2)
+2025-11-26 09:44:57,668 - INFO - 📋 File 16/25: file_9.py
+2025-11-26 09:44:58,621 - ERROR - ❌ file_9.py: Scan failed (exit code 2)
+2025-11-26 09:44:58,621 - INFO - 📋 File 17/25: file_20.py
+2025-11-26 09:44:59,574 - ERROR - ❌ file_20.py: Scan failed (exit code 2)
+2025-11-26 09:44:59,575 - INFO - 📋 File 18/25: file_14.py
+2025-11-26 09:45:00,935 - ERROR - ❌ file_14.py: Scan failed (exit code 2)
+2025-11-26 09:45:00,936 - INFO - 📋 File 19/25: file_8.py
+2025-11-26 09:45:01,815 - ERROR - ❌ file_8.py: Scan failed (exit code 2)
+2025-11-26 09:45:01,816 - INFO - 📋 File 20/25: file_10.py
+2025-11-26 09:45:02,713 - ERROR - ❌ file_10.py: Scan failed (exit code 2)
+2025-11-26 09:45:02,714 - INFO - 📋 File 21/25: file_24.py
+2025-11-26 09:45:03,668 - ERROR - ❌ file_24.py: Scan failed (exit code 2)
+2025-11-26 09:45:03,669 - INFO - 📋 File 22/25: file_7.py
+2025-11-26 09:45:04,547 - ERROR - ❌ file_7.py: Scan failed (exit code 2)
+2025-11-26 09:45:04,548 - INFO - 📋 File 23/25: file_3.py
+2025-11-26 09:45:05,395 - ERROR - ❌ file_3.py: Scan failed (exit code 2)
+2025-11-26 09:45:05,396 - INFO - 📋 File 24/25: file_2.py
+2025-11-26 09:45:06,465 - ERROR - ❌ file_2.py: Scan failed (exit code 2)
+2025-11-26 09:45:06,466 - INFO - 📋 File 25/25: file_6.py
+2025-11-26 09:45:07,563 - ERROR - ❌ file_6.py: Scan failed (exit code 2)
+2025-11-26 09:45:07,564 - INFO - 📊 Dataset python/medium scan complete:
+2025-11-26 09:45:07,564 - INFO -    ⏱️  Total time: 25.02 seconds
+2025-11-26 09:45:07,565 - INFO -    📈 Files processed: 0 successful, 25 failed
+2025-11-26 09:45:07,566 - INFO -    🔍 Total vulnerabilities detected: 0
+2025-11-26 09:45:07,567 - INFO - 🔍 Comparing 0 detected vs 75 expected vulnerabilities
+2025-11-26 09:45:07,568 - INFO - 🔎 Analyzing detected vulnerabilities for matches...
+2025-11-26 09:45:07,568 - INFO - 📊 Detection analysis complete: 0 true positives, 0 false positives
+2025-11-26 09:45:07,569 - INFO - 🔍 Checking for false negatives (expected vulnerabilities not found)...
+2025-11-26 09:45:07,569 - INFO - 📊 False negative analysis complete: 75 missed vulnerabilities
+2025-11-26 09:45:07,570 - INFO - 📊 Dataset python/medium final results:
+2025-11-26 09:45:07,571 - INFO -    📈 Performance: Precision=0.0%, Recall=0.0%, F1=0.0%
+2025-11-26 09:45:07,571 - INFO -    ⏱️  Performance: 25.02s total (1.0 files/sec)
+2025-11-26 09:45:07,572 - INFO -    🎯 Accuracy: TP=0, FP=0, FN=75
+2025-11-26 09:45:07,572 - INFO -    📋 Coverage: 0/75 vulnerabilities detected
+2025-11-26 09:45:07,573 - INFO - ⏱️ Benchmark execution completed in 653.44 seconds
+2025-11-26 09:45:07,573 - INFO - 📊 Calculating final benchmark statistics...
+2025-11-26 09:45:07,574 - INFO - 📈 Performance metrics across 12 datasets:
+2025-11-26 09:45:07,575 - INFO -    Precision range: 0.0% - 0.0%
+2025-11-26 09:45:07,575 - INFO -    Recall range: 0.0% - 0.0%
+2025-11-26 09:45:07,576 - INFO -    F1 range: 0.0% - 0.0%
+2025-11-26 09:45:07,577 - INFO -    Speed range: 0.8 - 1.2 files/sec
+2025-11-26 09:45:07,578 - INFO - 📋 Final summary statistics:
+2025-11-26 09:45:07,578 - INFO -    Overall Precision: 0.0%
+2025-11-26 09:45:07,579 - INFO -    Overall Recall: 0.0%
+2025-11-26 09:45:07,579 - INFO -    Overall F1-Score: 0.0%
+2025-11-26 09:45:07,580 - INFO -    Overall Speed: 1.0 files/sec
+2025-11-26 09:45:07,580 - INFO -    Total Coverage: 635 files, 1905 vulnerabilities
+2025-11-26 09:45:07,581 - INFO - 💾 Preparing and saving benchmark results...
+2025-11-26 09:45:07,582 - INFO - 📝 Saving results to ground_truth_benchmark_results.json...
+2025-11-26 09:45:07,584 - INFO - 📊 GROUND TRUTH BENCHMARK RESULTS
+2025-11-26 09:45:07,585 - INFO - ==================================================
+2025-11-26 09:45:07,585 - INFO - .1%
+2025-11-26 09:45:07,586 - INFO - .1%
+2025-11-26 09:45:07,586 - INFO - .1%
+2025-11-26 09:45:07,587 - INFO - .2f
+2025-11-26 09:45:07,587 - INFO - 📁 Datasets tested: 12
+2025-11-26 09:45:07,588 - INFO - 📄 Files scanned: 635
+2025-11-26 09:45:07,588 - INFO - 🎯 Expected vulnerabilities: 1905
+2025-11-26 09:45:07,589 - INFO - 🔍 Detected vulnerabilities: 0
+2025-11-26 09:45:07,589 - INFO - ✅ Ground truth benchmark completed successfully!
+2025-11-26 09:45:07,590 - INFO - 📄 Results saved to: ground_truth_benchmark_results.json
+2025-11-26 09:45:07,590 - INFO - 📋 Log file saved to: ground_truth_benchmark.log

@@ -1,0 +1,62 @@
+{
+  "timestamp": 1764121937.238498,
+  "synthetic_results": {
+    "Python Synthetic": {
+      "error": "cannot import name 'run_ground_truth_validation' from 'run_ground_truth_benchmark' (/Users/sathvikkurapati/Downloads/valid8-local/run_ground_truth_benchmark.py)"
+    },
+    "Java Synthetic": {
+      "error": "cannot import name 'run_ground_truth_validation' from 'run_ground_truth_benchmark' (/Users/sathvikkurapati/Downloads/valid8-local/run_ground_truth_benchmark.py)"
+    },
+    "JavaScript Synthetic": {
+      "error": "cannot import name 'run_ground_truth_validation' from 'run_ground_truth_benchmark' (/Users/sathvikkurapati/Downloads/valid8-local/run_ground_truth_benchmark.py)"
+    },
+    "TypeScript Synthetic": {
+      "error": "cannot import name 'run_ground_truth_validation' from 'run_ground_truth_benchmark' (/Users/sathvikkurapati/Downloads/valid8-local/run_ground_truth_benchmark.py)"
+    },
+    "Kotlin Synthetic": {
+      "error": "cannot import name 'run_ground_truth_validation' from 'run_ground_truth_benchmark' (/Users/sathvikkurapati/Downloads/valid8-local/run_ground_truth_benchmark.py)"
+    }
+  },
+  "real_world_results": {
+    "Flask Examples": {
+      "files_scanned": 95,
+      "vulns_found": 0,
+      "scan_time": 0.778623104095459,
+      "speed": 122.01025053111321,
+      "description": "Python web framework"
+    },
+    "Spring PetClinic": {
+      "files_scanned": 68,
+      "vulns_found": 0,
+      "scan_time": 0.20270490646362305,
+      "speed": 335.463019550556,
+      "description": "Java enterprise"
+    },
+    "Gin Framework": {
+      "files_scanned": 106,
+      "vulns_found": 0,
+      "scan_time": 0.9090821743011475,
+      "speed": 116.6011203348993,
+      "description": "Go web framework"
+    },
+    "Express.js": {
+      "files_scanned": 149,
+      "vulns_found": 0,
+      "scan_time": 0.8441979885101318,
+      "speed": 176.49888062746993,
+      "description": "Node.js web framework"
+    },
+    "Spring Boot": {
+      "files_scanned": 8933,
+      "vulns_found": 0,
+      "scan_time": 49.80562925338745,
+      "speed": 179.35723599742366,
+      "description": "Java microservices - partial"
+    }
+  },
+  "validation_summary": {
+    "synthetic_f1_scores": [],
+    "all_synthetic_above_92": false,
+    "avg_synthetic_f1": 0
+  }
+}

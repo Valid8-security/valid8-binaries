@@ -1,3 +1,14 @@
+#!/usr/bin/env python3
+"""
+Copyright (c) 2025 Valid8 Security
+All rights reserved.
+
+This software is proprietary and confidential. Unauthorized copying,
+modification, distribution, or use of this software, via any medium is
+strictly prohibited without the express written permission of Valid8 Security.
+
+"""
+
 """
 LLM Client - Interface for local LLM inference via Ollama
 """
@@ -14,10 +25,10 @@ class LLMConfig:
     base_url: str = "http://localhost:11434"
 
     # Default model (can be overridden)
-    model: str = "qwen2.5-coder:1.5b"
+    model: str = "tinyllama:1.1b"  # Default preset - lightweight and fast
 
     # 🚀 UNIVERSAL VULNERABILITY DETECTION MODEL STACK
-    primary_model: str = "qwen2.5-coder:1.5b"  # Main analysis model (1.5B - fast & capable)
+    primary_model: str = "tinyllama:1.1b"  # Main analysis model (default preset - fast & lightweight)
     security_model: str = "codellama:7b-instruct"  # Security-specialized model (7B - deep analysis)
     universal_model: str = "codellama:13b-instruct"  # Universal understanding (13B - comprehensive)
     fast_model: str = "qwen2.5-coder:0.5b"  # Lightning-fast validation (0.5B - speed)

@@ -21,28 +21,40 @@ from rich.table import Table
 console = Console()
 
 PRODUCTS = {
-    'pro_monthly': {
-        'name': 'Parry Scanner Pro - Monthly',
-        'description': 'Professional tier with hosted LLM, unlimited files, 150+ detectors',
-        'price': 4900,  # $49.00 in cents
+    'developer_monthly': {
+        'name': 'Valid8 Developer - Monthly',
+        'description': 'Individual developer tier with hosted LLM, unlimited files, IDE extensions',
+        'price': 2900,  # $29.00 in cents
         'interval': 'month'
     },
-    'pro_yearly': {
-        'name': 'Parry Scanner Pro - Yearly',
-        'description': 'Professional tier with hosted LLM, unlimited files, 150+ detectors (Save 17%)',
-        'price': 49000,  # $490.00 in cents (save $98/year)
+    'developer_yearly': {
+        'name': 'Valid8 Developer - Yearly',
+        'description': 'Individual developer tier with hosted LLM, unlimited files, IDE extensions (Save 17%)',
+        'price': 24900,  # $249.00 in cents (save $129/year)
+        'interval': 'year'
+    },
+    'professional_monthly': {
+        'name': 'Valid8 Professional - Monthly',
+        'description': 'Team tier with GitHub Actions, API access, advanced compliance, priority support',
+        'price': 5900,  # $59.00 in cents
+        'interval': 'month'
+    },
+    'professional_yearly': {
+        'name': 'Valid8 Professional - Yearly',
+        'description': 'Team tier with GitHub Actions, API access, advanced compliance, priority support (Save 25%)',
+        'price': 54900,  # $549.00 in cents (save $249/year)
         'interval': 'year'
     },
     'enterprise_monthly': {
-        'name': 'Parry Scanner Enterprise - Monthly',
-        'description': 'Enterprise tier with API access, SSO, on-premise, priority support',
+        'name': 'Valid8 Enterprise - Monthly',
+        'description': 'Organization tier with SSO, on-premise deployment, unlimited API, dedicated support',
         'price': 29900,  # $299.00 in cents
         'interval': 'month'
     },
     'enterprise_yearly': {
-        'name': 'Parry Scanner Enterprise - Yearly',
-        'description': 'Enterprise tier with API access, SSO, on-premise, priority support (Save 17%)',
-        'price': 299000,  # $2,990.00 in cents (save $598/year)
+        'name': 'Valid8 Enterprise - Yearly',
+        'description': 'Organization tier with SSO, on-premise deployment, unlimited API, dedicated support (Save 25%)',
+        'price': 269100,  # $2,691.00 in cents (save $3,588/year)
         'interval': 'year'
     }
 }

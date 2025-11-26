@@ -1,5 +1,15 @@
 #!/usr/bin/env python3
 """
+Copyright (c) 2025 Valid8 Security
+All rights reserved.
+
+This software is proprietary and confidential. Unauthorized copying,
+modification, distribution, or use of this software, via any medium is
+strictly prohibited without the express written permission of Valid8 Security.
+
+"""
+
+"""
 Script to upgrade to more accurate AI models for lower false positive rate.
 
 Default model (qwen2.5-coder:1.5b):  35% FP rate, ultra-fast

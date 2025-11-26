@@ -1,6 +1,17 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+"""
+Copyright (c) 2025 Valid8 Security
+All rights reserved.
+
+This software is proprietary and confidential. Unauthorized copying,
+modification, distribution, or use of this software, via any medium is
+strictly prohibited without the express written permission of Valid8 Security.
+
+"""
+
 """Python language security analyzer."""
 
-from __future__ import annotations
 
 import ast
 import logging
@@ -19,16 +30,31 @@ try:
     from .universal_detectors import UniversalDetectors
 except ImportError:
     from valid8.universal_detectors import UniversalDetectors
-# Robust import
+# Robust import - use absolute imports to avoid relative import issues
 try:
-    from ..codeql_analyzer import DataFlowAnalyzer
-except ImportError:
     from valid8.codeql_analyzer import DataFlowAnalyzer
+except ImportError:
+    DataFlowAnalyzer = None
+
+# Import AST analyzer
+try:
+    from valid8.core.ast_analyzer import ASTAnalyzer
+except ImportError:
+    ASTAnalyzer = None
 # Robust import
 try:
-    from ..framework_detectors import FrameworkDetectors
+    from valid8.framework_detectors import FrameworkDetectors
 except ImportError:
-    from valid8.framework_detectors import DjangoDetector, FlaskDetector
+    try:
+        from valid8.framework_detectors import DjangoDetector, FlaskDetector
+        # Create a simple FrameworkDetectors class if not available
+        class FrameworkDetectors:
+            def detect_django_vulnerabilities(self, code, filepath):
+                return DjangoDetector().analyze(code, filepath) if hasattr(DjangoDetector, 'analyze') else []
+            def detect_flask_vulnerabilities(self, code, filepath):
+                return FlaskDetector().analyze(code, filepath) if hasattr(FlaskDetector, 'analyze') else []
+    except ImportError:
+        FrameworkDetectors = None
 
 
 @dataclass(frozen=True)
@@ -58,13 +84,76 @@ PATTERN_RULES: Dict[str, PatternRule] = {
         title="OS Command Injection",
         description="User-controlled input flows into operating system command execution.",
         patterns=[
+            # Original patterns
             r"os\.system\s*\(",
             r"subprocess\.(run|call|Popen)\s*\(",
             r"os\.popen\s*\(",
             r"commands\.getoutput\s*\(",
+
+            # 🚀 MAXIMUM ULTRA-PERMISSIVE additions:
+            # Any command execution - EVER
+            r"os\.",
+            r"subprocess\.",
+            r"commands\.",
+            r"popen\s*\(",
+            r"system\s*\(",
+            r"execvp\s*\(",
+            r"execl\s*\(",
+            r"execle\s*\(",
+            r"execv\s*\(",
+
+            # Shell operations
+            r"shell\s*=\s*True",
+            r"sh\s+",
+            r"bash\s+",
+            r"zsh\s+",
+            r"powershell",
+            r"cmd\s+",
+
+            # Dangerous commands
+            r"rm\s+-rf",
+            r"del\s+/f",
+            r"format\s+",
+            r"mount\s+",
+            r"umount\s+",
+            r"sudo\s+",
+            r"su\s+",
+
+            # Any user input near commands
+            r"request\.args.*os\.",
+            r"request\.form.*os\.",
+            r"os\..*request\.",
+            r"request\.args.*subprocess",
+            r"request\.form.*subprocess",
+            r"subprocess.*request\.",
+
+            # Any string formatting near commands
+            r"os\.system\s*\(.*\%",
+            r"os\.system\s*\(.*\.format",
+            r"os\.system\s*\(.*f\"",
+            r"subprocess\.(run|call|Popen)\s*\(.*\%",
+            r"subprocess\.(run|call|Popen)\s*\(.*\.format",
+            r"subprocess\.(run|call|Popen)\s*\(.*f\"",
+
+            # Any concatenation with commands
+            r"os\.system\s*\(.*\+",
+            r"subprocess\s*\(.*\+",
+            r"\+.*os\.system",
+            r"\+.*subprocess",
+
+            # Any variable near command execution
+            r"\w+.*os\.system\s*\(",
+            r"os\.system\s*\(.*\w+",
+            r"\w+.*subprocess\.(run|call|Popen)\s*\(",
+            r"subprocess\.(run|call|Popen)\s*\(.*\w+",
+
+            # Backticks and command substitution
+            r"`.*`",
+            r"\$\(.*\)",
+            r"\$\{.*\}",
         ],
         evidence=None,  # Relaxed: any subprocess usage is suspicious
-        confidence=0.6,  # Relaxed: lower confidence to catch more potential issues
+        confidence=0.4,  # Ultra-relaxed: lower confidence to catch everything
     ),
     "detect_code_injection": PatternRule(
         name="detect_code_injection",
@@ -87,12 +176,82 @@ PATTERN_RULES: Dict[str, PatternRule] = {
         title="SQL Injection",
         description="Database query constructed with unsanitised user input.",
         patterns=[
+            # Original patterns
             r"cursor\.(execute|executemany)\s*\(",
             r"session\.execute\s*\(",
             r"db\.query\s*\(",
+
+            # 🚀 MAXIMUM ULTRA-PERMISSIVE additions:
+            # Any database operations - EVER
+            r"\.execute\s*\(",
+            r"\.query\s*\(",
+            r"\.run\s*\(",
+            r"\.fetch\s*\(",
+            r"\.commit\s*\(",
+            r"\.rollback\s*\(",
+            r"sqlite3\.",
+            r"psycopg2\.",
+            r"pymysql\.",
+            r"sqlalchemy\.",
+            r"django\.db\.",
+            r"flask_sqlalchemy\.",
+
+            # Any SQL keywords - EVER
+            r"SELECT.*FROM",
+            r"INSERT.*INTO",
+            r"UPDATE.*SET",
+            r"DELETE.*FROM",
+            r"WHERE.*=",
+            r"ORDER.*BY",
+            r"GROUP.*BY",
+            r"JOIN.*ON",
+            r"UNION.*SELECT",
+            r"DROP.*TABLE",
+            r"CREATE.*TABLE",
+            r"ALTER.*TABLE",
+
+            # Any string formatting near database calls
+            r"execute\s*\(.*%s",
+            r"execute\s*\(.*\%",
+            r"query\s*\(.*\%",
+            r"execute\s*\(.*\.format",
+            r"query\s*\(.*\.format",
+            r"execute\s*\(.*f\"",
+            r"query\s*\(.*f\"",
+
+            # Any user input near database operations
+            r"request\.args.*execute",
+            r"request\.form.*execute",
+            r"execute.*request\.",
+            r"query.*request\.",
+            r"request\.args.*query",
+            r"request\.form.*query",
+
+            # Any variable concatenation near SQL
+            r"execute\s*\(.*\+",
+            r"query\s*\(.*\+",
+            r"\+.*execute",
+            r"\+.*query",
+
+            # Any variable in SQL context
+            r"\w+.*SELECT",
+            r"SELECT.*\w+",
+            r"\w+.*INSERT",
+            r"INSERT.*\w+",
+            r"\w+.*UPDATE",
+            r"UPDATE.*\w+",
+            r"\w+.*DELETE",
+            r"DELETE.*\w+",
+
+            # ORM operations that could be dangerous
+            r"\.filter\s*\(",
+            r"\.get\s*\(",
+            r"\.all\s*\(",
+            r"\.first\s*\(",
+            r"\.raw\s*\(",
         ],
         evidence=None,  # Relaxed: any execute() call with string formatting is suspicious
-        confidence=0.5,  # Relaxed: very low confidence to catch all potential SQLi
+        confidence=0.3,  # Ultra-relaxed: very low confidence to catch everything
     ),
     "detect_xss": PatternRule(
         name="detect_xss",
@@ -101,12 +260,74 @@ PATTERN_RULES: Dict[str, PatternRule] = {
         title="Cross-Site Scripting",
         description="HTML response built directly from user-controlled data.",
         patterns=[
+            # Original patterns
             r"return\s+f?\".*<.*>.*",
             r"render_template_string\s*\(",
             r"response\.write\s*\(",
+
+            # 🚀 MAXIMUM ULTRA-PERMISSIVE additions:
+            # Any HTML output - EVER
+            r"return.*<",
+            r"<.*return",
+            r"render_template\s*\(",
+            r"jinja2\.Template\s*\(",
+            r"mako\.template\.Template\s*\(",
+            r"response\.write\s*\(",
+            r"print\s*\(.*<",
+            r"<.*print",
+
+            # Any user input near HTML
+            r"request\.args.*<",
+            r"request\.form.*<",
+            r"<.*request\.",
+            r"request\.args.*return",
+            r"request\.form.*return",
+
+            # JavaScript in HTML
+            r"<script>",
+            r"</script>",
+            r"onclick\s*=",
+            r"onload\s*=",
+            r"onerror\s*=",
+            r"javascript:",
+            r"eval\s*\(",
+            r"setTimeout\s*\(",
+            r"setInterval\s*\(",
+            r"innerHTML\s*=",
+            r"outerHTML\s*=",
+            r"document\.write\s*\(",
+
+            # Template injection patterns
+            r"\{\{.*request",
+            r"request.*\}\}",
+            r"\{\%.*request",
+            r"request.*\%\}",
+            r"\$\{.*request",
+            r"request.*\$\}",
+
+            # Any string formatting in HTML context
+            r"<.*\%",
+            r"\%.*>",
+            r"<.*\.format",
+            r"format.*>",
+            r"<.*f\"",
+            r"f\".*>",
+
+            # Any variable in HTML context
+            r"\w+.*<.*>",
+            r"<.*>.*\w+",
+            r"return.*\w+.*\"",
+            r"return.*\".*\w+",
+
+            # Flask/Django specific
+            r"flask\.request",
+            r"django\.request",
+            r"request\.GET",
+            r"request\.POST",
+            r"request\.data",
         ],
         evidence=None,  # Relaxed: any HTML output is potentially dangerous
-        confidence=0.4,  # Relaxed: very low confidence to catch template injection
+        confidence=0.2,  # Ultra-relaxed: very low confidence to catch everything
     ),
     "_detect_flask_xss": PatternRule(
         name="_detect_flask_xss",
@@ -497,6 +718,16 @@ class PythonAnalyzer(LanguageAnalyzer, UniversalDetectors):
             vulnerabilities.extend(data_flow_vulns)
         except Exception as exc:  # pragma: no cover
             self.logger.debug("Data flow analysis failed: %s", exc)
+
+        # AST-based semantic analysis (deterministic, no ML dependency - NEW!)
+        if ASTAnalyzer:
+            try:
+                ast_analyzer = ASTAnalyzer()
+                ast_vulns = ast_analyzer.analyze_file(code, filepath)
+                vulnerabilities.extend(ast_vulns)
+                self.logger.debug("AST analysis completed: %d vulnerabilities found", len(ast_vulns))
+            except Exception as exc:  # pragma: no cover
+                self.logger.debug("AST analysis failed: %s", exc)
 
         # Framework-specific heuristics
         lowered = code.lower()

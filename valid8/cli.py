@@ -1,5 +1,15 @@
 #!/usr/bin/env python3
 """
+Copyright (c) 2025 Valid8 Security
+All rights reserved.
+
+This software is proprietary and confidential. Unauthorized copying,
+modification, distribution, or use of this software, via any medium is
+strictly prohibited without the express written permission of Valid8 Security.
+
+"""
+
+"""
 Valid8 CLI - Command-line interface for security scanning
 """
 
@@ -471,13 +481,14 @@ def gui(host, port, no_browser):
 @click.option("--validate", is_flag=True, help="Use AI to validate findings and reduce false positives")
 @click.option("--mode", type=click.Choice(["fast", "deep", "hybrid"]), default="fast",
               help="Detection mode: fast (pattern-only, 72.7% recall), deep (AI-powered), hybrid (90.9% recall)")
+@click.option("--model", type=str, help="AI model to use (e.g., tinyllama:1.1b, qwen2.5-coder:7b, deepseek-coder:33b). Use 'valid8 list-models' to see available models.")
 @click.option("--sca", is_flag=True, help="Enable Software Composition Analysis (dependency scanning)")
 @click.option("--incremental", is_flag=True, help="Use incremental scanning (only scan changed files, 10-100x faster)")
 @click.option("--smart/--no-smart", default=True, help="Use smart file prioritization (2-5x faster for large codebases)")
 @click.option("--custom-rules", type=click.Path(exists=True), help="Path to custom YAML rules file")
 def scan(path: str, format: str, output: Optional[str], severity: Optional[str], 
          cwe: tuple, verbose: bool, exclude: tuple, validate: bool, mode: str,
-         sca: bool, incremental: bool, smart: bool, custom_rules: Optional[str]):
+         model: Optional[str], sca: bool, incremental: bool, smart: bool, custom_rules: Optional[str]):
     """
     Scan a codebase for security vulnerabilities.
     
@@ -553,21 +564,19 @@ def scan(path: str, format: str, output: Optional[str], severity: Optional[str],
         task = progress.add_task("[cyan]Scanning codebase...", total=None)
         
         try:
-            # Use incremental scanner if requested
+            # Use enhanced scanning with optimizations
             if incremental:
-                console.print("[cyan]🔄 Using incremental scanning mode...[/cyan]")
-                incremental_scanner = IncrementalScanner()
-                results = incremental_scanner.scan_incremental(
-                    Path(path), mode, max_workers=4
-                )
+                console.print("[cyan]🔄 Using incremental scanning mode with optimizations...[/cyan]")
+                results = scanner._incremental_scan(Path(path), mode, max_age_hours=24)
 
                 # Show incremental scanning stats
-                if '_metadata' in results:
-                    meta = results['_metadata']
-                    speedup = meta.get('speedup_estimate', 1)
+                if 'incremental_stats' in results:
+                    stats = results['incremental_stats']
+                    speedup = stats.get('speedup_estimate', 1)
                     if speedup > 1:
-                        console.print(f"[green]🚀 {speedup:.1f}x speedup! Only scanned {meta['impacted_files']} of {meta.get('total_files', meta['impacted_files'])} files[/green]")
+                        console.print(f"[green]🚀 {speedup:.1f}x speedup! Only scanned {stats['changed_files']} of {stats['total_files']} files[/green]")
             else:
+                # Use standard scanning
                 results = scanner.scan(Path(path))
 
             progress.update(task, completed=True)
@@ -601,7 +610,22 @@ def scan(path: str, format: str, output: Optional[str], severity: Optional[str],
             
             # 🚀 HYBRID SPEEDUP: Aggressive parallel processing for AI
             max_workers = min(multiprocessing.cpu_count() or 8, 8)  # Increased to 8 workers for speed
-            ai_detector = AIDetector(max_workers=max_workers)
+            
+            # Set model if specified
+            if model:
+                from valid8.llm import LLMClient
+                # Create LLM client with specified model to verify it's available
+                try:
+                    llm_client = LLMClient(model=model)
+                    console.print(f"[cyan]✓ Using model: {model}[/cyan]")
+                    # Pass model to AI detector
+                    ai_detector = AIDetector(max_workers=max_workers, model=model)
+                except Exception as e:
+                    console.print(f"[yellow]⚠ Warning: Could not use model '{model}': {e}[/yellow]")
+                    console.print(f"[yellow]  Falling back to default model[/yellow]")
+                    ai_detector = AIDetector(max_workers=max_workers)
+            else:
+                ai_detector = AIDetector(max_workers=max_workers)
             
             # Get list of scanned files - TWO-STAGE DETECTION for Hybrid mode
             scanned_files = []

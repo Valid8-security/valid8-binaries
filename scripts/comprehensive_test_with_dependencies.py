@@ -1,5 +1,15 @@
 #!/usr/bin/env python3
 """
+Copyright (c) 2025 Valid8 Security
+All rights reserved.
+
+This software is proprietary and confidential. Unauthorized copying,
+modification, distribution, or use of this software, via any medium is
+strictly prohibited without the express written permission of Valid8 Security.
+
+"""
+
+"""
 Comprehensive Test Script for Parry with SCA and Custom Rules
 Tests Parry (Fast, Deep, Hybrid modes) with SCA and custom rules enabled
 against Snyk, Semgrep, and Bandit using pre-existing benchmark data.

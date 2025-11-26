@@ -1,3 +1,14 @@
+#!/usr/bin/env python3
+"""
+Copyright (c) 2025 Valid8 Security
+All rights reserved.
+
+This software is proprietary and confidential. Unauthorized copying,
+modification, distribution, or use of this software, via any medium is
+strictly prohibited without the express written permission of Valid8 Security.
+
+"""
+
 """
 Base class for language-specific analyzers.
 """
@@ -82,14 +93,14 @@ class LanguageAnalyzer(ABC):
     
     def _create_vulnerability(
         self,
-    #     cwe: str,
-    #     severity: str,
-    #     title: str,
-    #     description: str,
+        cwe: str,
+        severity: str,
+        title: str,
+        description: str,
         code: str,
         filepath: str,
-    #     line_number: int,
-    #     confidence: str = "high"
+        line_number: int,
+        confidence: str = "high"
     ) -> Vulnerability:
         """Helper to create a vulnerability object."""
         lines = code.split('\n')
